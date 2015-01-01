@@ -51,6 +51,6 @@ class Handler(webapp2.RequestHandler):
 
         logging.debug('Generating output for "' + username + '" with ' + str(len(media_items)) + ' items')
         for media in media_items:
-            css_rule = '.animetitle[href="' + item.rel_url + '"]:' + pseudo_selector
+            css_rule = '.animetitle[href="' + item.rel_url + '"]' + pseudo_selector
             css_rule += '{background-image:url(' + media.cover_path + ');}'
             self.response.write(css_rule)
