@@ -49,7 +49,10 @@ class SchedulerHandler(webapp2.RequestHandler):
         else:
             logging.info('Running Scheduler - Production')
             more_than_a_day_ago = datetime.now() - timedelta(seconds=-settings.delay_seconds)
-            users = User.all().filter('last_scraped <', more_than_a_day_ago).fetch(limit=None)
+            user_query = User.all()
+            user_query.filter('last_scraped <', more_than_a_day_ago)
+            user_query.filter('exists =' + True)
+            users = user_query.fetch(limit=None)
 
         if users is not None:
             logging.info('Scheduling scrapper on ' + str(len(users)) + ' user(s)')
