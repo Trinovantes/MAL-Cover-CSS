@@ -26,6 +26,7 @@ class Handler(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'text/css'
 
     def generateEmptyResponse(self):
+        logging.debug('Generating empty output for "' + username + '"')
         self.generateHeading()
 
     def generateCSS(self, username, need_anime, need_manga, element_to_style):
@@ -48,6 +49,7 @@ class Handler(webapp2.RequestHandler):
             # Only need anime XOR manga so we need to filter media_items
             media_items = [i for i in media_items if i.is_anime == need_anime]
 
+        logging.debug('Generating output for "' + username + '" with ' + str(len(media_items)) + ' items')
         for media in media_items:
             css_rule = '.animetitle[href="' + item.rel_url + '"]:' + pseudo_selector
             css_rule += '{background-image:url(' + media.cover_path + ');}'
