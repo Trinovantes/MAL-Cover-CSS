@@ -1,3 +1,4 @@
+import logging
 from google.appengine.api import urlfetch
 
 import sys
@@ -5,14 +6,14 @@ sys.path.insert(0, 'libs') # Add /libs/ folder to $PATH
 from bs4 import BeautifulSoup
 
 import settings
-import logging
+import private
 
 #------------------------------------------------------------------------------
 
 def request_soup(url):
     result = urlfetch.fetch(
         url,
-        headers = {'User-Agent': 'MyAnimeList CSS Generator Bot (https://github.com/Trinovantes/MyAnimeList-CSS-Generator)'}
+        headers = {'User-Agent': private.USER_AGENT }
     )
 
     if result.status_code == 200:

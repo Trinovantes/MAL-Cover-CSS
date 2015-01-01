@@ -6,4 +6,5 @@ class UserScraper():
         self.username = username
 
     def run(self):
-        pass
+        list_soup = request_soup('http://myanimelist.net/animelist/' + self.username)
+        

@@ -7,6 +7,9 @@ from controllers import homepage
 
 application = webapp2.WSGIApplication([
 
+    # Defaults: /css/[username]/all/self
+    ('/css/(\w+)',                                       css.Handler),
+    ('/css/(\w+)/(all|anime|manga)',                     css.Handler),
     ('/css/(\w+)/(all|anime|manga)/(self|before|after)', css.Handler),
 
     ('/scraper/media',      scraper.MediaHandler),

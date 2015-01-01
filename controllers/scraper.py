@@ -56,7 +56,7 @@ class SchedulerHandler(webapp2.RequestHandler):
             logging.info('Running Scheduler - Debug')
             test_user = User.all().filter('username =', TEST_USERNAME).get()
             if test_user is None:
-                test_user = User(username=TEST_USERNAME, scrape_anime=True, scrape_manga=False)
+                test_user = User(username=TEST_USERNAME, scrape_anime=True, scrape_manga=True)
                 test_user.put()
             users = [test_user]
         else:

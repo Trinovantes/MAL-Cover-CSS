@@ -1,9 +1,9 @@
 queue:
 
 -   name:           user-queue
-    rate:           6/m
+    rate:           1/m
     bucket_size:    100
 
 -   name:           media-queue
-    rate:           30/m
+    rate:           6/m
     bucket_size:    100
