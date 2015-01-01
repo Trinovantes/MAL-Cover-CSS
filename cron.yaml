@@ -1,0 +1,5 @@
+cron:
+
+-   description:    Schedule user lists to be scraped
+    url:            /scraper/scheduler
+    schedule:       every 24 hours
