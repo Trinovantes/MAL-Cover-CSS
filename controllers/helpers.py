@@ -11,10 +11,14 @@ import private
 #------------------------------------------------------------------------------
 
 def request_soup(url):
+    logging.debug('Requesting: ' + url)
+
     result = urlfetch.fetch(
         url,
         headers = {'User-Agent': private.USER_AGENT }
     )
+
+    logging.debug('Received response from: ' + url)
 
     if result.status_code == 200:
         return BeautifulSoup(result.content)

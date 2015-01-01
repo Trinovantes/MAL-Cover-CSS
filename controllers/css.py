@@ -1,6 +1,5 @@
 import webapp2
 import logging
-from datetime import date
 
 from models.user import User
 from models.media import Media
