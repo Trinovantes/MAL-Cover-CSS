@@ -48,7 +48,7 @@ class UserScraper():
             media_list = 'animelist'
             media_name = 'anime'
         else:
-            media_base = 'mangalist'
+            media_list = 'mangalist'
             media_name = 'manga'
     
         if page_soup is None:
@@ -56,8 +56,6 @@ class UserScraper():
             soup = helpers.request_soup(url)
         else:
             soup = page_soup
-
-        print page_soup
 
         # Iterate over all the links on user list and schedule them to be scraped if they're not in the database yet
         links = soup.select('a[href^=/' + media_name + '/]')
@@ -83,6 +81,7 @@ class UserScraper():
                     url = '/scraper/user',
                     params = {
                         settings.HEADER_MEDIA_URL_KEY: rel_url
+                        settings.HEADER_MEDIA_NAME_KEY: media_name
                     }
                 ))
             else:

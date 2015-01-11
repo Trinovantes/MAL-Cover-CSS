@@ -16,9 +16,10 @@ DEBUG = 'development' in os.environ.get('SERVER_SOFTWARE', '').lower()
 # Globals
 #------------------------------------------------------------------------------
 
-TEST_USERNAME        = 'trinovantes'
-HEADER_USERNAME_KEY  = 'username'
-HEADER_MEDIA_URL_KEY = 'media-url'
+TEST_USERNAME         = 'trinovantes'
+HEADER_USERNAME_KEY   = 'username'
+HEADER_MEDIA_URL_KEY  = 'media-url'
+HEADER_MEDIA_NAME_KEY = 'media-name'
 
 user_queue  = taskqueue.Queue('user-queue')
 media_queue = taskqueue.Queue('media-queue')

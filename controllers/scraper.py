@@ -17,7 +17,8 @@ import settings
 class MediaHandler(webapp2.RequestHandler):
     def post(self):
         rel_url = self.request.get(settings.HEADER_MEDIA_URL_KEY)
-        scraper = MediaScraper(rel_url)
+        media_name = self.request.get(settings.HEADER_MEDIA_NAME_KEY)
+        scraper = MediaScraper(rel_url, media_name)
         scraper.run()
 
 #------------------------------------------------------------------------------
