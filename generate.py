@@ -84,7 +84,7 @@ def scrape_list(is_anime):
             if is_anime:
                 css_rule = '.animetitle'
             else:
-                css_rule = '.mangatitle'
+                css_rule = '.animetitle' # MAL is weird...
             css_rule += '[href*="' + regex.search(rel_url).group(0) + '"]' + PSEUDO_SELECTOR
             css_rule += '{background-image:url(' + img_src + ');}'
             output_file.write(css_rule)
