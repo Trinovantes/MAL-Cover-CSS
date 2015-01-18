@@ -39,9 +39,9 @@ class Handler(webapp2.RequestHandler):
         
         if element_to_style == 'self':
             pseudo_selector = ''
-        else if element_to_style == 'before':
+        elif element_to_style == 'before':
             pseudo_selector = ':before'
-        else if element_to_style == 'after':
+        elif element_to_style == 'after':
             pseudo_selector = ':after'
 
         media_items = Media.get(self.user.media_list)

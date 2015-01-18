@@ -8,7 +8,7 @@ from models.user import User
 from models.media import Media
 from scraper_media import MediaScraper
 from scraper_user import UserScraper
-import settings
+from utilities import settings
 
 #------------------------------------------------------------------------------
 # MediaHandler

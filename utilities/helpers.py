@@ -11,6 +11,7 @@ import private
 #------------------------------------------------------------------------------
 
 def request_soup(url):
+    #url = 'http://localhost:4567'
     logging.debug('Requesting: ' + url)
 
     result = urlfetch.fetch(
@@ -21,7 +22,9 @@ def request_soup(url):
     logging.debug('Received response from: ' + url)
 
     if result.status_code == 200:
-        return BeautifulSoup(result.content)
+        soup = BeautifulSoup(result.content)
+        logging.debug(soup)
+        return soup
     else:
         logging.error('Received ' +  str(result.status_code) + ' error from ' + url)
         return None

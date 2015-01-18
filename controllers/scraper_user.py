@@ -4,8 +4,8 @@ import logging
 
 from models.user import User
 from models.media import Media
-import settings
-import helpers
+from utilities import settings
+from utilities import helpers
 
 class UserScraper():
     def __init__(self, username):
@@ -80,7 +80,7 @@ class UserScraper():
                 settings.media_queue.add(taskqueue.Task(
                     url = '/scraper/user',
                     params = {
-                        settings.HEADER_MEDIA_URL_KEY: rel_url
+                        settings.HEADER_MEDIA_URL_KEY: rel_url,
                         settings.HEADER_MEDIA_NAME_KEY: media_name
                     }
                 ))

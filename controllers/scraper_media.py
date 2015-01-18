@@ -2,7 +2,7 @@ from datetime import datetime
 import logging
 
 from models.media import Media
-import helpers
+from utilities import helpers
 
 class MediaScraper():
     def __init__(self, rel_url, media_name):

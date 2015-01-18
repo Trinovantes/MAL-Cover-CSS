@@ -1,6 +1,6 @@
 import webapp2
 
-from controllers import settings
+from utilities import settings
 from controllers import css
 from controllers import scraper
 from controllers import homepage

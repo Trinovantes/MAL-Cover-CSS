@@ -9,7 +9,7 @@ from socket import error as SocketError
 sys.path.insert(0, 'libs') # Add /libs/ folder to $PATH
 from bs4 import BeautifulSoup
 
-from controllers import private
+from utilities import private
 
 #-------------------------------------------------------------------------------
 # Config
@@ -21,7 +21,7 @@ GET_ANIME       = True
 GET_MANGA       = True
 OUTPUT_FILE     = 'myanimelist-covers.css'
 SLEEP_DELAY     = 4
-START_INDEX     = -1
+START_INDEX     = -1 # Default -1
 
 #-------------------------------------------------------------------------------
 # Functions
