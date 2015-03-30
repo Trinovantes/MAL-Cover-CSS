@@ -1,15 +1,30 @@
+from peewee import *
 from datetime import datetime
-from google.appengine.ext import db
 
-class User(db.Model):
-    created      = db.DateTimeProperty(auto_now_add=True)
-    last_scraped = db.DateTimeProperty(default=datetime.fromtimestamp(0))
-    
-    username     = db.StringProperty(required=True)
-    scrape_anime = db.BooleanProperty(default=False)
-    scrape_manga = db.BooleanProperty(default=False)
-    media_list   = db.ListProperty(db.Key)
+from base import BaseModel
+from tasks.scraper import Scraper
 
-    # Assume to exist until otherwise proven
-    # Once this is marked as false, a weekly cron job will delete all invalid accounts
-    exists = db.BooleanProperty(default=True)
+class UserAlreadyExistsException(Exception):
+    pass
+
+class UserDoesNotExistException(Exception):
+    pass
+
+class User(BaseModel):
+    uid          = PrimaryKeyField()
+
+    username     = CharField(max_length=200, unique=True)
+    created      = DateTimeField(default=datetime.now)
+    last_scraped = DateTimeField(null=True)
+
+    def __init__(self, username):
+        if User.select().where(User.username == username).exists():
+            raise UserAlreadyExistsException
+        if not Scraper.user_exists(username):
+            raise UserDoesNotExistException
+
+        super(User, self).__init__()
+        self.username = username
+
+    class Meta:
+        db_table = 'users'

@@ -1,9 +1,13 @@
-from datetime import datetime
-from google.appengine.ext import db
+from peewee import *
+from base import BaseModel
 
-class Media(db.Model):
-    last_scraped = db.DateTimeProperty(default=datetime.fromtimestamp(0))
+class Media(BaseModel):
+    mid          = PrimaryKeyField()
 
-    rel_url    = db.StringProperty(required=True)  # Relative link to myanimelist.net
-    cover_path = db.LinkProperty()                 # Abs path to image
-    is_anime   = db.BooleanProperty(required=True) # Otherwise it's manga
+    last_scraped = DateTimeField(null=True)
+    img_url      = CharField(max_length=200) # http://cdn.myanimelist.net/images/anime/12/28009.jpg
+    medium_type  = CharField(max_length=10)  # anime
+    mal_id       = IntegerField()            # 9989
+
+    class Meta:
+        db_table = 'media'
