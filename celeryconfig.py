@@ -7,9 +7,11 @@ CELERY_RESULT_BACKEND = CELERY_RESULT_BACKEND
 
 CELERY_TIMEZONE = 'UTC'
 
+CELERY_INCLUDE = ['tasks.scraper_task']
+
 CELERYBEAT_SCHEDULE = {
     'scrape_users': {
-        'task': 'celeryapp.scraper_task',
+        'task': 'tasks.scraper_task.scraper_task',
         'schedule': timedelta(minutes=1)
     },
 }

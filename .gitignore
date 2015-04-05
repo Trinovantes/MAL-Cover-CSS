@@ -2,4 +2,5 @@
 private.py
 dump.rdb
 celerybeat-schedule
+celerybeat.pid
 
