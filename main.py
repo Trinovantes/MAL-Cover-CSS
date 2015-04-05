@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, abort, json, make_response
 
 import private
 
-app = Flask(__name__)
+flaskapp = Flask(__name__)
 
 #-------------------------------------------------------------------------------
 # Database
@@ -16,20 +16,14 @@ User.create_table(True) # Generate tables if they don't exist
 Media.create_table(True)
 
 #-------------------------------------------------------------------------------
-# Celery for Scraper
-#-------------------------------------------------------------------------------
-
-from celery import Celery
-
-#-------------------------------------------------------------------------------
 # CSS Generator
 #-------------------------------------------------------------------------------
 
 from controllers.generator import Generator
 
-@app.route('/covercss')
-@app.route('/covercss/<medium_type>')
-@app.route('/covercss/<medium_type>/<element_to_style>')
+@flaskapp.route('/covercss')
+@flaskapp.route('/covercss/<medium_type>')
+@flaskapp.route('/covercss/<medium_type>/<element_to_style>')
 def css(medium_type='all', element_to_style='self'):
     return Generator(medium_type, element_to_style).generate()
 
@@ -37,15 +31,17 @@ def css(medium_type='all', element_to_style='self'):
 # Main Website
 #-------------------------------------------------------------------------------
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+from tasks.scraper import user_exists_on_mal
 
-@app.route('/add', methods=['POST'])
+@flaskapp.route('/add', methods=['POST'])
 def add_user():
     result = None
     try:
-        username = request.get_json().get('username', '')
+        username = request.get_json().get('username', '')        
+        if User.select().where(User.username == username).exists():
+            raise UserAlreadyExistsException
+        if not user_exists_on_mal(username):
+            raise UserDoesNotExistException
         User.create(username=username)
         result = {
             "success": True
@@ -70,10 +66,13 @@ def add_user():
             "success": False,
             "error": "Username \"" + username + "\" is already being tracked"
         }
-
     response = make_response(json.dumps(result))
     response.headers["Content-Type"] = "application/json"
     return response
 
+@flaskapp.route('/')
+def index():
+    return render_template('index.html')
+
 if __name__ == '__main__':
-    app.run(debug=private.IS_DEBUG)
+    flaskapp.run(debug=private.IS_DEBUG)

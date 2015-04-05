@@ -1,4 +1,3 @@
-from datetime import datetime
 from lxml import etree
 import logging
 import requests
@@ -9,55 +8,53 @@ import private
 class ScraperException(Exception):
     pass        
 
-class Scraper():
-    @staticmethod
-    def request_url(url):
-        headers = {
+def request_url(url):
+    headers = {
         'User-Agent': private.USER_AGENT
-        }
-        req = requests.get(url, headers=headers, timeout=private.REQUESTS_TIMEOUT)
-        xml = req.content.strip()
-        tree = etree.fromstring(xml)
-        return tree
+    }
+    req = requests.get(url, headers=headers, timeout=private.REQUESTS_TIMEOUT)
+    xml = req.content.strip()
+    tree = etree.fromstring(xml)
 
-    @staticmethod
-    def get_url(username, medium_type='anime'):
-        return 'http://myanimelist.net/malappinfo.php?u=' + username + '&type=' + medium_type
+    if tree is None or tree.tag != 'myanimelist':
+        logging.error('Failed to get xml for ' + url)
+        raise ScraperException
 
-    @staticmethod
-    def user_exists(username):
-        url = Scraper.get_url(username, 'anime')
-        animelist = Scraper.request_url(url)
-        return len(animelist) > 0 and animelist[0].tag == 'myinfo'
-    
-    @staticmethod
-    def scrape_user(username, medium_type):
-        url = Scraper.get_url(username, medium_type)
-        media_list = Scraper.request_url(url)
-        for item in media_list:
-            if item.tag != medium_type:
-                continue
+    return tree
 
-            mal_id = None
-            img_url = None
+def get_url(username, medium_type='anime'):
+    return 'http://myanimelist.net/malappinfo.php?u=' + username + '&type=' + medium_type
 
-            for prop in item:
-                if prop.tag == 'series_' + medium_type + 'db_id':
-                    mal_id = int(prop.text)
-                elif prop.tag == 'series_image':
-                    img_url = prop.text
+def user_exists_on_mal(username):
+    url = get_url(username, 'anime')
+    animelist = request_url(url)
+    return len(animelist) > 0 and animelist[0].tag == 'myinfo'
 
-            if mal_id is None or img_url is None:
-                logging.error("Scrapper error on \"" + username + "\" mal_id:" + str(mal_id) + " img_url:" + str(img_url))
-                continue
+def scrape_user(username, medium_type):
+    url = get_url(username, medium_type)
+    media_list = request_url(url)
+    for item in media_list:
+        if item.tag != medium_type:
+            continue
 
-            media_item = Media.select().where(Media.mal_id == mal_id)
+        mal_id = None
+        img_url = None
 
-            try:
-                media_item = media_item.get()
-                media_item.img_url = img_url
-            except Media.DoesNotExist:
-                media_item = Media(img_url=img_url, medium_type=medium_type, mal_id=mal_id)
+        for prop in item:
+            if prop.tag == 'series_' + medium_type + 'db_id':
+                mal_id = int(prop.text)
+            elif prop.tag == 'series_image':
+                img_url = prop.text
 
-            media_item.last_scraped = datetime.now()
-            media_item.save()
+        if mal_id is None or img_url is None:
+            logging.error('Scrapper error on "' + username + '" mal_id:' + str(mal_id) + ' img_url:' + str(img_url))
+            continue
+
+        media_item = Media.select().where((Media.mal_id == mal_id) & (Media.medium_type == medium_type))
+        try:
+            media_item = media_item.get()
+            media_item.img_url = img_url
+        except Media.DoesNotExist:
+            media_item = Media(img_url=img_url, medium_type=medium_type, mal_id=mal_id)
+
+        media_item.save()

@@ -1,8 +1,5 @@
-import logging
 from flask import make_response
-from datetime import datetime
 
-from models.user import User
 from models.media import Media
 
 class Generator():
