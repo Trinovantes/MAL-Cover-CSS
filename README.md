@@ -16,9 +16,10 @@ Host myalias
 
 Then running `ssh myalias` should automatically log you into the droplet (without a password prompt). Finally you should disable password for root login so that only you can log in with your ssh key.
 
-1. `sudo vim /etc/ssh/sshd_config`
+1. Open `/etc/ssh/sshd_config` in an editor
 2. Find `PermitRootLogin yes` and change it to `PermitRootLogin without-password`
 3. Run `reload ssh`
+4. Log out of the VPS and try to SSH in again (it should not ask for a password this time)
 
 2. Setup Redis as Celery's Backend
 ---
@@ -85,7 +86,7 @@ sudo pip install Flask
 sudo pip install lxml
 ```
 
-Note that building lxml will take up a lot of RAM. If you're using the 512 mb Digital Ocean droplet, you need to setup a swap file.
+Note that building `lxml` will take up a lot of RAM. If you're using the 512 mb Digital Ocean droplet, you need to setup a swap file.
 
 ```
 sudo dd if=/dev/zero of=/swapfile bs=1024 count=524288
