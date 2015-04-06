@@ -18,7 +18,7 @@ Then running `ssh myalias` should automatically log you into the droplet (withou
 
 1. `sudo vim /etc/ssh/sshd_config`
 2. Find `PermitRootLogin yes` and change it to `PermitRootLogin without-password`
-3. Run `reload ssh`.
+3. Run `reload ssh`
 
 2. Setup Redis as Celery's Backend
 ---
@@ -63,15 +63,35 @@ sudo apt-get install python-pip
 sudo pip install celery
 ```
 
+4. Setup Database
 
-4. Setup Flask
+```
+sudo apt-get install mysql-server
+mysql -u root -p
+[enter password]
+CREATE DATABASE mal_cover_css_link;
+
+sudo pip install peewee
+sudo pip install PyMySQL
+```
+
+5. Setup Flask and other Dependencies
 ---
 
 ```
-sudo apt-get install python-dev
+sudo apt-get install python-dev libxml2-dev libxslt1-dev lib32z1-dev
 sudo pip install uwsgi
 sudo pip install Flask
-sudo pip install peewee
+sudo pip install lxml
+```
+
+Note that building lxml will take up a lot of RAM. If you're using the 512 mb Digital Ocean droplet, you need to setup a swap file.
+
+```
+sudo dd if=/dev/zero of=/swapfile bs=1024 count=524288
+sudo chmod 600 /swapfile
+sudo mkswap /swapfile
+sudo swapon /swapfile
 ```
 
 <!---
@@ -79,10 +99,30 @@ sudo pip install peewee
 sudo apt-get install nginx
 mkdir /var/www/malcovercss.link
 cd /var/www/malcovercss.link
-```
 
-```
 sudo apt-get install git
 git clone https://github.com/Trinovantes/MyAnimeList-Cover-CSS-Generator.git .
+```
+
+`sudo vim /etc/nginx/sites-available/default`
+
+```
+server {
+    listen 80
+    location / { 
+        try_files $uri @yourapplication; 
+    }
+    location @yourapplication {
+        include uwsgi_params;
+        uwsgi_pass unix:/tmp/uwsgi.sock;
+    }
+}
+
+```
+
+`uwsgi -s /tmp/uwsgi.sock -w main:flaskapp --chown-socket=www-data:www-data --master`
+
+
+```
 ```
 -->
