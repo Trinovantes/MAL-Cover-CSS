@@ -59,6 +59,7 @@ sudo apt-get install rabbitmq-server
 This should automatically start your RabbitMQ server after it finishes.
 
 4. Setup Database
+---
 
 ```
 sudo apt-get install mysql-server
