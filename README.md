@@ -24,6 +24,11 @@ Then running `ssh myalias` should automatically log you into the droplet (withou
 2. Setup Redis as Celery's Backend
 ---
 
+This is for installing the Python library for accessing Redis.
+```
+sudo pip install redis
+```
+
 Redis can't be obtained from Linux package managers (at least not officially at the time of writing this). Instead it has to be downloaded from the website and be built manually.
 
 ```
