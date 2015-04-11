@@ -1,19 +1,11 @@
 from requests.exceptions import RequestException
 from flask import Flask, render_template, request, abort, json, make_response
 
+from models.user import User, UserDoesNotExistException, UserAlreadyExistsException
+from models.media import Media
 import private
 
 flaskapp = Flask(__name__)
-
-#-------------------------------------------------------------------------------
-# Database
-#-------------------------------------------------------------------------------
-
-from models.user import User, UserDoesNotExistException, UserAlreadyExistsException
-from models.media import Media
-
-User.create_table(True) # Generate tables if they don't exist
-Media.create_table(True)
 
 #-------------------------------------------------------------------------------
 # CSS Generator

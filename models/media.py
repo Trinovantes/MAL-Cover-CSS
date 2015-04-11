@@ -10,3 +10,6 @@ class Media(BaseModel):
 
     class Meta:
         db_table = 'media'
+
+# Generate tables if they don't exist
+Media.create_table(True)

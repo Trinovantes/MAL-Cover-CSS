@@ -18,3 +18,6 @@ class User(BaseModel):
 
     class Meta:
         db_table = 'users'
+
+# Generate tables if they don't exist
+User.create_table(True)
