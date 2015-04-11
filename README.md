@@ -86,12 +86,12 @@ sudo apt-get install python-pip
 sudo pip install celery
 ```
 
-We want to create a new unprivileged user to run the script just to be safe (according to the [FAQ]()http://celery.readthedocs.org/en/latest/faq.html#is-it-safe-to-run-celery-worker-as-root). We can simply run `sudo adduser celery`.
+We want to create a new unprivileged user to run the script just to be safe (according to the [FAQ](http://celery.readthedocs.org/en/latest/faq.html#is-it-safe-to-run-celery-worker-as-root)). We can simply run `sudo adduser celery`.
 
 Next we need to setup the `init.d` scripts to run Celery as a daemon service.
 ```
 cd /etc/init.d/
-wget https://github.com/celery/celery/blob/3.1/extra/generic-init.d/celeryd
+wget https://raw.githubusercontent.com/celery/celery/3.1/extra/generic-init.d/celeryd
 cd /etc/default/
 vim celeryd
 ```
@@ -136,7 +136,7 @@ CELERY_CREATE_DIRS=1
 Now do the same thing to run Celery Beat as a daemon service.
 ```
 cd /etc/init.d/
-wget https://github.com/celery/celery/blob/3.1/extra/generic-init.d/celerybeat
+wget https://raw.githubusercontent.com/celery/celery/3.1/extra/generic-init.d/celerybeat
 cd /etc/default/
 vim celerybeat
 ```
@@ -174,7 +174,7 @@ If you get this error `IOError: [Errno 13] Permission denied: '/var/log/celery/c
 
 ```
 sudo apt-get install python-dev libxml2-dev libxslt1-dev lib32z1-dev
-sudo pip install uwsgi
+sudo apt-get install uwsgi-plugin-python uwsgi
 sudo pip install Flask
 sudo pip install lxml
 ```
@@ -188,14 +188,20 @@ sudo mkswap /swapfile
 sudo swapon /swapfile
 ```
 
+Now get the latest source code for this project:
+```
+mkdir /var/www/malcovercss.link
+cd /var/www/malcovercss.link
+sudo apt-get install git
+git clone https://github.com/Trinovantes/MyAnimeList-Cover-CSS-Generator.git .
+touch malcovercss.sock
+sudo chown www-data malcovercss.sock
+```
+
 <!---
 ```
 sudo apt-get install nginx
-mkdir /var/www/malcovercss.link
-cd /var/www/malcovercss.link
 
-sudo apt-get install git
-git clone https://github.com/Trinovantes/MyAnimeList-Cover-CSS-Generator.git .
 ```
 
 `sudo vim /etc/nginx/sites-available/default`
