@@ -3,4 +3,4 @@ private.py
 dump.rdb
 celerybeat-schedule
 *.pid
-
+*.sock
