@@ -2,8 +2,17 @@ from datetime import timedelta
 
 from private import CELERY_BROKER_URL, CELERY_RESULT_BACKEND
 
-BROKER_URL = CELERY_BROKER_URL
+#-------------------------------------------------------------------------------
+
+BROKER_URL            = CELERY_BROKER_URL
 CELERY_RESULT_BACKEND = CELERY_RESULT_BACKEND
+
+#-------------------------------------------------------------------------------
+
+CELERY_ACCEPT_CONTENT  = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+#-------------------------------------------------------------------------------
 
 CELERY_TIMEZONE = 'UTC'
 
