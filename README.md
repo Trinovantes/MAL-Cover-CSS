@@ -56,13 +56,7 @@ Finally run `sudo service redis_6379 restart`.
 sudo apt-get install rabbitmq-server
 ```
 
-3. Setup Celery
----
-
-```
-sudo apt-get install python-pip
-sudo pip install celery
-```
+This should automatically start your RabbitMQ server after it finishes.
 
 4. Setup Database
 
@@ -76,7 +70,100 @@ sudo pip install peewee
 sudo pip install PyMySQL
 ```
 
-5. Setup Flask and other Dependencies
+5. (Part 1) Setup Celery
+---
+
+Step 5 Parts 1 and 2 are mutually exclusive so they can be done in either order.
+
+```
+sudo apt-get install python-pip
+sudo pip install celery
+```
+
+We want to create a new unprivileged user to run the script just to be safe (according to the [FAQ]()http://celery.readthedocs.org/en/latest/faq.html#is-it-safe-to-run-celery-worker-as-root). We can simply run `sudo adduser celery`.
+
+Next we need to setup the `init.d` scripts to run Celery as a daemon service.
+```
+cd /etc/init.d/
+wget https://github.com/celery/celery/blob/3.1/extra/generic-init.d/celeryd
+cd /etc/default/
+vim celeryd
+```
+
+Add the following to your new `/etc/default/celeryd` file (update the details accordingly):
+```
+# Names of nodes to start
+#   most will only start one node:
+CELERYD_NODES="worker1"
+
+# Absolute or relative path to the 'celery' command:
+CELERY_BIN="/usr/local/bin/celery"
+#CELERY_BIN="/virtualenvs/def/bin/celery"
+
+# App instance to use
+# comment out this line if you don't use an app
+CELERY_APP="proj"
+# or fully qualified:
+#CELERY_APP="proj.tasks:app"
+
+# Where to chdir at start.
+CELERYD_CHDIR="/opt/Myproject/"
+
+# Extra command-line arguments to the worker
+CELERYD_OPTS="--time-limit=300 --concurrency=8"
+
+# %N will be replaced with the first part of the nodename.
+CELERYD_LOG_FILE="/var/log/celery/%N.log"
+CELERYD_PID_FILE="/var/run/celery/%N.pid"
+
+# Workers should run as an unprivileged user.
+#   You need to create this user manually (or you can choose
+#   a user/group combination that already exists, e.g. nobody).
+CELERYD_USER="celery"
+CELERYD_GROUP="celery"
+
+# If enabled pid and log directories will be created if missing,
+# and owned by the userid/group configured.
+CELERY_CREATE_DIRS=1
+```
+
+Now do the same thing to run Celery Beat as a daemon service.
+```
+cd /etc/init.d/
+wget https://github.com/celery/celery/blob/3.1/extra/generic-init.d/celerybeat
+cd /etc/default/
+vim celerybeat
+```
+
+Add the following to `/etc/default/celerybeat` file:
+```
+# Absolute or relative path to the 'celery' command:
+CELERY_BIN="/usr/local/bin/celery"
+#CELERY_BIN="/virtualenvs/def/bin/celery"
+
+# App instance to use
+# comment out this line if you don't use an app
+CELERY_APP="proj"
+# or fully qualified:
+#CELERY_APP="proj.tasks:app"
+
+# Where to chdir at start.
+CELERYBEAT_CHDIR="/opt/Myproject/"
+
+# Extra arguments to celerybeat
+CELERYBEAT_OPTS="--schedule=/var/run/celery/celerybeat-schedule"
+```
+
+Finally we can start the two scripts:
+```
+sudo service celeryd start
+sudo service celerybeat start
+```
+
+If you get this error `IOError: [Errno 13] Permission denied: '/var/log/celery/celery.log'`, then run `sudo chown celery:celery /var/log/celery`.
+
+
+5. (Part 2) Setup Flask Server
 ---
 
 ```
