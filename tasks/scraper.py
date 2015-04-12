@@ -3,6 +3,7 @@ import logging
 import requests
 
 from models.media import Media
+from models.user import User
 import private
 
 class ScraperException(Exception):
@@ -33,8 +34,18 @@ def user_exists_on_mal(username):
 def scrape_user(username, medium_type):
     url = get_url(username, medium_type)
     media_list = request_url(url)
-    for item in media_list:
+
+    if len(media_list) == 0 or media_list[0].tag != 'myinfo':
+        logging.warning('Deleting user "' + username + '"')
+        q = User.delete().where(User.username == username)
+        q.execute()
+        return
+
+    for i in xrange(1, len(media_list) - 1): # Skip first element since it's myinfo
+        item = media_list[i]
+
         if item.tag != medium_type:
+            logging.error('Scrapper error on "' + username + '" itemtag:' + item.tag + ' medium:' + medium_type)
             continue
 
         mal_id = None
