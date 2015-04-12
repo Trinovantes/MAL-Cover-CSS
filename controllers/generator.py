@@ -1,4 +1,4 @@
-from flask import make_response
+from flask import make_response, abort
 
 from models.media import Media
 
@@ -59,6 +59,6 @@ class Generator():
 
             for item in media_items:
                 css_rule = ".animetitle" # Luckily even mangas' <a> tags use the .animetitle css class
-                css_rule += "[href^=/" + item.medium_type + "/" + str(item.mal_id) + "]" + pseudo_selector
+                css_rule += "[href^='/" + item.medium_type + "/" + str(item.mal_id) + "']" + pseudo_selector
                 css_rule += "{background-image:url(" + item.img_url + ");}"
                 self.response_body += css_rule
