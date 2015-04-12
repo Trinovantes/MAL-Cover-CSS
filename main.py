@@ -1,11 +1,13 @@
 from requests.exceptions import RequestException
 from flask import Flask, render_template, request, abort, json, make_response
+from flask_limiter import Limiter
 
 from models.user import User, UserDoesNotExistException, UserAlreadyExistsException
 from models.media import Media
 import private
 
 flaskapp = Flask(__name__)
+limiter = Limiter(flaskapp)
 
 #-------------------------------------------------------------------------------
 # CSS Generator
@@ -26,6 +28,8 @@ def css(medium_type='all', element_to_style='self'):
 from tasks.scraper import user_exists_on_mal
 
 @flaskapp.route('/add', methods=['POST'])
+@limiter.limit("9/hour")
+@limiter.limit("3/minute")
 def add_user():
     result = None
     try:
