@@ -6,6 +6,9 @@ from celeryapp import celeryapp
 from tasks.scraper import scrape_user, ScraperException
 from models.user import User
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
 @celeryapp.task
 def scraper_task():
     cutoff = datetime.now() - timedelta(days=1)
@@ -15,10 +18,13 @@ def scraper_task():
         for user in users_to_scrape:
             scrape_user(user.username, 'anime')
             scrape_user(user.username, 'manga')
+            
             user.last_scraped = datetime.now()
             user.save()
+
             count += 1
             logging.info('Finished scraping user "' + user.username + '"')
+
         return count
 
     except ScraperException:
