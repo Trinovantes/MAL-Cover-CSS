@@ -1,7 +1,7 @@
 Deploy Instructions
 ===
 
-This `README` is written for my future reference when I need to redeploy this application into production from scratch. This assumes that I'll be working with a single DigitalOcean droplet (these instructions should also work with other VPS as well).
+This `README` is written for my future reference when I need to redeploy this application into production from scratch. This assumes that I'll be working with a single DigitalOcean droplet running Ubuntu 14.04.1 LTS (these instructions should also work with other VPS as well).
 
 0. Setup SSH
 ---
