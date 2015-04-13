@@ -15,7 +15,7 @@ Host myalias
 
 Then running `ssh myalias` should automatically log you into the droplet (without a password prompt).
 
-1. Setup Essentials
+1. Setup essentials
 ---
 
 Assuming that you are working on a clean VPS image, then the server should have nothing on it. Run the following to install the essential tools:
@@ -26,7 +26,7 @@ apt-get install git python-pip
 apt-get install python-dev libxml2-dev libxslt1-dev lib32z1-dev
 ```
 
-2. Setup Redis as Celery's Backend
+2. Setup Redis as Celery's backend
 ---
 
 This is for installing the Python library for accessing Redis.
@@ -52,7 +52,7 @@ requirepass yoursuperlongpassword
 
 Finally run `service redis_6379 restart`.
 
-3. Setup RabbitMQ as Celery's Message Broker
+3. Setup RabbitMQ as Celery's message broker
 ---
 
 ```
@@ -61,7 +61,7 @@ apt-get install rabbitmq-server
 
 This should automatically start your RabbitMQ server after it finishes.
 
-4. Setup Database
+4. Setup database
 ---
 
 Note when installing `mysql-server`, it will prompt you for a password for `root` user. Feel free to make it as long as you want (e.g. I used 40+ characters).
@@ -78,7 +78,7 @@ pip install peewee
 pip install PyMySQL
 ```
 
-5. Get Source Code for this Application
+5. Get source code
 ---
 
 ```
@@ -107,10 +107,8 @@ IS_DEBUG              = False
 REQUESTS_TIMEOUT      = 1
 ```
 
-6. (Part 1) Setup Celery
+6. Setup Celery
 ---
-
-Step 6 Parts 1 and 2 are mutually exclusive so they can be done in either order.
 
 ```
 pip install celery
@@ -169,12 +167,10 @@ service celerybeat start
 
 If you get this error `IOError: [Errno 13] Permission denied: '/var/log/celery/celery.log'`, then run `chown celery:celery /var/log/celery`.
 
-
-6. (Part 2) Setup Flask to Run with uWSGI and Nginx
+7. Setup Flask and serve it with uWSGI
 ---
 
 ```
-apt-get install nginx
 pip install uwsgi
 pip install Flask flask_limiter Flask-Cache
 pip install lxml
@@ -189,35 +185,69 @@ mkswap /swapfile
 swapon /swapfile
 ```
 
+Now comes the hard part of setting up uWSGI. No matter how detailed this guide is, I can almost guarantee you that you'll end up spending hours Googling some obsure configuration error.
 
+First create `/etc/init/uwsgi.conf` file and add the following:
+```
+description "uWSGI Emperor"
 
+start on runlevel [2345]
+stop on runlevel [06]
 
+respawn
 
-<!---
+exec uwsgi --emperor /etc/uwsgi/vassals --vassals-include /etc/uwsgi/vassals-default.ini --uid www-data --gid www-data
+```
+
+Next create these two directories: `/etc/uwsgi/` and `/etc/uwsgi/vassals`.
+
+Now create the `/etc/uwsgi/vassals-default.ini` file and add the following:
+```
+[uwsgi]
+socket = /tmp/%(vassal_name).sock
+```
+
+Then create the `/etc/uwsgi/vassals/malcovercss.ini` file and add the following:
+```
+[uwsgi]
+vassal_name = %n
+chdir = /var/www/malcovercss.link
+module = main
+callable = flaskapp
+```
+
+You can start your uWSGI server by running `initctl start uwsgi`. If this command was successful, you should see a `/tmp/malcovercss.sock` file in your `/tmp` directory.
+
+8. Route traffic to your uWSGI server with Nginx
+---
+
 ```
 apt-get install nginx
 
 ```
 
-`vim /etc/nginx/sites-available/default`
-
+Open `/etc/nginx/sites-available/default` and replace everything with the following:
 ```
 server {
-    listen 80
-    location / { 
-        try_files $uri @yourapplication; 
-    }
-    location @yourapplication {
-        include uwsgi_params;
-        uwsgi_pass unix:/tmp/uwsgi.sock;
-    }
+    listen          80;
+    server_name     malcovercss.link;
+    return          301 http://www.malcovercss.link$request_uri;
 }
 
+server {
+    listen          80;
+    server_name     www.malcovercss.link;
+
+    location / {
+        try_files   $uri @malcovercss;
+        autoindex   off;
+    }
+    
+    location @malcovercss {
+        include     uwsgi_params;
+        uwsgi_pass  unix:/tmp/malcovercss.sock;
+    }
+}
 ```
 
-`uwsgi -s /tmp/uwsgi.sock -w main:flaskapp --chown-socket=www-data:www-data --master`
-
-
-```
-```
--->
+Finally run `service nginx restart`. If everything worked as expected, then navigating to `[your IP address]` should serve up this application's homepage.
