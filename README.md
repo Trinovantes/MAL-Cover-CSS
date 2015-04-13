@@ -85,6 +85,26 @@ pip install PyMySQL
 mkdir /var/www/malcovercss.link
 cd /var/www/malcovercss.link
 git clone https://github.com/Trinovantes/MyAnimeList-Cover-CSS-Generator.git .
+vim private.py
+```
+
+In your new `private.py` file (ignored in `.gitignore`), define the following variables (update accordingly):
+```
+MYSQL_DATABASE        = 'malcovercss'
+MYSQL_USERNAME        = 'root'
+MYSQL_PASSWORD        = 'your mysql password'
+
+REDIS_PASSWORD        = 'your redis password'
+REDIS_HOST            = 'localhost'
+REDIS_PORT            = '6379'
+REDIS_DB              = '0'
+
+CELERY_BROKER_URL     = 'amqp://'
+CELERY_RESULT_BACKEND = 'redis://:' + REDIS_PASSWORD + '@' + REDIS_HOST + ':' + REDIS_PORT + '/' + REDIS_DB
+
+USER_AGENT            = 'api-indiv-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+IS_DEBUG              = False
+REQUESTS_TIMEOUT      = 1
 ```
 
 6. (Part 1) Setup Celery
@@ -106,40 +126,20 @@ cd /etc/default/
 vim celeryd
 ```
 
-Add the following to your new `/etc/default/celeryd` file (update the details accordingly):
+Add the following to your new `/etc/default/celeryd` file (update the details accordingly). Read [this](http://celery.readthedocs.org/en/latest/tutorials/daemonizing.html#example-configuration) for more info.
 ```
-# Names of nodes to start
-#   most will only start one node:
 CELERYD_NODES="worker1"
-
-# Absolute or relative path to the 'celery' command:
 CELERY_BIN="/usr/local/bin/celery"
-#CELERY_BIN="/virtualenvs/def/bin/celery"
 
-# App instance to use
-# comment out this line if you don't use an app
 CELERY_APP="celeryapp"
-# or fully qualified:
-#CELERY_APP="proj.tasks:app"
-
-# Where to chdir at start.
 CELERYD_CHDIR="/var/www/malcovercss.link/"
 
-# Extra command-line arguments to the worker
 CELERYD_OPTS="--time-limit=300 --concurrency=8"
-
-# %N will be replaced with the first part of the nodename.
 CELERYD_LOG_FILE="/var/log/celery/%N.log"
 CELERYD_PID_FILE="/var/run/celery/%N.pid"
 
-# Workers should run as an unprivileged user.
-#   You need to create this user manually (or you can choose
-#   a user/group combination that already exists, e.g. nobody).
 CELERYD_USER="celery"
 CELERYD_GROUP="celery"
-
-# If enabled pid and log directories will be created if missing,
-# and owned by the userid/group configured.
 CELERY_CREATE_DIRS=1
 ```
 
@@ -151,22 +151,13 @@ cd /etc/default/
 vim celerybeat
 ```
 
-Add the following to `/etc/default/celerybeat` file:
+Add the following to `/etc/default/celerybeat` file. Read [this](http://celery.readthedocs.org/en/latest/tutorials/daemonizing.html#generic-initd-celerybeat-example) for more info.
 ```
-# Absolute or relative path to the 'celery' command:
 CELERY_BIN="/usr/local/bin/celery"
-#CELERY_BIN="/virtualenvs/def/bin/celery"
 
-# App instance to use
-# comment out this line if you don't use an app
 CELERY_APP="celeryapp"
-# or fully qualified:
-#CELERY_APP="proj.tasks:app"
-
-# Where to chdir at start.
 CELERYBEAT_CHDIR="/var/www/malcovercss.link/"
 
-# Extra arguments to celerybeat
 CELERYBEAT_OPTS="--schedule=/var/run/celery/celerybeat-schedule"
 ```
 
