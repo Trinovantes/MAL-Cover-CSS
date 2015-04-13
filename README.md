@@ -223,7 +223,6 @@ You can start your uWSGI server by running `initctl start uwsgi`. If this comman
 
 ```
 apt-get install nginx
-
 ```
 
 Open `/etc/nginx/sites-available/default` and replace everything with the following:
@@ -250,4 +249,4 @@ server {
 }
 ```
 
-Finally run `service nginx restart`. If everything worked as expected, then navigating to `[your IP address]` should serve up this application's homepage.
+Finally run `service nginx restart`. If everything worked as expected, then navigating to your server's IP address should serve up this application's homepage. Don't forget to set `malcovercss.link` domain's A Record to your server's IP address and CNAME `www` to `malcovercss.link`
