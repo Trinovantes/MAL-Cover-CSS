@@ -196,7 +196,7 @@ stop on runlevel [06]
 
 respawn
 
-exec uwsgi --emperor /etc/uwsgi/vassals --vassals-include /etc/uwsgi/vassals-default.ini --uid www-data --gid www-data
+exec uwsgi --emperor /etc/uwsgi/vassals --vassals-include /etc/uwsgi/vassals-default.ini --uid www-data --gid www-data -p 4
 ```
 
 Next create these two directories: `/etc/uwsgi/` and `/etc/uwsgi/vassals`.
