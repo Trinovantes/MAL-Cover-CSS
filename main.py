@@ -1,5 +1,4 @@
-from requests.exceptions import RequestException
-from flask import Flask, render_template, request, abort, json, make_response
+from flask import Flask
 from flask_limiter import Limiter
 from flask.ext.cache import Cache
 
@@ -16,17 +15,22 @@ cache = Cache(flaskapp, config={'CACHE_TYPE': 'redis'})
 #-------------------------------------------------------------------------------
 
 from controllers.generator import Generator
+from flask import Response
+
+from models.media import Media
 
 @flaskapp.route('/covercss')
 @flaskapp.route('/covercss/<medium_type>')
 @flaskapp.route('/covercss/<medium_type>/<element_to_style>')
-@cache.cached(timeout=3600)
 def css(medium_type='all', element_to_style='self'):
-    return Generator(medium_type, element_to_style).generate()
+    return Response(Generator(medium_type, element_to_style).generate(), mimetype='text/css')
 
 #-------------------------------------------------------------------------------
 # Main Website
 #-------------------------------------------------------------------------------
+
+from requests.exceptions import RequestException
+from flask import request, json, render_template
 
 from tasks.scraper import user_exists_on_mal
 
@@ -70,8 +74,13 @@ def add_user():
     return response
 
 @flaskapp.route('/')
+@cache.cached(timeout=3600)
 def index():
     return render_template('index.html')
+
+#-------------------------------------------------------------------------------
+# Start App
+#-------------------------------------------------------------------------------
 
 if __name__ == '__main__':
     flaskapp.run(debug=private.IS_DEBUG)
