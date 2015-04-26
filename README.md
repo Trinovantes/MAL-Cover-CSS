@@ -236,6 +236,10 @@ server {
 server {
     listen          80;
     server_name     www.malcovercss.link;
+    
+    location /static/ {
+        root /var/www/malcovercss.link/;
+    }
 
     location / {
         try_files   $uri @malcovercss;
