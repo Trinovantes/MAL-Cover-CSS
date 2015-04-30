@@ -29,7 +29,7 @@ class Generator():
                 css_rule += "#more" + str(item.mal_id)
             else:
                 css_rule += ".animetitle" # Luckily even mangas' <a> tags use the .animetitle css class
-                css_rule += "[href^='/" + item.medium_type + "/" + str(item.mal_id) + "']" + pseudo_selector
+                css_rule += "[href^='/" + item.medium_type + "/" + str(item.mal_id) + "/']" + pseudo_selector
 
             css_rule += "{background-image:url(" + item.img_url + ");}"
             yield css_rule
