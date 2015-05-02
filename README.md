@@ -239,6 +239,14 @@ server {
     listen          80;
     server_name     www.malcovercss.link;
     
+    location /covercss {
+        root /var/www/malcovercss.link/;
+        rewrite ^(/covercss/.*)/(.*)$ /static$1-$2.css break;
+        rewrite ^(/covercss/.*)$      /static$1-self.css break;
+        rewrite ^(/covercss)$         /static$1/all-self.css break;
+        return 404;
+    }
+    
     location /static/ {
         root /var/www/malcovercss.link/;
     }
