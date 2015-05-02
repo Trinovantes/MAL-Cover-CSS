@@ -1,13 +1,26 @@
 from lxml import etree
+from datetime import datetime, timedelta
 import logging
 import requests
 
+from celeryapp import celeryapp
 from models.media import Media
 from models.user import User
 import private
 
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+
+#-------------------------------------------------------------------------------
+# Scraper Exception
+#-------------------------------------------------------------------------------
+
 class ScraperException(Exception):
     pass        
+
+#-------------------------------------------------------------------------------
+# Helpers
+#-------------------------------------------------------------------------------
 
 def request_url(url):
     headers = {
@@ -31,7 +44,7 @@ def user_exists_on_mal(username):
     animelist = request_url(url)
     return len(animelist) > 0 and animelist[0].tag == 'myinfo'
 
-def scrape_user(username, medium_type):
+def __scrape_user(username, medium_type):
     url = get_url(username, medium_type)
     media_list = request_url(url)
 
@@ -69,3 +82,29 @@ def scrape_user(username, medium_type):
             media_item = Media(img_url=img_url, medium_type=medium_type, mal_id=mal_id)
 
         media_item.save()
+
+#-------------------------------------------------------------------------------
+# Celery Task
+#-------------------------------------------------------------------------------
+
+@celeryapp.task
+def scrape_users():
+    cutoff = datetime.now() - timedelta(days=1)
+    users_to_scrape = User.select().where((User.last_scraped >> None) | (User.last_scraped < cutoff))
+    try:
+        count = 0
+        for user in users_to_scrape:
+            __scrape_user(user.username, 'anime')
+            __scrape_user(user.username, 'manga')
+            
+            user.last_scraped = datetime.now()
+            user.save()
+
+            count += 1
+            logging.info('Finished scraping user "' + user.username + '"')
+
+        return count
+
+    except ScraperException:
+        logging.error('Failed to scrape user "' + user.username + '"')
+        return -1

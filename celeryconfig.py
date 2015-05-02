@@ -9,18 +9,23 @@ CELERY_RESULT_BACKEND = CELERY_RESULT_BACKEND
 
 #-------------------------------------------------------------------------------
 
-CELERY_ACCEPT_CONTENT  = ['json']
-CELERY_TASK_SERIALIZER = 'json'
+CELERY_ACCEPT_CONTENT    = ['json']
+CELERY_TASK_SERIALIZER   = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 #-------------------------------------------------------------------------------
 
 CELERY_TIMEZONE = 'UTC'
 
-CELERY_INCLUDE = ['tasks.scraper_task']
+CELERY_INCLUDE = ['tasks.scraper', 'tasks.generator']
 
 CELERYBEAT_SCHEDULE = {
     'scrape_users': {
-        'task': 'tasks.scraper_task.scraper_task',
-        'schedule': timedelta(minutes=1)
+        'task': 'tasks.scraper.scrape_users',
+        'schedule': timedelta(minutes=10)
     },
+    'generate_css': {
+        'task': 'task.generator.generate_css',
+        'schedule': timedelta(hours=1)
+    }
 }

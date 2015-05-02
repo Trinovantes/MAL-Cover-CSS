@@ -1,9 +1,12 @@
 from flask import Flask
 from flask_limiter import Limiter
 from flask.ext.cache import Cache
+from requests.exceptions import RequestException
+from flask import request, json, render_template
 
 from models.user import User, UserDoesNotExistException, UserAlreadyExistsException
 from models.media import Media
+from tasks.scraper import user_exists_on_mal
 import private
 
 flaskapp = Flask(__name__)
@@ -11,28 +14,8 @@ limiter = Limiter(flaskapp)
 cache = Cache(flaskapp, config={'CACHE_TYPE': 'redis'})
 
 #-------------------------------------------------------------------------------
-# CSS Generator
-#-------------------------------------------------------------------------------
-
-from controllers.generator import Generator
-from flask import Response
-
-from models.media import Media
-
-@flaskapp.route('/covercss')
-@flaskapp.route('/covercss/<medium_type>')
-@flaskapp.route('/covercss/<medium_type>/<element_to_style>')
-def css(medium_type='all', element_to_style='self'):
-    return Response(Generator(medium_type, element_to_style).generate(), mimetype='text/css')
-
-#-------------------------------------------------------------------------------
 # Main Website
 #-------------------------------------------------------------------------------
-
-from requests.exceptions import RequestException
-from flask import request, json, render_template
-
-from tasks.scraper import user_exists_on_mal
 
 @flaskapp.route('/add', methods=['POST'])
 @limiter.limit("9/hour")
