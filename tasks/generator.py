@@ -77,7 +77,7 @@ def generate_css():
     for pair in css_to_generate:
         medium = pair[0]
         element = pair[1]
-        fileName = 'static/css/covercss-' + medium + '-' + element + '.css'
+        fileName = 'static/covercss/' + medium + '-' + element + '.css'
 
         fs = open(fileName, 'w')
         fs.write(Generator(medium, element).generate())
