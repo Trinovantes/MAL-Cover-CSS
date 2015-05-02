@@ -116,6 +116,8 @@ pip install celery
 
 We want to create a new unprivileged user to run the script just to be safe (according to the [FAQ](http://celery.readthedocs.org/en/latest/faq.html#is-it-safe-to-run-celery-worker-as-root)). We can run `adduser celery`.
 
+Since the `celery` user will be generating CSS files into `static/covercss/` folder, it needs to first own it. Run `chown celery:celery static/covercss/`
+
 Next we need to setup the `init.d` scripts to run Celery as a daemon service.
 ```
 cd /etc/init.d/
