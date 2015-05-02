@@ -22,10 +22,10 @@ CELERY_INCLUDE = ['tasks.scraper', 'tasks.generator']
 CELERYBEAT_SCHEDULE = {
     'scrape_users': {
         'task': 'tasks.scraper.scrape_users',
-        'schedule': timedelta(minutes=10)
+        'schedule': timedelta(minutes=30)
     },
     'generate_css': {
         'task': 'tasks.generator.generate_css',
-        'schedule': timedelta(minutes=1)
+        'schedule': timedelta(hours=1)
     }
 }
