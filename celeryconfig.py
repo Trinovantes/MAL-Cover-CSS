@@ -25,7 +25,7 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(minutes=10)
     },
     'generate_css': {
-        'task': 'task.generator.generate_css',
-        'schedule': timedelta(hours=1)
+        'task': 'tasks.generator.generate_css',
+        'schedule': timedelta(minutes=1)
     }
 }
