@@ -1,0 +1,32 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const Config = require('../config');
+let kue = require('kue-scheduler');
+let scrapeUsers = require('../tasks/scraper');
+let generateCSS = require('../tasks/generator');
+
+
+let queue = kue.createQueue({ redis: Config.REDIS_CONFIG });
+queue.on('error', function(error) {
+    console.error('[Kue Error]', error);
+});
+
+// Scraper
+let scrapJob = queue.create(Config.SCRAPE_USER_JOB_KEY).removeOnComplete(true).attempts(3).save();
+queue.every('1 days', scrapJob);
+queue.process(Config.SCRAPE_USER_JOB_KEY, function(job, done){
+    scrapeUsers(function() {
+        done();
+    });
+});
+
+// Generator
+let generateJob = queue.create(Config.GENERATE_CSS_JOB_KEY).removeOnComplete(true).attempts(3).save();
+queue.every('1 days', generateJob);
+queue.process(Config.GENERATE_CSS_JOB_KEY, function(job, done){
+    generateCSS(function() {
+        done();
+    });
+});
