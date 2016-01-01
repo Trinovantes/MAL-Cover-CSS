@@ -96,13 +96,13 @@ function getCSSRule(item, selector) {
             break;
 
         case 'self':
-            cssRule += '.animelist';
+            cssRule += '.animetitle';
             cssRule += '[href^="/' + item.type + '/' + item.malId + '/"]';
             break;
 
         case 'before':
         case 'after':
-            cssRule += '.animelist';
+            cssRule += '.animetitle';
             cssRule += '[href^="/' + item.type + '/' + item.malId + '/"]:' + selector;
             break;
     }
