@@ -1,6 +1,6 @@
 'use strict'
 
-const Config = require('../config');
+const Config = require('config');
 let express = require('express');
 let router = express.Router();
 let MongoClient = require('mongodb').MongoClient;

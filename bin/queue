@@ -2,10 +2,10 @@
 
 'use strict';
 
-const Config = require('../config');
+const Config = require('config');
 let kue = require('kue-scheduler');
-let scrapeUsers = require('../tasks/scraper');
-let generateCSS = require('../tasks/generator');
+let scrapeUsers = require('tasks/scraper');
+let generateCSS = require('tasks/generator');
 
 
 let queue = kue.createQueue({ redis: Config.REDIS_CONFIG });

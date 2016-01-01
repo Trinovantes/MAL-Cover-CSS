@@ -1,6 +1,6 @@
 'use strict'
 
-const Config = require('../config');
+const Config = require('config');
 let MongoClient = require('mongodb').MongoClient;
 let vasync = require('vasync');
 let _ = require('underscore');

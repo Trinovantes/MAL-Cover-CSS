@@ -1,6 +1,6 @@
 'use strict'
 
-const Config = require('../config');
+const Config = require('config');
 let MongoClient = require('mongodb').MongoClient;
 let request = require("request");
 let XML = require('pixl-xml');
