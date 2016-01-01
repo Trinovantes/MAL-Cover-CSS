@@ -1,0 +1,31 @@
+{
+    "apps" : [
+        {
+            "name"   : "Website",
+            "script" : "bin/www",
+            "env_production" : {
+                "NODE_PATH": "/var/www/malcovercss.link/current",
+                "NODE_ENV": "production"
+            }
+        },
+        {
+            "name"   : "Tasks",
+            "script" : "bin/queue",
+            "env_production" : {
+                "NODE_PATH": "/var/www/malcovercss.link/current",
+                "NODE_ENV": "production"
+            }
+        },
+    ],
+
+    "deploy" : {
+        "production" : {
+            "user"        : "root",
+            "host"        : "do-personalsites",
+            "ref"         : "origin/master",
+            "repo"        : "https://github.com/Trinovantes/MyAnimeList-Cover-CSS-Generator.git",
+            "path"        : "/var/www/malcovercss.link",
+            "post-deploy" : "npm install ; pm2 startOrRestart ecosystem.json --env production"
+        }
+    }
+}
