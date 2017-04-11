@@ -69,7 +69,7 @@ function findUsersToScrape(db, barrier, onUserToScrape) {
 
 function scapeUser(db, barrier, username, type) {
     const barrierKey = 'scrape:' + username + ':' + type;
-    const url = 'http://myanimelist.net/malappinfo.php?status=all'
+    const url = 'https://myanimelist.net/malappinfo.php?status=all'
                     + '&u=' + username
                     + '&type=' + type;
     const options = {
