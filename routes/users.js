@@ -1,26 +1,26 @@
 'use strict'
 
 const Config = require('config');
-let express = require('express');
-let router = express.Router();
-let MongoClient = require('mongodb').MongoClient;
-
+const MongoClient = require('mongodb').MongoClient;
+const express = require('express');
+const router = express.Router();
+const logger = require("winston-color");
 
 router.post('/', function(request, response, next) {
     let username = request.body.username;
-    
+
     if (typeof username === 'undefined') {
         response.status(400).json({
-            error: 'No username provided'
+            error: "No username provided"
         });
         return;
     }
 
     MongoClient.connect(Config.getMongoDbURL(), function(dbError, db) {
         if (dbError) {
-            console.error(dbError);
+            logger.error(dbError);
             response.status(500).json({
-                error: 'Database error'
+                error: "Database error"
             });
             return;
         }
@@ -34,27 +34,30 @@ router.post('/', function(request, response, next) {
         db.collection(Config.USERS_COLLECTION).insert(user, function(error, result) {
             db.close();
 
-            let statusCode = 200;
-            let message = 'User ' + username + ' is now scheduled for scraping';
-
             if (error) {
+                let statusCode = 500;
+                let message = 'Failed to save user to database';
+
                 switch (error.code) {
                     case 11000:
                     case 11001:
                         statusCode = 400;
-                        message = 'User ' + username + ' is already in database';
+                        message = "User '" + username + "' is already in database";
                         break;
-                    default:
-                        console.error(error); // Unhandled exception
-                        statusCode = 500;
-                        message = 'Failed to save user to database';
                 }
-            }
 
-            console.info(message);
-            response.status(statusCode).json({
-                success: message
-            });
+                logger.warn(message);
+                response.status(statusCode).json({
+                    error: message
+                });
+            } else {
+                let message = "User '" + username + "' is now scheduled for scraping";
+
+                logger.info(message);
+                response.status(200).json({
+                    success: message
+                });
+            }
         });
     });
 });

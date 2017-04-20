@@ -1,73 +1,87 @@
 'use strict'
 
 const Config = require('config');
-let MongoClient = require('mongodb').MongoClient;
-let request = require("request");
-let XML = require('pixl-xml');
-let vasync = require('vasync');
+const MongoClient = require('mongodb').MongoClient;
 
+const request = require("request");
+const XML = require('pixl-xml');
+const vasync = require('vasync');
+const logger = require("winston-color");
+
+//-----------------------------------------------------------------------------
+// Scraper
+//-----------------------------------------------------------------------------
 
 module.exports = function scrapeUsers(onComplete) {
-    console.info('Starting to scrape users');
-
+    logger.info('Starting to scrape users');
     MongoClient.connect(Config.getMongoDbURL(), function(dbError, db) {
         if (dbError) {
-            console.error('Failed to connect to database', dbError);
+            logger.error('Failed to connect to database', dbError);
             onComplete();
             return;
         }
+
+        let cursor = db.collection(Config.USERS_COLLECTION).find({
+            $or: [
+                { lastScraped: null },                                          // Never scraped
+                { lastScraped: { $lte : Date.now() - Config.SCRAPING_DELAY } }, // Over x days ago
+                { _id: 'trinovantes' }, // For debugging
+            ]
+        });
 
         let barrier = vasync.barrier();
         barrier.on('drain', function() {
-            console.info('Finished scraping users');
-            db.close();
-            onComplete();
+            if (cursor.isClosed()) {
+                logger.info('Finished scraping users');
+                db.close();
+                onComplete();
+            }
         });
 
-        findUsersToScrape(db, barrier, scapeUser);
-    });
-}
+        cursor.count(function(error, count) {
+            if (error) {
+                logger.error(error);
+                return;
+            }
 
-function findUsersToScrape(db, barrier, onUserToScrape) {
-    let cursor = db.collection(Config.USERS_COLLECTION).find({
-        $or: [
-            { lastScraped: null },                                          // Never scraped
-            { lastScraped: { $lte : Date.now() - Config.SCRAPING_DELAY } }, // Over x days ago
-            { _id: 'trinovantes' }, // For debugging
-        ]
-    });
+            logger.info('Found %d users to scrape', count);
 
-    cursor.count(function(error, count) {
-        console.info('Found', count, 'users to scrape');
+            if (count === 0) {
+                barrier.start('dummy');
+                barrier.done('dummy');
+                return;
+            }
 
-        if (count === 0) {
-            barrier.start('dummy');
-            barrier.done('dummy');
-            return;
-        }
+            cursor.forEach(function(user) {
+                const username = user._id;
+                const barrierKey = 'update user:' + username;
+                barrier.start(barrierKey);
 
-        cursor.forEach(function(user) {
-            const username = user._id;
-            const barrierKey = 'update user:' + username;
-            barrier.start(barrierKey);
+                scrapeUser(db, barrier, username, 'anime');
+                scrapeUser(db, barrier, username, 'manga');
 
-            onUserToScrape(db, barrier, username, 'anime');
-            onUserToScrape(db, barrier, username, 'manga');
-
-            db.collection(Config.USERS_COLLECTION).update({
-                _id: user._id 
-            }, {
-                $set: {
-                    lastScraped: Date.now()
-                }
-            }, function(error, results) {
-                barrier.done(barrierKey);
+                db.collection(Config.USERS_COLLECTION).update({
+                    _id: user._id
+                }, {
+                    $set: {
+                        lastScraped: Date.now()
+                    }
+                }, function(error, results) {
+                    if (error) {
+                        logger.error(error);
+                    }
+                    barrier.done(barrierKey);
+                });
             });
         });
     });
 }
 
-function scapeUser(db, barrier, username, type) {
+//-----------------------------------------------------------------------------
+// Helpers
+//-----------------------------------------------------------------------------
+
+function scrapeUser(db, barrier, username, type) {
     const barrierKey = 'scrape:' + username + ':' + type;
     const url = 'https://myanimelist.net/malappinfo.php?status=all'
                     + '&u=' + username
@@ -79,11 +93,11 @@ function scapeUser(db, barrier, username, type) {
         },
     };
 
-    console.info('Fetching', url);
+    logger.info('Fetching %s', url);
     barrier.start(barrierKey);
     request(options, function(error, response, body) {
         if (error) {
-            console.error('Failed to scrape user', username, error);
+            logger.error('Failed to scrape user %s : %s', username, error);
             barrier.done(barrierKey);
             return;
         }
@@ -91,8 +105,8 @@ function scapeUser(db, barrier, username, type) {
         let doc = XML.parse(body);
 
         if (typeof doc.myinfo === 'undefined') {
-            console.error('User', username, 'does not exist on MyAnimeList.net');
-            console.warn('Deleting', username, 'from database');
+            logger.warn('User %s does not exist on MyAnimeList.net', username);
+            logger.warn('Deleting %s from database', username);
 
             db.collection(Config.USERS_COLLECTION).deleteOne({
                 _id: username
@@ -119,7 +133,7 @@ function scapeUser(db, barrier, username, type) {
             }, {
                 upsert: true
             }, function(error, result) {
-                console.info('Saved', type, malId, imgUrl);
+                logger.info('Saved', type, malId, imgUrl);
                 barrier.done(itemBarrierKey);
             });
         }
