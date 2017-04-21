@@ -13,9 +13,9 @@ app.set('view engine', 'hbs');
 app.set('view options', { layout: 'layout.hbs' });
 
 let less = require('less-middleware');
-app.use(less(path.join(__dirname, 'public')));
-
-app.use(express.static(path.join(__dirname, 'public')));
+let publicDir = path.join(__dirname, 'public');
+app.use(less(publicDir));
+app.use(express.static(publicDir, { dotfiles: 'allow' }));
 
 // -----------------------------------------------------------------------------
 // Other Middleware
