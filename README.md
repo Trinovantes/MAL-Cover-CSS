@@ -65,32 +65,25 @@ Configure nginx in `/etc/nginx/sites-available/default`:
 #-------------------------------------------------------------------------------
 
 server {
-    listen      80;
+    listen 80;
     server_name malcovercss.link;
-    return      301 https://www.malcovercss.link$request_uri;
+    
+    include /etc/nginx/snippets/letsencrypt.conf;
+
+    location / {
+        return 301 https://www.malcovercss.link$request_uri;
+    }
 }
 
 server {
-    listen      443 ssl;
-    listen [::]:443 ssl;
+    listen      443;
     server_name www.malcovercss.link;
     autoindex   off;
-
-    ssl on;
+    
     ssl_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/malcovercss.link/privkey.pem;
-    ssl_session_timeout 1d;
-
-    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
-    ssl_prefer_server_ciphers on;
-
-    # OCSP stapling
-    ssl_stapling on;
-    ssl_stapling_verify on;
-
-    # HSTS (ngx_http_headers_module is required) (15768000 seconds = 6 months)
-    add_header Strict-Transport-Security max-age=15768000;
+    ssl_trusted_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
+    include /etc/nginx/snippets/ssl.conf;
 
     location / {
         proxy_pass http://127.0.0.1:3000/;
@@ -100,6 +93,39 @@ server {
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
+}
+```
+
+Common nginx File (`/etc/nginx/snippets/ssl.conf`):
+```
+ssl on;
+
+# certs sent to the client in SERVER HELLO are concatenated in ssl_certificate
+ssl_session_timeout 1d;
+ssl_session_cache shared:SSL:50m;
+ssl_session_tickets off;
+
+# modern configuration. tweak to your needs.
+ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+ssl_ciphers AES256+EECDH:AES256+EDH:!aNULL;
+ssl_prefer_server_ciphers on;
+
+# HSTS (ngx_http_headers_module is required) (15768000 seconds = 6 months)
+add_header Strict-Transport-Security max-age=15768000;
+add_header X-Frame-Options DENY;
+add_header X-Content-Type-Options nosniff;
+
+# OCSP Stapling ---
+# fetch OCSP records from URL in ssl_certificate and cache them
+ssl_stapling on;
+ssl_stapling_verify on;
+```
+
+Common nginx File (`/etc/nginx/snippets/letsencrypt.conf`):
+```
+location ^~ /.well-known/acme-challenge/ {
+    default_type "text/plain";
+    root /var/www/letsencrypt;
 }
 ```
 
