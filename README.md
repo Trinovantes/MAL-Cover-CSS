@@ -1,12 +1,18 @@
 # On Remote Server
 
 ```
-# Install MongoDB
-sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
-echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
-sudo apt-get update
-sudo apt-get install mongodb-org
-sudo service mongod start
+sudo mkdir -p /var/www/malcovercss.link
+sudo mkdir -p /var/www/letsencrypt
+sudo chown ubuntu:ubuntu /var/www/malcovercss.link
+```
+
+```
+# Install CouchDB
+sudo apt install apt-transport-https gnupg ca-certificates
+echo "deb https://apache.bintray.com/couchdb-deb bionic main" | sudo tee -a /etc/apt/sources.list.d/couchdb.list
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
+sudo apt update
+sudo apt install couchdb
 
 # Install Redis
 cd /tmp
@@ -16,49 +22,15 @@ cd redis-stable
 make
 sudo make install
 cd utils
-./install-server.sh
+sudo ./install-server.sh
 sudo service redis_6379 start
 
 # Install pm2
 sudo npm install pm2 -g
+pm2 install pm2-logrotate
 ```
 
-Create `config.js` (gitignored) in `/var/www/malcovercss.link/current` directory:
-```
-'use strict'
-
-module.exports = {
-    getMongoDbURL : function () {
-        const USERNAME = 'malcovercss';
-        const PASSWORD = ''; // Enter password
-        const DB_NAME = 'malcovercss';
-        const HOST = 'localhost';
-        const PORT = ''; // Enter port
-
-        return 'mongodb://'
-            + ((typeof USERNAME === 'undefined' || typeof PASSWORD === 'undefined') ? '' : (USERNAME + ':' + PASSWORD + '@'))
-            + HOST + ':' + PORT + '/' + DB_NAME;
-    },
-
-    REDIS_CONFIG : {
-        port : 6379,
-        db   : 0,
-        auth : '', // Enter password
-        host : 'localhost'
-    },
-
-    USER_AGENT : '', // myanimelist.net API key
-
-    USERS_COLLECTION     : 'users',
-    MAL_ITEMS_COLLECTION : 'malitems',
-    SCRAPING_DELAY       : 7 * 24 * 60 * 60 * 1000,
-
-    SCRAPE_USER_JOB_KEY  : 'scrape',
-    GENERATE_CSS_JOB_KEY : 'generate',
-};
-```
-
-Configure nginx in `/etc/nginx/sites-available/default`:
+Create the nginx configuration file (`/etc/nginx/sites-available/malcovercss.link`):
 ```
 #-------------------------------------------------------------------------------
 # malcovercss.link
@@ -66,9 +38,23 @@ Configure nginx in `/etc/nginx/sites-available/default`:
 
 server {
     listen 80;
-    server_name malcovercss.link;
-    
+    server_name malcovercss.link www.malcovercss.link;
+
     include /etc/nginx/snippets/letsencrypt.conf;
+
+    location / {
+        return 301 https://www.malcovercss.link$request_uri;
+    }
+}
+
+server {
+    listen 443;
+    server_name malcovercss.link;
+
+#    ssl_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
+#    ssl_certificate_key /etc/letsencrypt/live/malcovercss.link/privkey.pem;
+#    ssl_trusted_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
+#    include /etc/nginx/snippets/ssl.conf;
 
     location / {
         return 301 https://www.malcovercss.link$request_uri;
@@ -79,11 +65,11 @@ server {
     listen      443;
     server_name www.malcovercss.link;
     autoindex   off;
-    
-    ssl_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/malcovercss.link/privkey.pem;
-    ssl_trusted_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
-    include /etc/nginx/snippets/ssl.conf;
+
+#    ssl_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
+#    ssl_certificate_key /etc/letsencrypt/live/malcovercss.link/privkey.pem;
+#    ssl_trusted_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
+#    include /etc/nginx/snippets/ssl.conf;
 
     location / {
         proxy_pass http://127.0.0.1:3000/;
@@ -96,7 +82,15 @@ server {
 }
 ```
 
-Common nginx File (`/etc/nginx/snippets/ssl.conf`):
+The SSL options are initially commented out because those files do not exist yet. This will allow us to start nginx for the initial authentication without getting `FileDoesNotExist` errors.
+
+
+Next symlink the config file to `sites-enabled`:
+```
+sudo ln -s /etc/nginx/sites-available/malcovercss.link /etc/nginx/sites-enabled/
+```
+
+Create the common nginx file (`/etc/nginx/snippets/ssl.conf`):
 ```
 ssl on;
 
@@ -121,7 +115,7 @@ ssl_stapling on;
 ssl_stapling_verify on;
 ```
 
-Common nginx File (`/etc/nginx/snippets/letsencrypt.conf`):
+Create the common nginx file (`/etc/nginx/snippets/letsencrypt.conf`):
 ```
 location ^~ /.well-known/acme-challenge/ {
     default_type "text/plain";
@@ -129,9 +123,97 @@ location ^~ /.well-known/acme-challenge/ {
 }
 ```
 
-# Local Machine
+Now we can restart nginx (`sudo systemctl restart nginx`) to host the non-SSL version for Let's Encrypt authentication challenge.
+```
+sudo certbot certonly --webroot -d malcovercss.link -d www.malcovercss.link --webroot-path /var/www/letsencrypt
+```
+
+After this, go back to `/etc/nginx/sites-available/malcovercss.link` and uncomment the SSL options.
+
+# Deploy
+
+On local machine:
 ```
 git clone git@github.com:Trinovantes/MyAnimeList-Cover-CSS-Generator.git
 cd MyAnimeList-Cover-CSS-Generator
+pm2 deploy production setup
+```
+
+Then on the remote machine, create and update `config.js` (gitignored) in `/var/www/malcovercss.link/current/src` directory:
+```
+'use strict'
+
+module.exports = {
+
+    COUCHDB_CONFIG : {
+        url: (function () {
+            const USERNAME = '';
+            const PASSWORD = '';
+            const PORT = 5984;
+            return `http://${USERNAME}:${PASSWORD}@localhost:${PORT}`
+        })(),
+    },
+
+    REDIS_CONFIG : {
+        port: 6379,
+        password: '',
+        host: 'localhost'
+    },
+
+    DB_NAME: 'malcovercss',
+    MAL_USERS_DESIGN : 'mal_users',
+    MAL_ITEMS_DESIGN : 'mal_items',
+
+    SCRAPING_DELAY : 24 * 60 * 60 * 1000,
+
+    JOB_REPEAT_DELAY : (function() {
+        if (process.env.NODE_ENV === 'dev') {
+            return '*/10 * * * * *';
+        } else {
+            return '0 0/2 * * *';
+        }
+    }()),
+
+};
+```
+
+Finally on local machine:
+```
 pm2 deploy production
+```
+
+# Startup Scripts
+
+## PM2
+```
+pm2 save
+pm2 startup
+```
+
+## CouchDB
+```
+sudo apt install runit runit-systemd
+sudo mkdir /etc/sv/couchdb
+sudo mkdir /etc/sv/couchdb/log
+```
+
+Create `/etc/sv/couchdb/log/run`
+```
+#!/bin/sh
+exec svlogd -tt /var/log/couchdb
+```
+
+Create `/etc/sv/couchdb/run`
+```
+#!/bin/sh
+export HOME=/opt/couchdb
+exec 2>&1
+exec chpst -u couchdb /opt/couchdb/bin/couchdb
+```
+
+```
+sudo chmod u+x /etc/sv/couchdb/log/run
+sudo chmod u+x /etc/sv/couchdb/run
+sudo ln -s /etc/sv/couchdb/ /etc/service/couchdb
+sudo sv status couchdb
 ```

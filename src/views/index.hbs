@@ -1,0 +1,55 @@
+{{#*inline 'codeBlock'}}
+<pre class="line-numbers"
+     data-highlights="[{{ data.highlights }}]"
+     data-comments="[{{ data.comments }}]">{{ data.code }}</pre>
+{{/inline}}
+
+<header id="header">
+    <div class="grid">
+        <img src="https://place-hold.it/400x600" alt="" id="sample-image" class="center">
+        <div id="desc" class="center">
+            <h1>{{ title }}</h1>
+            <h2>This tool automatically scans your profile and generates stylesheets that can be included in your profile pages to display your saved anime's or manga's cover images</h2>
+        </div>
+    </div>
+</header>
+
+<article id="instructions">
+
+    <section class="grid">
+        <h3>1. Sign Up</h3>
+        <p>You first need to add your MyAnimeList.net username to this tool's database. This tool periodically scans the profiles of everyone who has signed up and generates stylesheets that you can then include in your profile page to display your saved anime's or manga's cover images. Note that it may take a few hours before your profile is scanned.</p>
+        <form id="signup">
+            <div class="row">
+                <input type="text" placeholder="MyAnimeList.net Username" id="username">
+                <button>Sign Up</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="grid">
+        <h3>2. Get the Generated Stylesheets</h3>
+        <p>All you have to do now is pick the stylesheet that your profile page's theme needs. If you are using a theme someone else created, please consult the original designer. If you are creating your own theme, check out the example in the next section for more guidance.</p>
+        {{~> codeBlock data=generatedStylesheets }}
+    </section>
+
+    <section class="grid">
+        <h3>Example Usage</h3>
+        <p>You can view this example on my <a href="https://myanimelist.net/animelist/Trinovantes">profile page</a>. The full theme is available <a href="https://www.malcovercss.link/stylesheets/example-covers.css">here</a>. The key parts of the theme are highlighted on line 1 where we import a generated stylesheet and line 18 where we style the pseudoelement <code>a.animetitle:before</code> to display its corresponding anime's cover image in the element's background.</p>
+        {{~> codeBlock data=exampleUsage }}
+    </section>
+
+    <section class="grid">
+        <h3>How It Works</h3>
+        <p>Each anime and manga entry in your profile contains HTML elements with unique identifiers. For example, the anime <a href="https://myanimelist.net/anime/820/Ginga_Eiyuu_Densetsu">Ginga Eiyuu Densetsu</a> has an id of 820. Likewise, its entry in my profile page contains elements that identify it on lines 12 and 41. As a result, we can style these elements to display the associated cover image in the elements' background.</p>
+        {{~> codeBlock data=exampleEntry }}
+    </section>
+
+</article>
+
+<footer id="copyright">
+    <div class="grid">
+        <p>&copy; malcovercss.link This is a third party tool and is not affliated with MyAnimeList.net</p>
+        <p><a href="https://github.com/Trinovantes/MALCoverCSS">Submit an issue on GitHub</a></p>
+    </div>
+</footer>

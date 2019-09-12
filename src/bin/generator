@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const logger = require('src/logger');
+const setupQueue = require('src/tasks/setupQueue');
+const generateCSS = require('src/tasks/generator');
+
+logger.bar();
+logger.info(__filename);
+logger.bar();
+
+setupQueue('generatorQueue', function(job, done) {
+    generateCSS(function() {
+        done();
+    });
+});
+
+// Don't kill this process
+setInterval(() => {}, 1 << 30);

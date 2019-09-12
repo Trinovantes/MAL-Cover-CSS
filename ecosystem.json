@@ -1,16 +1,45 @@
 {
     "apps" : [
         {
-            "name"   : "Website",
-            "script" : "bin/www",
+            "name": "Website",
+            "script": "src/bin/www",
+
+            "ignore_watch": ["src/public/generated"],
+
+            "env": {
+                "NODE_PATH": "./",
+                "NODE_ENV": "dev"
+            },
             "env_production" : {
                 "NODE_PATH": "/var/www/malcovercss.link/current",
                 "NODE_ENV": "production"
             }
         },
         {
-            "name"   : "Tasks",
-            "script" : "bin/queue",
+            "name": "Scraper",
+            "script": "src/bin/scraper",
+
+            "ignore_watch": ["src/public/generated"],
+
+            "env": {
+                "NODE_PATH": "./",
+                "NODE_ENV": "dev"
+            },
+            "env_production" : {
+                "NODE_PATH": "/var/www/malcovercss.link/current",
+                "NODE_ENV": "production"
+            }
+        },
+        {
+            "name": "Generator",
+            "script": "src/bin/generator",
+
+            "ignore_watch": ["src/public/generated"],
+
+            "env": {
+                "NODE_PATH": "./",
+                "NODE_ENV": "dev"
+            },
             "env_production" : {
                 "NODE_PATH": "/var/www/malcovercss.link/current",
                 "NODE_ENV": "production"
@@ -20,8 +49,8 @@
 
     "deploy" : {
         "production" : {
-            "user"        : "root",
-            "host"        : "do-personalsites",
+            "user"        : "ubuntu",
+            "host"        : "ec2",
             "ref"         : "origin/master",
             "repo"        : "https://github.com/Trinovantes/MyAnimeList-Cover-CSS-Generator.git",
             "path"        : "/var/www/malcovercss.link",

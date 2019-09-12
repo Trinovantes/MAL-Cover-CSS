@@ -86,7 +86,7 @@ table#mal_control_strip #mal_cs_powered{
     font-weight: bold;
     line-height: 40px;
     text-decoration: none;
-    
+
     background: #333;
     display: block;
     transition: 0.5s;
@@ -123,8 +123,8 @@ table#mal_control_strip #mal_cs_powered{
 /* Hide table labels */
 #list_surround table.header_cw + table,
 #list_surround table.header_completed + table,
-#list_surround table.header_onhold + table, 
-#list_surround table.header_dropped + table, 
+#list_surround table.header_onhold + table,
+#list_surround table.header_dropped + table,
 #list_surround table.header_ptw + table {
     display: none;
 }
@@ -191,7 +191,7 @@ table#mal_control_strip #mal_cs_powered{
     position: absolute;
     bottom: -35px; left: 0;
     z-index: 0;
-    width:180px; height: 250px;
+    width: 180px; height: 250px;
 }
 
 /* Main link - background */
@@ -227,7 +227,7 @@ table#mal_control_strip #mal_cs_powered{
     font-weight: bold;
     line-height: 30px;
     text-align: right;
-    
+
     display: block;
     padding: 5px 10px;
     position: absolute;
@@ -260,7 +260,7 @@ table#mal_control_strip #mal_cs_powered{
 
     display: block;
     overflow: hidden;
-    position:absolute;
+    position: absolute;
     bottom: 10px; left:10px;
     width: 180px; height: 20px;
 }
@@ -274,7 +274,7 @@ table#mal_control_strip #mal_cs_powered{
     text-indent: 0;
     text-decoration: none;
     text-transform: uppercase;
-    
+
     background: #666;
     border-radius: 2px;
     display: block;
@@ -290,8 +290,8 @@ table#mal_control_strip #mal_cs_powered{
 
 #list_surround table.header_cw,
 #list_surround table.header_completed,
-#list_surround table.header_onhold, 
-#list_surround table.header_dropped, 
+#list_surround table.header_onhold,
+#list_surround table.header_dropped,
 #list_surround table.header_ptw {
     background: none;
     border: none;
