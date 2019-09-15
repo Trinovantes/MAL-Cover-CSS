@@ -2,8 +2,10 @@
 
 const Nano = require('nano');
 const assert = require('assert');
-const logger = require('src/logger');
-const Config = require('src/config');
+const sleep = require('src/utils/sleep');
+const logger = require('src/utils/logger');
+const Config = require('src/utils/config');
+const Constants = require('src/utils/constants');
 
 //-----------------------------------------------------------------------------
 // DB Setup
@@ -13,7 +15,7 @@ function getOrCreateDatabase(couchDB, dbName) {
     const nano = Nano(couchDB);
 
     let createMALUsersDesign = function(db) {
-        const USERS_DOCTYPE = Config.MAL_USERS_DESIGN;
+        const USERS_DOCTYPE = Constants.MAL_USERS_DESIGN;
 
         // Need to hardcode this because the map function is saved into the database
         assert(USERS_DOCTYPE === 'mal_users');
@@ -36,7 +38,7 @@ function getOrCreateDatabase(couchDB, dbName) {
     }
 
     let createMALItemsDesign = function(db) {
-        const ITEMS_DOCTYPE = Config.MAL_ITEMS_DESIGN;
+        const ITEMS_DOCTYPE = Constants.MAL_ITEMS_DESIGN;
 
         // Need to hardcode this because the map function is saved into the database
         assert(ITEMS_DOCTYPE === 'mal_items');
@@ -117,18 +119,12 @@ function getOrCreateDatabase(couchDB, dbName) {
 // Helpers
 //-----------------------------------------------------------------------------
 
-function sleep(ms){
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms);
-    });
-}
-
 function getMALUserId(username) {
-    return `${Config.MAL_USERS_DESIGN}:${username}`;
+    return `${Constants.MAL_USERS_DESIGN}:${username}`;
 }
 
 function getMALItemID(mediaType, malId) {
-    return `${Config.MAL_ITEMS_DESIGN}:${mediaType}:${malId}`;
+    return `${Constants.MAL_ITEMS_DESIGN}:${mediaType}:${malId}`;
 }
 
 function readableDate(unixTime) {
@@ -142,7 +138,7 @@ function readableDate(unixTime) {
 module.exports = {
 
     connect: function() {
-        const dbPromise = getOrCreateDatabase(Config.COUCHDB_CONFIG, Config.DB_NAME);
+        const dbPromise = getOrCreateDatabase(Config.COUCHDB_CONFIG, Constants.DB_NAME);
 
         return {
 
@@ -153,7 +149,7 @@ module.exports = {
             registerUser: function(username, onComplete) {
                 dbPromise.then((db) => {
                     let newUser = {
-                        docType: Config.MAL_USERS_DESIGN,
+                        docType: Constants.MAL_USERS_DESIGN,
                         _id: getMALUserId(username),
 
                         username: username,
@@ -189,11 +185,11 @@ module.exports = {
 
             getUsersToScrape: function(onReceivedResults) {
                 dbPromise.then((db) => {
-                    let staleUserTime = Date.now() - Config.SCRAPING_DELAY;
+                    let staleUserTime = Date.now() - Constants.DELAY_BETWEEN_SCRAPPING;
 
                     logger.info('Gettings users lastScraped before %s (%d)', readableDate(staleUserTime), staleUserTime);
 
-                    db.view(Config.MAL_USERS_DESIGN, "byLastScraped", {
+                    db.view(Constants.MAL_USERS_DESIGN, "byLastScraped", {
                         "endkey": staleUserTime,
                     }).then((results) => {
                         onReceivedResults(results.rows.map(row => row.value));
@@ -249,7 +245,7 @@ module.exports = {
                 }
 
                 dbPromise.then((db) => {
-                    db.view(Config.MAL_ITEMS_DESIGN, 'byMediaType', params).then((results) => {
+                    db.view(Constants.MAL_ITEMS_DESIGN, 'byMediaType', params).then((results) => {
                         onReceivedResults(results.rows.map(row => row.value));
                     });
                 });
@@ -267,7 +263,7 @@ module.exports = {
                     }).catch((error) => {
                         if (error.error === 'not_found') {
                             let newItem = {
-                                docType: Config.MAL_ITEMS_DESIGN,
+                                docType: Constants.MAL_ITEMS_DESIGN,
                                 _id: id,
 
                                 mediaType: mediaType,

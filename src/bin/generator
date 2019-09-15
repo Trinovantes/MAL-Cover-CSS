@@ -2,19 +2,24 @@
 
 'use strict';
 
-const logger = require('src/logger');
-const setupQueue = require('src/tasks/setupQueue');
+const _ = require('underscore');
+const Constants = require('src/utils/constants');
+const logger = require('src/utils/logger');
+const sleep = require('src/utils/sleep');
 const generateCSS = require('src/tasks/generator');
 
 logger.bar();
 logger.info(__filename);
 logger.bar();
 
-setupQueue('generatorQueue', function(job, done) {
-    generateCSS(function() {
-        done();
-    });
+generateCSS(async () => {
+    if (process.env.NODE_ENV === 'production') {
+        let hours = _.random(1, Constants.MAX_JOB_DELAY);
+        let ms = hours * 60 * 60 * 1000;
+
+        // In production, we want to add random delay before restarting again
+        logger.info('Sleeping for %d hours', hours);
+        await sleep(ms);
+    }
 });
 
-// Don't kill this process
-setInterval(() => {}, 1 << 30);

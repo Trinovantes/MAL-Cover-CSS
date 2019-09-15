@@ -1,29 +1,17 @@
 # On Remote Server
 
 ```
+# Create directories
 sudo mkdir -p /var/www/malcovercss.link
 sudo mkdir -p /var/www/letsencrypt
 sudo chown ubuntu:ubuntu /var/www/malcovercss.link
-```
 
-```
 # Install CouchDB
 sudo apt install apt-transport-https gnupg ca-certificates
 echo "deb https://apache.bintray.com/couchdb-deb bionic main" | sudo tee -a /etc/apt/sources.list.d/couchdb.list
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
 sudo apt update
 sudo apt install couchdb
-
-# Install Redis
-cd /tmp
-curl -O http://download.redis.io/redis-stable.tar.gz
-tar xzvf redis-stable.tar.gz
-cd redis-stable
-make
-sudo make install
-cd utils
-sudo ./install-server.sh
-sudo service redis_6379 start
 
 # Install pm2
 sudo npm install pm2 -g
@@ -84,7 +72,6 @@ server {
 
 The SSL options are initially commented out because those files do not exist yet. This will allow us to start nginx for the initial authentication without getting `FileDoesNotExist` errors.
 
-
 Next symlink the config file to `sites-enabled`:
 ```
 sudo ln -s /etc/nginx/sites-available/malcovercss.link /etc/nginx/sites-enabled/
@@ -139,40 +126,18 @@ cd MyAnimeList-Cover-CSS-Generator
 pm2 deploy production setup
 ```
 
-Then on the remote machine, create and update `config.js` (gitignored) in `/var/www/malcovercss.link/current/src` directory:
+Then on remote machine, create and update `config.js` (gitignored) in `/var/www/malcovercss.link/current/src/utils` directory:
 ```
-'use strict'
+'use strict';
 
 module.exports = {
 
-    COUCHDB_CONFIG : {
-        url: (function () {
-            const USERNAME = '';
-            const PASSWORD = '';
-            const PORT = 5984;
-            return `http://${USERNAME}:${encodeURIComponent(PASSWORD)}@localhost:${PORT}`;
-        })(),
-    },
-
-    REDIS_CONFIG : {
-        port: 6379,
-        password: '',
-        host: 'localhost'
-    },
-
-    DB_NAME: 'malcovercss',
-    MAL_USERS_DESIGN : 'mal_users',
-    MAL_ITEMS_DESIGN : 'mal_items',
-
-    SCRAPING_DELAY : 24 * 60 * 60 * 1000,
-
-    JOB_REPEAT_DELAY : (function() {
-        if (process.env.NODE_ENV === 'dev') {
-            return '*/10 * * * * *';
-        } else {
-            return '0 0/2 * * *';
-        }
-    }()),
+    COUCHDB_CONFIG : (function() {
+        const USERNAME = '';
+        const PASSWORD = '';
+        const PORT = 5984;
+        return `http://${USERNAME}:${encodeURIComponent(PASSWORD)}@localhost:${PORT}`;
+    })(),
 
 };
 ```
@@ -191,6 +156,8 @@ pm2 startup
 ```
 
 ## CouchDB
+
+First run:
 ```
 sudo apt install runit runit-systemd
 sudo mkdir /etc/sv/couchdb
@@ -211,6 +178,7 @@ exec 2>&1
 exec chpst -u couchdb /opt/couchdb/bin/couchdb
 ```
 
+Finally run:
 ```
 sudo chmod u+x /etc/sv/couchdb/log/run
 sudo chmod u+x /etc/sv/couchdb/run

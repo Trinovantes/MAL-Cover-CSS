@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 const request = require("request");
 const vasync = require('vasync');
 
-const logger = require('src/logger');
-const Config = require('src/config');
+const logger = require('src/utils/logger');
+const sleep = require('src/utils/sleep');
 const MALCoverCSSDB = require('src/models/MALCoverCSSDB');
 
 //-----------------------------------------------------------------------------
@@ -61,12 +61,6 @@ module.exports = function scrapeUsers(onComplete) {
 // Helpers
 //-----------------------------------------------------------------------------
 
-function sleep(ms){
-    return new Promise((resolve, reject) => {
-        setTimeout(resolve, ms);
-    });
-}
-
 function scrapeUser(dbmgr, barrier, user, mediaType, onDeleteUser) {
     const username = user.username;
     const barrierKey = `scrape:${username}:${mediaType}`;
@@ -94,7 +88,7 @@ function scrapeUser(dbmgr, barrier, user, mediaType, onDeleteUser) {
             case 200: {
                 let info = JSON.parse(body);
                 let items = info[mediaType];
-                logger.info('[%s] Scraped %d items', mediaType, items.length)
+                logger.info('[%s] Scraped %d items from "%s"', mediaType, items.length, username)
 
                 for (let item of items) {
                     const malId = item['mal_id'];

@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "private": true,
   "dependencies": {
-    "bull": "^3.10.0",
     "cookie-parser": "~1.4.4",
     "express": "~4.16.1",
     "express-handlebars": "^3.1.0",

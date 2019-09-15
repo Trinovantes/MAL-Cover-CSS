@@ -18,6 +18,7 @@
         {
             "name": "Scraper",
             "script": "src/bin/scraper",
+            "restart_delay": 10000,
 
             "ignore_watch": ["src/public/generated"],
 
@@ -33,6 +34,7 @@
         {
             "name": "Generator",
             "script": "src/bin/generator",
+            "restart_delay": 10000,
 
             "ignore_watch": ["src/public/generated"],
 

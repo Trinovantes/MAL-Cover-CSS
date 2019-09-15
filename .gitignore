@@ -1,5 +1,5 @@
 *.sublime-*
-src/config.js
+src/utils/config.js
 
 # Logs
 logs

@@ -4,7 +4,7 @@
 
 const http = require('http');
 const app = require('src/app');
-const logger = require('src/logger');
+const logger = require('src/utils/logger');
 
 logger.bar();
 logger.info(__filename);

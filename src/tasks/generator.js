@@ -1,12 +1,11 @@
-'use strict'
+'use strict';
 
 const _ = require('underscore');
 const vasync = require('vasync');
 const fs = require('fs');
 const path = require('path');
 
-const logger = require('src/logger');
-const Config = require('src/config');
+const logger = require('src/utils/logger');
 const MALCoverCSSDB = require('src/models/MALCoverCSSDB');
 
 //-----------------------------------------------------------------------------
@@ -35,16 +34,6 @@ module.exports = function generateCSS(onComplete) {
 //-----------------------------------------------------------------------------
 // Helpers
 //-----------------------------------------------------------------------------
-
-function crossProduct() {
-    return _.reduce(arguments, function(a, b) {
-        return _.flatten(_.map(a, function(x) {
-            return _.map(b, function(y) {
-                return x.concat([y]);
-            });
-        }), true);
-    }, [ [] ]);
-}
 
 function generate(dbmgr, jobBarrier, mediaType, selector) {
     if (mediaType === 'all' && selector === 'more') {
@@ -96,4 +85,14 @@ function getCSSRule(selector, mediaType, malId, imgUrl) {
 
     cssRule += '{background-image:url(' + imgUrl + ');}\n';
     return cssRule;
+}
+
+function crossProduct() {
+    return _.reduce(arguments, function(a, b) {
+        return _.flatten(_.map(a, function(x) {
+            return _.map(b, function(y) {
+                return x.concat([y]);
+            });
+        }), true);
+    }, [ [] ]);
 }
