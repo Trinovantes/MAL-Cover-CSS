@@ -6,7 +6,7 @@
 
 <header id="header">
     <div class="grid">
-        <img src="https://place-hold.it/400x600" alt="" id="sample-image" class="center">
+        <img src="/images/sample.png" id="sample-image" class="center">
         <div id="desc" class="center">
             <h1>{{ title }}</h1>
             <h2>This tool automatically scans your profile and generates stylesheets that can be included in your profile pages to display your saved anime's or manga's cover images</h2>
@@ -29,7 +29,7 @@
 
     <section class="grid">
         <h3>2. Get the Generated Stylesheets</h3>
-        <p>All you have to do now is pick the stylesheet that your profile page's theme needs. If you are using a theme someone else created, please consult the original designer. If you are creating your own theme, check out the example in the next section for more guidance.</p>
+        <p>All you have to do now is pick the stylesheet that your profile page's theme needs. If you are using a theme that someone else has created, please consult the original designer. If you are creating your own theme, check out the example in the next section for more guidance.</p>
         {{~> codeBlock data=generatedStylesheets }}
     </section>
 
@@ -41,7 +41,7 @@
 
     <section class="grid">
         <h3>How It Works</h3>
-        <p>Each anime and manga entry in your profile contains HTML elements with unique identifiers. For example, the anime <a href="https://myanimelist.net/anime/820/Ginga_Eiyuu_Densetsu">Ginga Eiyuu Densetsu</a> has an id of 820. Likewise, its entry in my profile page contains elements that identify it on lines 12 and 41. As a result, we can style these elements to display the associated cover image in the elements' background.</p>
+        <p>Each anime and manga entry in your profile contains HTML elements with unique identifiers. For example, the anime <a href="https://myanimelist.net/anime/820/Ginga_Eiyuu_Densetsu">Ginga Eiyuu Densetsu</a> has an id of 820 on MyAnimeList.net. Likewise, its entry in my profile page contains elements that identify it on lines 12 and 41. As a result, we can style these elements to display the anime's cover image in the elements' background.</p>
         {{~> codeBlock data=exampleEntry }}
     </section>
 
