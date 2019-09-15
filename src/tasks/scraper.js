@@ -5,6 +5,7 @@ const vasync = require('vasync');
 
 const logger = require('src/utils/logger');
 const sleep = require('src/utils/sleep');
+const Constants = require('src/utils/constants');
 const MALCoverCSSDB = require('src/models/MALCoverCSSDB');
 
 //-----------------------------------------------------------------------------
@@ -61,10 +62,10 @@ module.exports = function scrapeUsers(onComplete) {
 // Helpers
 //-----------------------------------------------------------------------------
 
-function scrapeUser(dbmgr, barrier, user, mediaType, onDeleteUser) {
+function scrapeUser(dbmgr, barrier, user, mediaType, onDeleteUser, pageNum = 1) {
     const username = user.username;
-    const barrierKey = `scrape:${username}:${mediaType}`;
-    const url = `https://api.jikan.moe/v3/user/${username}/${mediaType}list/all`;
+    const barrierKey = `scrape:${username}:${mediaType}:${pageNum}`;
+    const url = `https://api.jikan.moe/v3/user/${username}/${mediaType}list/all/${pageNum}`;
 
     const options = {
         url: url,
@@ -99,6 +100,11 @@ function scrapeUser(dbmgr, barrier, user, mediaType, onDeleteUser) {
                     dbmgr.updateMALItem(mediaType, malId, imgUrl, () => {
                         barrier.done(itemBarrierKey);
                     });
+                }
+
+                if (items.length == Constants.MAX_ITEMS_PER_PAGE) {
+                    // If this page contains max num items, there might be another page
+                    scrapeUser(dbmgr, barrier, user, mediaType, onDeleteUser, pageNum + 1);
                 }
 
                 barrier.done(barrierKey);
