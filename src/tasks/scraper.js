@@ -35,11 +35,11 @@ module.exports = function scrapeUsers(onComplete) {
             let userIsValid = true;
             const username = user.username;
 
-            const barrierKey = 'update user:' + username;
+            let barrierKey = `update ${username}`;
             jobBarrier.start(barrierKey);
 
-            let scrapBarrier = vasync.barrier();
-            scrapBarrier.on('drain', function() {
+            let userBarrier = vasync.barrier();
+            userBarrier.on('drain', function() {
                 if (userIsValid) {
                     dbmgr.updateUserLastScraped(user, () => {
                         jobBarrier.done(barrierKey);
@@ -49,11 +49,16 @@ module.exports = function scrapeUsers(onComplete) {
                 }
             });
 
-            scrapeUser(dbmgr, scrapBarrier, user, 'anime', () => { userIsValid = false; });
+            let userBarrierKey = 'this ensures all the barriers inside scrapeUser has started before userBarrier can drain';
+            userBarrier.start(userBarrierKey);
+
+            scrapeUser(dbmgr, userBarrier, user, 'anime', () => { userIsValid = false; });
             await sleep(1000);
 
-            scrapeUser(dbmgr, scrapBarrier, user, 'manga', () => { userIsValid = false; });
+            scrapeUser(dbmgr, userBarrier, user, 'manga', () => { userIsValid = false; });
             await sleep(1000);
+
+            userBarrier.done(userBarrierKey);
         }
     });
 }
