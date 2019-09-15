@@ -52,6 +52,7 @@ function getOrCreateDatabase(couchDB, dbName) {
                         }
 
                         emit(doc.mediaType, {
+                            mediaType: doc.mediaType,
                             malId: doc.malId,
                             imgUrl: doc.imgUrl,
                         });
