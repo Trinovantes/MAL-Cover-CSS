@@ -150,7 +150,7 @@ module.exports = {
             const USERNAME = '';
             const PASSWORD = '';
             const PORT = 5984;
-            return `http://${USERNAME}:${PASSWORD}@localhost:${PORT}`
+            return `http://${USERNAME}:${encodeURIComponent(PASSWORD)}@localhost:${PORT}`;
         })(),
     },
 
