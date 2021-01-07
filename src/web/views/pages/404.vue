@@ -1,0 +1,29 @@
+<template>
+    <article>
+        <div class="row">
+            <div class="col">
+                <h1>{{ pageTitle }}</h1>
+            </div>
+        </div>
+    </article>
+</template>
+
+<script lang="ts">
+import Component, { mixins } from 'vue-class-component'
+import { Page } from '@views/mixins/Page'
+
+import Constants from '@common/Constants'
+import { AppContext } from '@web/entryServer'
+
+@Component
+export default class Error404Page extends mixins(Page) {
+    getPageTitle = 'Page Not Found'
+
+    created(): void {
+        if (Constants.IS_SSR) {
+            const ssrContext = this.$ssrContext as AppContext
+            ssrContext.status = 404
+        }
+    }
+}
+</script>

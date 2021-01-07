@@ -1,0 +1,59 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Generator",
+            "type": "node",
+            "request": "launch",
+
+            "envFile": "${workspaceFolder}/.env",
+            "runtimeArgs": [
+                "-r",
+                "source-map-support/register",
+            ],
+
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+
+            "program": "${workspaceFolder}/dist-cron/generator.js",
+            "sourceMaps": true,
+        },
+        {
+            "name": "Run Scraper",
+            "type": "node",
+            "request": "launch",
+
+            "envFile": "${workspaceFolder}/.env",
+            "runtimeArgs": [
+                "-r",
+                "source-map-support/register",
+            ],
+
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+
+            "program": "${workspaceFolder}/dist-cron/scraper.js",
+            "sourceMaps": true,
+        },
+        {
+            "name": "Launch Server",
+            "type": "node",
+            "request": "launch",
+
+            "envFile": "${workspaceFolder}/.env",
+            "runtimeArgs": [
+                "-r",
+                "source-map-support/register",
+            ],
+
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+
+            "program": "${workspaceFolder}/dist-web-server/www.js",
+            "sourceMaps": true,
+        },
+    ],
+}

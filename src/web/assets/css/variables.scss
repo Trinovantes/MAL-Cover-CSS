@@ -1,0 +1,12 @@
+$dark: #222;
+$primary: #2e51a2;
+$dimmed: rgba(255, 255, 255, 0.2);
+$dimmed-light: rgba(255, 255, 255, 0.6);
+
+$padding: 16px;
+$space-base: $padding;
+
+@import 'quasar/src/css/variables.sass';
+
+$max-page-width: 1600px;
+$mobile-breakpoint: $breakpoint-sm;

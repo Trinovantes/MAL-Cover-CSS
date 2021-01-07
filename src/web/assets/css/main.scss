@@ -1,0 +1,116 @@
+html,
+body,
+#app,
+#main-layout{
+    min-height: 100vh;
+}
+
+#main-layout{
+    display: flex;
+    flex-direction: column;
+
+    > .content{
+        flex: 1;
+        padding: ($padding * 8) 0;
+
+        &.center-vertically{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .row{
+            padding: 0 $padding;
+        }
+    }
+}
+
+body {
+    div.row{
+        margin-left: auto;
+        margin-right: auto;
+        max-width: $max-page-width;
+        width: 80%;
+    }
+
+    &.screen--xs{
+        div.row{
+            width: 100%;
+        }
+    }
+}
+
+.content{
+    font-size: 21px;
+    line-height: 1.5;
+
+    @media (min-width: $mobile-breakpoint) {
+        font-size: 24px;
+    }
+
+    @media (min-width: $mobile-breakpoint * 1.5) {
+        font-size: 27px;
+    }
+
+    :not(pre) > code{
+        background-color: #ddd;
+        border-radius: 3px;
+        padding: 3px 6px;
+    }
+
+    a{
+        color: $primary;
+
+        &:hover{
+            color: lighten($primary, 30%);
+        }
+    }
+
+    h1, h2, h3 {
+        line-height: 1.33;
+        font-weight: bold;
+    }
+
+    h1{
+        font-size: 3em;
+    }
+
+    h2{
+        font-size: 1.5em;
+    }
+
+    h3{
+        font-size: 1.25em;
+    }
+
+    h1, h2, h3, p, pre, ul{
+        margin: ($padding * 2) 0 !important;
+
+        @media (min-width: $mobile-breakpoint) {
+            margin: ($padding * 2.5) 0 !important;
+        }
+
+        @media (min-width: $mobile-breakpoint * 1.5) {
+            margin: ($padding * 3) 0 !important;
+        }
+    }
+
+    .btn-group{
+        display: flex;
+    }
+
+    .q-btn{
+        font-weight: bold;
+        flex: 1;
+        margin-right: $padding * 2;
+        padding: ($padding / 2) $padding;
+
+        &:last-child{
+            margin-right: 0;
+        }
+
+        @media (min-width: $mobile-breakpoint) {
+            flex: none;
+        }
+    }
+}

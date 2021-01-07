@@ -1,0 +1,25 @@
+/* Both anime and manga covers */
+@\import url('https://www.malcovercss.link/generated/all-before.css');
+@\import url('https://www.malcovercss.link/generated/all-after.css');
+@\import url('https://www.malcovercss.link/generated/all-self.css');
+
+/* Only anime covers */
+@\import url('https://www.malcovercss.link/generated/anime-before.css');
+@\import url('https://www.malcovercss.link/generated/anime-after.css');
+@\import url('https://www.malcovercss.link/generated/anime-self.css');
+@\import url('https://www.malcovercss.link/generated/anime-more.css');
+
+/* Only manga covers */
+@\import url('https://www.malcovercss.link/generated/manga-before.css');
+@\import url('https://www.malcovercss.link/generated/manga-after.css');
+@\import url('https://www.malcovercss.link/generated/manga-self.css');
+@\import url('https://www.malcovercss.link/generated/manga-more.css');
+
+/*
+*-before.css contains rules for a.animetitle:before
+ *-after.css contains rules for a.animetitle:after
+  *-self.css contains rules for a.animetitle
+  *-more.css contains rules for div#more{ID}
+
+Note: all-more.css does not exist because different anime and manga can have the same id
+*/
