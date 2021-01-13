@@ -33,8 +33,15 @@ async function scrapeUsers() {
     logger.info(`Found ${users.length} users to scrape`)
     for (const user of users) {
         for (const mediaType of Object.values(MediaType)) {
-            await scrapeUser(user, mediaType)
-            await user.update({ lastChecked: new Date() })
+            try {
+                await scrapeUser(user, mediaType)
+                await user.update({ lastChecked: new Date() })
+            } catch (err) {
+                const error = err as Error
+                logger.warn('Failed to scrapeUser %d %s (%s:%s)', user.malUserId, error.name, error.message)
+                logger.debug(error.stack)
+            }
+
             await sleep(Constants.DELAY_BETWEEN_REQUESTS)
         }
     }
@@ -42,7 +49,7 @@ async function scrapeUsers() {
 
 async function scrapeUser(user: User, mediaType: MediaType, offset = 0) {
     if (!user.accessToken || !user.refreshToken) {
-        logger.warn('Skipping user %d due to missing accessToken or refreshToken', user.malUserId)
+        logger.warn('Skipping to scrapeUser %d due to missing accessToken or refreshToken', user.malUserId)
         return
     }
 

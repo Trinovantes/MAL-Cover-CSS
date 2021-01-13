@@ -121,10 +121,6 @@ async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: Ax
                     refreshToken: null,
                 })
             }
-
-            logger.warn('AxiosError with Request:%s', err.config)
-            logger.warn('Status:%d Response:%s', err.response?.status, err.response?.data)
-            logger.debug(err.stack)
         }
 
         throw err
