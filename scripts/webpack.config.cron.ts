@@ -12,8 +12,8 @@ const expressConfig = merge(commonConfig, {
     target: 'node',
 
     entry: {
-        generator: `${srcCronDir}/generator.ts`,
-        scraper: `${srcCronDir}/scraper.ts`,
+        generator: `${srcCronDir}/generator/generator.ts`,
+        scraper: `${srcCronDir}/scraper/scraper.ts`,
     },
     output: {
         path: distCronDir,
