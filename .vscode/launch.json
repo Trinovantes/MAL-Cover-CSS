@@ -16,7 +16,7 @@
                 "<node_internals>/**"
             ],
 
-            "program": "${workspaceFolder}/dist-cron/generator.js",
+            "program": "${workspaceFolder}/dist/cron/generator.js",
             "sourceMaps": true,
         },
         {
@@ -34,7 +34,7 @@
                 "<node_internals>/**"
             ],
 
-            "program": "${workspaceFolder}/dist-cron/scraper.js",
+            "program": "${workspaceFolder}/dist/cron/scraper.js",
             "sourceMaps": true,
         },
         {
@@ -52,7 +52,7 @@
                 "<node_internals>/**"
             ],
 
-            "program": "${workspaceFolder}/dist-web-server/www.js",
+            "program": "${workspaceFolder}/dist/web-server/www.js",
             "sourceMaps": true,
         },
     ],
