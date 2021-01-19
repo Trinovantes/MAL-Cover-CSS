@@ -5,7 +5,7 @@ export const publicPath = '/public/'
 
 const rootDir = path.resolve() // Assume we are running from the project root
 
-export const scriptsDir = path.resolve(rootDir, 'scripts')
+export const buildDir = path.resolve(rootDir, 'build')
 export const staticDir = path.resolve(rootDir, 'static')
 
 const distDir = path.resolve(rootDir, 'dist')

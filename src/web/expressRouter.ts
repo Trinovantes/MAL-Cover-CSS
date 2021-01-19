@@ -7,8 +7,8 @@ import MemoryFileSystem from 'memory-fs'
 import express, { RequestHandler, Express, ErrorRequestHandler, Router } from 'express'
 import createHttpError, { HttpError } from 'http-errors'
 
-import clientConfig from '@scripts/webpack.config.web.client'
-import serverConfig from '@scripts/webpack.config.web.server'
+import clientConfig from '@build/webpack.config.web.client'
+import serverConfig from '@build/webpack.config.web.server'
 
 import template from '@views/index.html'
 import { AppContext } from '@web/entryServer'

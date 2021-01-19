@@ -3,7 +3,7 @@ import webpack, { DefinePlugin } from 'webpack'
 import TerserPlugin from 'terser-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
 
-import { isDev, srcDir, srcWebDir, distServerDir, scriptsDir } from './webpack.constants'
+import { isDev, srcDir, srcWebDir, distServerDir, buildDir } from './webpack.constants'
 import merge from 'webpack-merge'
 
 // ----------------------------------------------------------------------------
@@ -23,7 +23,7 @@ export const commonConfig: webpack.Configuration = {
         extensions: ['.ts', '.js', '.vue', '.json', '.scss', '.css'],
         alias: {
             // Need to match aliases in tsconfig.json
-            '@scripts': scriptsDir,
+            '@build': buildDir,
 
             '@common': path.resolve(srcDir, 'common'),
             '@cron': path.resolve(srcDir, 'cron'),
