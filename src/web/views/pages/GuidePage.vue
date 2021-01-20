@@ -23,10 +23,10 @@
                 />
 
                 <h3>Important Note on CSS Imports</h3>
-
                 <p>
                     Since MyAnimeList.net only allows external images in CSS urls, you will need to use a (technically) invalid import syntax in order for the import to work properly (web browsers will still parse the import properly).
                 </p>
+
                 <CodeBlock
                     lang="css"
                     code="brokenImport.css"
@@ -35,7 +35,7 @@
                 <h3>Example Usage</h3>
                 <p>
                     You can view this example on my <a href="https://myanimelist.net/animelist/Trinovantes">profile page</a>.
-                    The full theme is available <a href="/css/example-covers.css">here</a>.
+                    The full theme is available <a href="/example-covers.css">here</a>.
                     The key parts of this theme are highlighted:
                 </p>
                 <ul>

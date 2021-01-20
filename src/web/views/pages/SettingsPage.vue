@@ -18,7 +18,7 @@
                             {{ getRelativeTime(currentUser.lastChecked) }}
                         </p>
                         <p>
-                            The generated CSS now includes anime and manga from your profile. Read the <router-link to="gudie">guide</router-link> for more information on how to set up your profile theme.
+                            The generated CSS now includes anime and manga from your profile. Read the <router-link to="guide">guide</router-link> for more information on how to set up your profile theme.
                         </p>
                     </div>
                     <div v-else>
