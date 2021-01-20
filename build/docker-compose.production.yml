@@ -1,0 +1,24 @@
+services:
+  generator:
+    extends:
+      file: docker-compose.common.yml
+      service: production-app
+    volumes:
+      - generated:/app/static/generated
+
+  scraper:
+    extends:
+      file: docker-compose.common.yml
+      service: production-app
+
+  www:
+    extends:
+      file: docker-compose.common.yml
+      service: production-app
+    volumes:
+      - generated:/app/static/generated
+    ports:
+      - 9001:8080
+
+volumes:
+  generated:

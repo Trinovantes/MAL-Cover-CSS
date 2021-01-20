@@ -11,9 +11,10 @@ import { apiRouter } from '@api/expressRouter'
 import { debugInfo } from '@web/api/middleware/dev'
 import { setUserInLocals } from '@api/middleware/user'
 import { logger } from '@common/utils/logger'
-import { normalizePort } from '@common/utils'
-import { AppContext } from '@web/entryServer'
+import { getSecret, Secrets } from '@common/Secrets'
+import { AppContext } from './entryServer'
 import Constants from '@common/Constants'
+import { normalizePort } from '@common/utils'
 
 // ----------------------------------------------------------------------------
 // ENV
@@ -43,7 +44,7 @@ app.use(morgan(DEFINE.IS_DEV ? 'dev' : 'combined'))
 
 // Set up sessions
 app.use(session({
-    secret: process.env.ENCRYPTION_KEY || '',
+    secret: getSecret(Secrets.ENCRYPTION_KEY),
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -52,7 +53,7 @@ app.use(session({
     },
     store: (() => {
         const RedisStore = ConnectRedis(session)
-        const redisClient = redis.createClient()
+        const redisClient = redis.createClient({ host: 'cache' })
         return new RedisStore({ client: redisClient })
     })(),
 }))

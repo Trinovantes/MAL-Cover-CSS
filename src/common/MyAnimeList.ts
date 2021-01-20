@@ -5,6 +5,7 @@ import querystring from 'querystring'
 
 import Constants from './Constants'
 import { User } from './models/User'
+import { getSecret, Secrets } from './Secrets'
 import { hasField, hasExpectedNumFields, isAxiosError, getHost } from './utils'
 import { createLogger } from './utils/logger'
 
@@ -189,7 +190,7 @@ export function isOauthTokenSuccess(obj?: unknown): obj is OauthTokenSuccess {
 export function getAuthEndpoint(oauthState: OauthState): string {
     const redirectUrl = `${getHost()}/${Constants.MAL_OAUTH_REDIRECT_URL}`
     const data = {
-        client_id: process.env.MAL_CLIENT_ID,
+        client_id: getSecret(Secrets.MAL_CLIENT_ID),
         redirect_uri: redirectUrl,
         response_type: 'code',
         state: encodeURIComponent(JSON.stringify(oauthState)),
@@ -204,8 +205,8 @@ export function getAuthEndpoint(oauthState: OauthState): string {
 export async function obtainAccessToken(authCode: string, codeChallenge: string, redirectUrl: string): Promise<OauthTokenSuccess> {
     const url = `${Constants.MAL_OAUTH_URL}/oauth2/token`
     const data = {
-        client_id: process.env.MAL_CLIENT_ID,
-        client_secret: process.env.MAL_CLIENT_SECRET,
+        client_id: getSecret(Secrets.MAL_CLIENT_ID),
+        client_secret: getSecret(Secrets.MAL_CLIENT_SECRET),
         grant_type: 'authorization_code',
         code: authCode,
         code_verifier: codeChallenge,
@@ -232,8 +233,8 @@ export async function obtainAccessToken(authCode: string, codeChallenge: string,
 async function refreshAccessToken(refreshToken: string): Promise<OauthTokenSuccess> {
     const url = `${Constants.MAL_OAUTH_URL}/oauth2/token`
     const data = {
-        client_id: process.env.MAL_CLIENT_ID,
-        client_secret: process.env.MAL_CLIENT_SECRET,
+        client_id: getSecret(Secrets.MAL_CLIENT_ID),
+        client_secret: getSecret(Secrets.MAL_CLIENT_SECRET),
         grant_type: 'refresh_token',
         refreshToken: refreshToken,
     }

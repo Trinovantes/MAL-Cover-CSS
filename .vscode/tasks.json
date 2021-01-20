@@ -1,0 +1,20 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compose: generator",
+            "type": "shell",
+            "command": "yarn dockerDevUpGenerator",
+        },
+        {
+            "label": "Compose: scraper",
+            "type": "shell",
+            "command": "yarn dockerDevUpScraper",
+        },
+        {
+            "label": "Compose: www",
+            "type": "shell",
+            "command": "yarn dockerDevUpWeb",
+        },
+    ],
+}

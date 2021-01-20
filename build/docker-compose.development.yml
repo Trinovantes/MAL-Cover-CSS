@@ -1,0 +1,35 @@
+services:
+  generator:
+    extends:
+      file: docker-compose.common.yml
+      service: development-app
+    ports:
+      - 1001:9229
+
+  scraper:
+    extends:
+      file: docker-compose.common.yml
+      service: development-app
+    ports:
+      - 1002:9229
+
+  www:
+    extends:
+      file: docker-compose.common.yml
+      service: development-app
+    ports:
+      - 8080:8080
+      - 9229:9229
+    volumes:
+      - ../:/app/
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    depends_on:
+      - db
+    environment:
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
+    ports:
+      - 1000:80
+    secrets:
+      - MYSQL_PASSWORD

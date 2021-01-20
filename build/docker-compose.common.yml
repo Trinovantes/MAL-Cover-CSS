@@ -1,0 +1,22 @@
+services:
+  development-app:
+    build:
+      target: builder
+      args:
+        BUILD_ENV: development
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - API_HOST=http://test.malcovercss.link
+    stdin_open: true
+    tty: true
+
+  production-app:
+    build:
+      args:
+        BUILD_ENV: production
+    restart: always
+    environment:
+      - NODE_ENV=production
+      - PORT=8080
+      - API_HOST=https://www.malcovercss.link

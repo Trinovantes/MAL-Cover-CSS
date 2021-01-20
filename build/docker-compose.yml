@@ -1,0 +1,77 @@
+services:
+  db:
+    image: mysql:8
+    volumes:
+      - mysql-data:/var/lib/mysql
+    secrets:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+    environment:
+      - MYSQL_DATABASE_FILE=/run/secrets/MYSQL_DATABASE
+      - MYSQL_USER_FILE=/run/secrets/MYSQL_USER
+      - MYSQL_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
+
+  cache:
+    image: redis:6.0-alpine
+
+  generator:
+    image: malcovercss-generator
+    build:
+      context: ../
+      target: cron-generator
+    depends_on:
+      - db
+    secrets:
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
+  scraper:
+    image: malcovercss-scraper
+    build:
+      context: ../
+      target: cron-scraper
+    depends_on:
+      - db
+    secrets:
+      - ENCRYPTION_KEY
+      - MAL_CLIENT_ID
+      - MAL_CLIENT_SECRET
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
+  www:
+    image: malcovercss-www
+    build:
+      context: ../
+      target: www
+    depends_on:
+      - db
+      - cache
+    secrets:
+      - ENCRYPTION_KEY
+      - MAL_CLIENT_ID
+      - MAL_CLIENT_SECRET
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
+volumes:
+  mysql-data:
+
+secrets:
+  ENCRYPTION_KEY:
+    file: ./secrets/ENCRYPTION_KEY.txt
+  MAL_CLIENT_ID:
+    file: ./secrets/MAL_CLIENT_ID.txt
+  MAL_CLIENT_SECRET:
+    file: ./secrets/MAL_CLIENT_SECRET.txt
+  MYSQL_DATABASE:
+    file: ./secrets/MYSQL_DATABASE.txt
+  MYSQL_USER:
+    file: ./secrets/MYSQL_USER.txt
+  MYSQL_PASSWORD:
+    file: ./secrets/MYSQL_PASSWORD.txt
