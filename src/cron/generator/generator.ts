@@ -28,7 +28,13 @@ async function generateCSS() {
     const comboToGenerate = crossProduct(selectors, mediaTypes)
 
     for (const combo of comboToGenerate) {
-        await generate(outputDir, combo[0], combo[1])
+        try {
+            await generate(outputDir, combo[0], combo[1])
+        } catch (err) {
+            const error = err as Error
+            logger.warn('Failed to generate %s (%s:%s)', comboToGenerate, error.name, error.message)
+            logger.debug(error.stack)
+        }
     }
 }
 
