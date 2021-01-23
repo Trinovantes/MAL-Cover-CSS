@@ -7,7 +7,7 @@
                 <div class="info">
                     <h3>MyAnimeList.net Username</h3>
                     <p class="info">
-                        {{ currentUser.username }}
+                        {{ currentUser.malUsername }}
                     </p>
                 </div>
 

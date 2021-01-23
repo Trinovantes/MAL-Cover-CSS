@@ -12,6 +12,6 @@ export interface SuccessResponse {
 
 export interface UserResponse {
     malUserId: number
-    username: string
+    malUsername: string
     lastChecked: Date | null
 }

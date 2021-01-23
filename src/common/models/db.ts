@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize'
 import mysql from 'mysql2'
+
 import { getSecret, Secrets } from '@common/Secrets'
 
 const db = getSecret(Secrets.MYSQL_DATABASE)

@@ -37,7 +37,7 @@ interface UserCreationAttributes {
 
 class User extends Model<UserAttributes, UserCreationAttributes> {
     id!: number
-    username!: string
+    malUsername!: string
     malUserId!: number
     lastChecked!: Date | null
 

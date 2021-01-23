@@ -114,16 +114,16 @@ oauthRouter.get('/', function(req, res) {
             })
 
             await user.update({
-                username: malUser.name,
+                malUsername: malUser.name,
                 tokenExpires: tokenExpires.toDate(),
                 accessToken: malOauth.access_token,
                 refreshToken: malOauth.refresh_token,
             })
 
-            logger.verbose(`${created ? 'Created' : 'Updated'} user ${user.username}`)
+            logger.verbose(`${created ? 'Created' : 'Updated'} user ${user.malUsername}`)
             req.session.currentUser = {
                 malUserId: user.malUserId,
-                username: user.username,
+                malUsername: user.malUsername,
                 lastChecked: user.lastChecked,
             }
 

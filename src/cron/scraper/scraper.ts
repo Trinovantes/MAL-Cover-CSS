@@ -38,7 +38,7 @@ async function scrapeUsers() {
                 await user.update({ lastChecked: new Date() })
             } catch (err) {
                 const error = err as Error
-                logger.warn('Failed to scrapeUser %d %s (%s:%s)', user.malUserId, user.username, error.name, error.message)
+                logger.warn('Failed to scrapeUser %d %s (%s:%s)', user.malUserId, user.malUsername, error.name, error.message)
                 logger.debug(error.stack)
             }
 

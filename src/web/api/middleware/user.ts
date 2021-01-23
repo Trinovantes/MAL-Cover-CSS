@@ -23,7 +23,7 @@ export const setUserInLocals: RequestHandler = (req, res, next) => {
             })
 
             if (user) {
-                logger.verbose('Found %d, setting %s in locals', malUserId, user.username)
+                logger.verbose('Found %d, setting %s in locals', malUserId, user.malUsername)
                 res.locals.currentUser = user
             } else {
                 logger.verbose('Did not find user %d', malUserId)

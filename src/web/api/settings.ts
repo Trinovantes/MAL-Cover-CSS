@@ -25,7 +25,7 @@ settingsRouter.get('/user', (req, res: Response, next) => {
     const user = res.locals.currentUser
     const settings: UserResponse = {
         malUserId: user.malUserId,
-        username: user.username,
+        malUsername: user.malUsername,
         lastChecked: user.lastChecked,
     }
 
