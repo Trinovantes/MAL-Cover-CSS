@@ -20,7 +20,7 @@ function getEncryptionKey(): Buffer {
     return key
 }
 
-export interface UserAttributes {
+interface UserAttributes {
     id: number
     username: string
     malUserId: number
