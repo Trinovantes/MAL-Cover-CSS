@@ -1,4 +1,9 @@
 services:
+  db-migration:
+    extends:
+      file: docker-compose.common.yml
+      service: production
+
   generator:
     extends:
       file: docker-compose.common.yml

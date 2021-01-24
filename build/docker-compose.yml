@@ -13,6 +13,18 @@ services:
       - MYSQL_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
 
+  db-migration:
+    image: malcovercss-db-migration
+    build:
+      context: ../db
+    depends_on:
+      - db
+    secrets:
+      - MYSQL_HOST
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
   cache:
     image: redis:6.0-alpine
 
@@ -22,7 +34,7 @@ services:
       context: ../
       target: cron-generator
     depends_on:
-      - db
+      - db-migration
     secrets:
       - MYSQL_HOST
       - MYSQL_DATABASE
@@ -35,7 +47,7 @@ services:
       context: ../
       target: cron-scraper
     depends_on:
-      - db
+      - db-migration
     secrets:
       - ENCRYPTION_KEY
       - MAL_CLIENT_ID
@@ -51,7 +63,7 @@ services:
       context: ../
       target: www
     depends_on:
-      - db
+      - db-migration
       - cache
     secrets:
       - ENCRYPTION_KEY
