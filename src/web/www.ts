@@ -153,6 +153,10 @@ async function runHttpServer() {
     server.listen(port, () => {
         logger.info('Server Listening %d', port)
     })
+
+    server.on('error', (error) => {
+        logger.error(error)
+    })
 }
 
 void runHttpServer()
