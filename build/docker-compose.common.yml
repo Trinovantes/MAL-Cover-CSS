@@ -1,5 +1,11 @@
 services:
+  development:
+    stdin_open: true
+    tty: true
+
   development-app:
+    extends:
+      service: development
     build:
       target: builder
       args:
@@ -8,14 +14,16 @@ services:
       - NODE_ENV=development
       - PORT=8080
       - API_HOST=http://test.malcovercss.link
-    stdin_open: true
-    tty: true
+
+  production:
+    restart: always
 
   production-app:
+    extends:
+      service: production
     build:
       args:
         BUILD_ENV: production
-    restart: always
     environment:
       - NODE_ENV=production
       - PORT=8080
