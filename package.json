@@ -22,7 +22,7 @@
         "dockerDevUpWeb": "        docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build www",
         "dockerDevUp": "           docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d",
         "dockerProdUp": "          docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.production.yml  up -d",
-        "dockerDown": "            docker-compose -f build/docker-compose.yml -p malcovercss down",
+        "dockerDown": "            docker-compose -f build/docker-compose.yml -p malcovercss down --remove-orphans",
         "dockerDevBuild": "        docker-compose -f build/docker-compose.yml -f build/docker-compose.development.yml build",
         "dockerProdBuild": "       docker-compose -f build/docker-compose.yml -f build/docker-compose.production.yml  build",
         "dockerDev": " yarn dockerDevBuild  && yarn dockerDevUp",
