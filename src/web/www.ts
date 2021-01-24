@@ -15,6 +15,7 @@ import { getSecret, Secrets } from '@common/Secrets'
 import { AppContext } from './entryServer'
 import Constants from '@common/Constants'
 import { normalizePort } from '@common/utils'
+import { sequelize } from '@common/models/db'
 
 // ----------------------------------------------------------------------------
 // ENV
@@ -135,6 +136,14 @@ async function createViewRouter(app: Express): Promise<Router> {
 async function runHttpServer() {
     const port = normalizePort(process.env.PORT || '8080')
     const server = http.createServer(app)
+
+    if (DEFINE.IS_DEV) {
+        require('@common/models/Item')
+        require('@common/models/User')
+
+        logger.info('Synchronizing Database')
+        await sequelize.sync()
+    }
 
     logger.info('Setting up Handlers')
     app.use('/api', setUserInLocals, debugInfo, apiRouter)
