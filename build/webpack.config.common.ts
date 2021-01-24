@@ -121,8 +121,6 @@ export const commonConfig: webpack.Configuration = {
 export const commonNodeConfig = merge(commonConfig, {
     target: 'node',
 
-    context: srcWebDir,
-
     output: {
         path: distServerDir,
 
