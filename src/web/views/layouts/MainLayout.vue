@@ -19,3 +19,20 @@ export default class MainLayout extends Vue {
     // nop
 }
 </script>
+
+<style lang="scss">
+#main-layout{
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+
+    > .content{
+        flex: 1;
+        padding: ($padding * 8) 0;
+
+        .row{
+            padding: 0 $padding;
+        }
+    }
+}
+</style>

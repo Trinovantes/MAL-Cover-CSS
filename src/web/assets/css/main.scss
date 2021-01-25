@@ -1,33 +1,6 @@
 @import 'material-design-icons-iconfont/dist/material-design-icons.css';
 @import 'quasar/src/css/index.sass';
 
-html,
-body,
-#app,
-#main-layout{
-    min-height: 100vh;
-}
-
-#main-layout{
-    display: flex;
-    flex-direction: column;
-
-    > .content{
-        flex: 1;
-        padding: ($padding * 8) 0;
-
-        &.center-vertically{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .row{
-            padding: 0 $padding;
-        }
-    }
-}
-
 body {
     div.row{
         margin-left: auto;

@@ -1,5 +1,5 @@
 <template>
-    <header class="hero-unit center-vertically">
+    <header class="hero-unit">
         <div class="row">
             <div class="img-col col-12 col-md">
                 <img
@@ -65,6 +65,10 @@ export default class HomePage extends mixins(Page, VuexAccessor, ApiAccessor) {
     background: linear-gradient(lighten($primary, 5%), lighten($primary, 10%) 33%, $primary);
     color: white;
     overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     .row{
         flex-direction: row-reverse;
