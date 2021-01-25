@@ -1,15 +1,9 @@
-// ----------------------------------------------------------------------------
-// Quasar
-// ----------------------------------------------------------------------------
-
-import 'material-design-icons-iconfont/dist/material-design-icons.css'
-import 'quasar/src/css/index.sass'
+import '@css/main.scss'
 
 // ----------------------------------------------------------------------------
 // App
 // ----------------------------------------------------------------------------
 
-import '@css/main.scss'
 import { createApp } from './app'
 
 if (DEFINE.IS_DEV && module.hot) {
