@@ -7,8 +7,11 @@ PASSWORD=`cat /run/secrets/MYSQL_PASSWORD`
 
 export DATABASE_URL="mysql://${USER}:${PASSWORD}@${HOST}/${DATABASE}"
 
-dbmate --migrations-dir ./migrations ${1:-'up'} || true
+dbmate wait
 
-echo "Finished Migration"
+dbmate --migrations-dir ./migrations ${1:-'up'} || true
+if [[ $? -ne 0 ]]; then
+    echo "Migration failed"
+fi
 
 read -n 1 -s -r -p "Press any key to continue"; echo

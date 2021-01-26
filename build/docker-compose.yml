@@ -1,6 +1,6 @@
 services:
   db:
-    image: mysql:8
+    image: mariadb:10
     logging:
       driver: local
     volumes:
