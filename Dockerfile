@@ -61,7 +61,7 @@ RUN yarn install --production
 FROM cron-base as cron-scraper
 # -----------------------------------------------------------------------------
 
-RUN sh -c "echo '0 * * * * cd /app && yarn runScraper' >> /etc/crontabs/root"
+RUN sh -c "echo '11 * * * * cd /app && yarn runScraper' >> /etc/crontabs/root"
 
 CMD sh -c "\
     if [[ $BUILD_ENV = 'development' ]]; then\
@@ -74,7 +74,7 @@ CMD sh -c "\
 FROM cron-base as cron-generator
 # -----------------------------------------------------------------------------
 
-RUN sh -c "echo '0 * * * * cd /app && yarn runGenerator' >> /etc/crontabs/root"
+RUN sh -c "echo '19 * * * * cd /app && yarn runGenerator' >> /etc/crontabs/root"
 
 CMD sh -c "\
     if [[ $BUILD_ENV = 'development' ]]; then\
