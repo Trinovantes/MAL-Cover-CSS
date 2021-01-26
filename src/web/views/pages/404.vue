@@ -22,7 +22,7 @@ export default class Error404Page extends mixins(Page) {
     created(): void {
         if (Constants.IS_SSR) {
             const ssrContext = this.$ssrContext as AppContext
-            ssrContext.status = 404
+            ssrContext.statusCode = 404
         }
     }
 }

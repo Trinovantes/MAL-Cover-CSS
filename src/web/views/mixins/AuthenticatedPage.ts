@@ -11,7 +11,7 @@ export class AuthenticatedPage extends mixins(VuexAccessor) {
 
         if (!session.currentUser) {
             console.warn('[AuthenticatedPage]', 'User is not logged in')
-            ssrContext.status = 403
+            ssrContext.statusCode = 403
         }
     }
 

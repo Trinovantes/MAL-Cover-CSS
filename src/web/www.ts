@@ -100,7 +100,7 @@ async function createViewRouter(app: Express): Promise<Router> {
         const ssrContext: AppContext = {
             url: req.originalUrl,
             title: Constants.APP_NAME,
-            status: 200,
+            statusCode: 200,
             req: req,
             res: res,
         }
@@ -112,7 +112,7 @@ async function createViewRouter(app: Express): Promise<Router> {
                 return next(new createHttpError.InternalServerError(error.message))
             }
 
-            return res.status(ssrContext.status).send(html)
+            return res.status(ssrContext.statusCode).send(html)
         })
     }
 

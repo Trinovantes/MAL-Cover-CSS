@@ -11,7 +11,7 @@ import { IRootState } from '@web/store'
 export interface AppContext {
     url: string
     title: string
-    status: number
+    statusCode: number
     req: Request
     res: Response
 
