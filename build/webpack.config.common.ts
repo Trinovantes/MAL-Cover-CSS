@@ -1,6 +1,5 @@
 import path from 'path'
 import webpack, { DefinePlugin } from 'webpack'
-import TerserPlugin from 'terser-webpack-plugin'
 import nodeExternals from 'webpack-node-externals'
 
 import { isDev, srcDir, srcWebDir, distServerDir, buildDir } from './webpack.constants'
@@ -98,18 +97,6 @@ export const commonConfig: webpack.Configuration = {
                     },
                 ],
             },
-        ],
-    },
-
-    optimization: {
-        minimize: !isDev,
-        minimizer: [
-            new TerserPlugin({
-                terserOptions: {
-                    // https://github.com/vuejs/vue-class-component/issues/407
-                    keep_classnames: true,
-                },
-            }),
         ],
     },
 }
