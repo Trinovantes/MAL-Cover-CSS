@@ -15,12 +15,28 @@ services:
       - MYSQL_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
 
+  db-backup:
+    image: malcovercss-db-backup
+    logging:
+      driver: local
+    build:
+      context: ../db
+      target: backup
+    depends_on:
+      - db
+    secrets:
+      - MYSQL_HOST
+      - MYSQL_DATABASE
+      - MYSQL_USER
+      - MYSQL_PASSWORD
+
   db-migration:
     image: malcovercss-db-migration
     logging:
       driver: local
     build:
       context: ../db
+      target: migration
     depends_on:
       - db
     secrets:

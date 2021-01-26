@@ -9,9 +9,14 @@ export DATABASE_URL="mysql://${USER}:${PASSWORD}@${HOST}/${DATABASE}"
 
 dbmate wait
 
-dbmate --migrations-dir ./migrations ${1:-'up'} || true
+sh backup.sh
 if [[ $? -ne 0 ]]; then
-    echo "Migration failed"
+    echo 'Backup failed'
+    exit
 fi
 
-read -n 1 -s -r -p "Press any key to continue"; echo
+dbmate --schema-file ./schema.sql --migrations-dir ./migrations ${1:-'up'}
+if [[ $? -ne 0 ]]; then
+    echo 'Migration failed'
+    exit
+fi

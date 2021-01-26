@@ -6,6 +6,13 @@ services:
     volumes:
       - ../db/:/db/
 
+  db-backup:
+    extends:
+      file: docker-compose.common.yml
+      service: development
+    volumes:
+      - ../db/:/db/
+
   generator:
     extends:
       file: docker-compose.common.yml

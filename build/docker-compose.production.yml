@@ -4,6 +4,13 @@ services:
       file: docker-compose.common.yml
       service: production
 
+  db-backup:
+    extends:
+      file: docker-compose.common.yml
+      service: production
+    volumes:
+      - ~/backups/:/db/backups
+
   generator:
     extends:
       file: docker-compose.common.yml
