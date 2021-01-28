@@ -54,6 +54,8 @@ services:
     image: malcovercss-generator
     logging:
       driver: local
+    volumes:
+      - generated:/app/static/generated
     build:
       context: ../
       target: cron-generator
@@ -87,6 +89,8 @@ services:
     image: malcovercss-www
     logging:
       driver: local
+    volumes:
+      - generated:/app/static/generated
     build:
       context: ../
       target: www
@@ -104,6 +108,7 @@ services:
 
 volumes:
   mysql-data:
+  generated:
 
 secrets:
   ENCRYPTION_KEY:
