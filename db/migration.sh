@@ -10,13 +10,13 @@ export DATABASE_URL="mysql://${USER}:${PASSWORD}@${HOST}/${DATABASE}"
 dbmate wait
 
 sh backup.sh
-if [[ $? -ne 0 ]]; then
+if [ $? -ne 0 ]; then
     echo 'Backup failed'
     exit
 fi
 
 dbmate --schema-file ./schema.sql --migrations-dir ./migrations ${1:-'up'}
-if [[ $? -ne 0 ]]; then
+if [ $? -ne 0 ]; then
     echo 'Migration failed'
     exit
 fi

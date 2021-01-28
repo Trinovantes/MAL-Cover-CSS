@@ -1,3 +1,5 @@
 #!/usr/bin/env sh
 
-find db/backups -name "*.sql" -type f -printf '%T+ %p\n' | sort  | head -n -5 | awk '{print $NF}' | xargs rm
+echo 'Starting to clean up old backups'
+find backups -name "*.sql" -type f -print | sort  | head -n -5 | xargs -t rm
+echo 'Finished deleting old backups'

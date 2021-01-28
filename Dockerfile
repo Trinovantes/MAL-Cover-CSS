@@ -37,7 +37,7 @@ COPY --from=builder /app/yarn.lock  /app/package.json   ./
 RUN yarn install --production
 
 CMD sh -c "\
-    if [[ $BUILD_ENV = 'development' ]]; then\
+    if [ ${BUILD_ENV} = 'development' ]; then\
         yarn dev; \
     else \
         yarn runWeb; \
@@ -64,7 +64,7 @@ FROM cron-base as cron-scraper
 RUN sh -c "echo '11 * * * * cd /app && yarn runScraper' >> /etc/crontabs/root"
 
 CMD sh -c "\
-    if [[ $BUILD_ENV = 'development' ]]; then\
+    if [ ${BUILD_ENV} = 'development' ]; then\
         yarn debugScraper; \
     else \
         crond -f; \
@@ -77,7 +77,7 @@ FROM cron-base as cron-generator
 RUN sh -c "echo '19 * * * * cd /app && yarn runGenerator' >> /etc/crontabs/root"
 
 CMD sh -c "\
-    if [[ $BUILD_ENV = 'development' ]]; then\
+    if [ ${BUILD_ENV} = 'development' ]; then\
         yarn debugScraper; \
     else \
         crond -f; \

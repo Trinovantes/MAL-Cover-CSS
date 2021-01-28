@@ -27,7 +27,7 @@ RUN sh -c "echo '11 1 * * * cd /db && sh backup.sh' >> /etc/crontabs/root"
 RUN sh -c "echo '13 1 * * * cd /db && sh clean.sh' >> /etc/crontabs/root"
 
 CMD sh -c "\
-    if [[ $BUILD_ENV = 'development' ]]; then\
+    if [ ${BUILD_ENV} = 'development' ]; then\
         sh; \
     else \
         crond -f; \
