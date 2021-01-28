@@ -29,7 +29,7 @@ export class ApiAccessor extends VuexAccessor {
     async onClickUnlinkAccount(): Promise<void> {
         try {
             const success = await fetchDeleteUser()
-            this.setCurrentUser(undefined)
+            this.logoutUser()
 
             this.$q.notify({
                 message: success.message,

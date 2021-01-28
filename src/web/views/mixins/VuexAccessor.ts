@@ -12,6 +12,7 @@ import { ErrorResponse, UserResponse } from '@web/api/interfaces/Responses'
     },
     methods: {
         ...mapMutations([
+            'logoutUser',
             'setCurrentUser',
             'setError',
         ]),
@@ -24,7 +25,8 @@ export class VuexAccessor extends Vue {
     currentUser?: UserResponse
     error?: ErrorResponse
 
-    setCurrentUser!: (currentUser?: UserResponse) => void
+    logoutUser!: () => void
+    setCurrentUser!: (currentUser: UserResponse) => void
     setError!: (error?: ErrorResponse) => void
 
     fetchUser!: () => Promise<void>

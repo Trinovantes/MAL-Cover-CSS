@@ -28,7 +28,11 @@ export function createStore(): Store<IRootState> {
         state: createDefaultState,
 
         mutations: {
-            setCurrentUser(state, currentUser?: UserResponse): void {
+            logoutUser(state): void {
+                state.currentUser = undefined
+            },
+
+            setCurrentUser(state, currentUser: UserResponse): void {
                 state.currentUser = currentUser
             },
 

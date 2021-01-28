@@ -16,13 +16,10 @@ export class AuthenticatedPage extends mixins(VuexAccessor) {
     }
 
     async mounted(): Promise<void> {
-        if (!DEFINE.IS_DEV && this.currentUser) {
-            return
-        }
-
         try {
             await this.fetchUser()
         } catch (err) {
+            this.logoutUser()
             await this.$router.push('/')
         }
     }
