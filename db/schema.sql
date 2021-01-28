@@ -35,7 +35,7 @@ CREATE TABLE `Items` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `Users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) DEFAULT NULL,
+  `malUsername` varchar(255) NOT NULL,
   `malUserId` int(10) unsigned NOT NULL,
   `lastChecked` datetime DEFAULT NULL,
   `tokenExpires` datetime DEFAULT NULL,

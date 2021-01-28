@@ -2,7 +2,7 @@
 
 CREATE TABLE IF NOT EXISTS `Users` (
     `id` INTEGER UNSIGNED NOT NULL auto_increment,
-    `username` VARCHAR(255),
+    `malUsername` VARCHAR(255) NOT NULL,
     `malUserId` INTEGER UNSIGNED NOT NULL UNIQUE,
     `lastChecked` DATETIME,
     `tokenExpires` DATETIME,

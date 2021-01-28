@@ -22,8 +22,8 @@ function getEncryptionKey(): Buffer {
 
 interface UserAttributes {
     id: number
-    username: string
     malUserId: number
+    malUsername: string
     lastChecked: Date | null
 
     tokenExpires: Date | null
@@ -42,8 +42,8 @@ interface UserCreationAttributes {
 
 class User extends Model<UserAttributes, UserCreationAttributes> {
     id!: number
-    malUsername!: string
     malUserId!: number
+    malUsername!: string
     lastChecked!: Date | null
 
     tokenExpires!: Date | null
@@ -84,14 +84,15 @@ User.init({
         primaryKey: true,
     },
 
-    username: {
-        type: DataTypes.STRING,
-    },
-
     malUserId: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         unique: true,
+    },
+
+    malUsername: {
+        type: DataTypes.STRING,
+        allowNull: false,
     },
 
     lastChecked: {
