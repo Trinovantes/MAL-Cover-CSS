@@ -116,8 +116,9 @@ async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: Ax
     } catch (err) {
         if (isAxiosError(err)) {
             // Invalid token
-            if (err.code === '401') {
+            if (err.response?.status === 401) {
                 await user.update({
+                    tokenExpires: null,
                     accessToken: null,
                     refreshToken: null,
                 })
