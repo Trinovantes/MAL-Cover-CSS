@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `Items` (
     `createdAt` DATETIME NOT NULL,
     `updatedAt` DATETIME NOT NULL,
 
-    PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`),
+    CONSTRAINT unique_item UNIQUE (`mediaType`, `malId`)
 );
 
 -- migrate:down
