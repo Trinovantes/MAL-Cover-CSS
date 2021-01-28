@@ -237,7 +237,7 @@ async function refreshAccessToken(refreshToken: string): Promise<OauthTokenSucce
         client_id: getSecret(Secrets.MAL_CLIENT_ID),
         client_secret: getSecret(Secrets.MAL_CLIENT_SECRET),
         grant_type: 'refresh_token',
-        refreshToken: refreshToken,
+        refresh_token: refreshToken,
     }
 
     logger.verbose('Fetching:%s %s', url, data)
