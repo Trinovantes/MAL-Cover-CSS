@@ -58,7 +58,7 @@ services:
       - generated:/app/static/generated
     build:
       context: ../
-      target: cron-generator
+      dockerfile: src/cron/generator/Dockerfile
     depends_on:
       - db-migration
     secrets:
@@ -73,7 +73,7 @@ services:
       driver: local
     build:
       context: ../
-      target: cron-scraper
+      dockerfile: src/cron/scraper/Dockerfile
     depends_on:
       - db-migration
     secrets:
@@ -93,7 +93,7 @@ services:
       - generated:/app/static/generated
     build:
       context: ../
-      target: www
+      dockerfile: src/web/Dockerfile
     depends_on:
       - db-migration
       - cache
