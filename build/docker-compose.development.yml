@@ -16,21 +16,21 @@ services:
   generator:
     extends:
       file: docker-compose.common.yml
-      service: development-app
+      service: development
     ports:
       - 1001:9229
 
   scraper:
     extends:
       file: docker-compose.common.yml
-      service: development-app
+      service: development
     ports:
       - 1002:9229
 
   www:
     extends:
       file: docker-compose.common.yml
-      service: development-app
+      service: development
     ports:
       - 8080:8080
       - 9229:9229

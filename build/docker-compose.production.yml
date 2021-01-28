@@ -14,19 +14,19 @@ services:
   generator:
     extends:
       file: docker-compose.common.yml
-      service: production-app
+      service: production
     volumes:
       - generated:/app/static/generated
 
   scraper:
     extends:
       file: docker-compose.common.yml
-      service: production-app
+      service: production
 
   www:
     extends:
       file: docker-compose.common.yml
-      service: production-app
+      service: production
     volumes:
       - generated:/app/static/generated
     ports:

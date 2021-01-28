@@ -2,12 +2,7 @@ services:
   development:
     stdin_open: true
     tty: true
-
-  development-app:
-    extends:
-      service: development
     build:
-      target: builder
       args:
         BUILD_ENV: development
     environment:
@@ -17,10 +12,6 @@ services:
 
   production:
     restart: always
-
-  production-app:
-    extends:
-      service: production
     build:
       args:
         BUILD_ENV: production
