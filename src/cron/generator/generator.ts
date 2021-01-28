@@ -39,7 +39,7 @@ async function generateCSS() {
 }
 
 async function generate(outputDir: string, selector: CssSelector, mediaType: MediaType | null) {
-    if (!mediaType && selector === CssSelector.More) {
+    if (mediaType === null && selector === CssSelector.More) {
         // The '#more[mal id]' selector is based on MAL's id which is not unique for both manga and anime
         // i.e. different manga/anime can share the same id
         return
