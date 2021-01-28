@@ -33,6 +33,11 @@ interface UserAttributes {
 
 interface UserCreationAttributes {
     malUserId: number
+    malUsername: string
+
+    tokenExpires: Date | null
+    accessToken: string | null
+    refreshToken: string | null
 }
 
 class User extends Model<UserAttributes, UserCreationAttributes> {

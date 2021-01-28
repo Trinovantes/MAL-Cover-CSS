@@ -111,9 +111,6 @@ oauthRouter.get('/', function(req, res) {
 
             const [user, created] = await User.upsert({
                 malUserId: malUser.id,
-            })
-
-            await user.update({
                 malUsername: malUser.name,
                 tokenExpires: tokenExpires.toDate(),
                 accessToken: malOauth.access_token,
