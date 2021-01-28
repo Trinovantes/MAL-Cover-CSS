@@ -78,7 +78,7 @@ RUN sh -c "echo '19 * * * * cd /app && yarn runGenerator' >> /etc/crontabs/root"
 
 CMD sh -c "\
     if [ ${BUILD_ENV} = 'development' ]; then\
-        yarn debugScraper; \
+        yarn debugGenerator; \
     else \
         crond -f; \
     fi"
