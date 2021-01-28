@@ -47,9 +47,9 @@ async function generate(outputDir: string, selector: CssSelector, mediaType: Med
 
     const fileName = `${!mediaType ? 'all' : mediaType}-${selector}.css`
     const outputFile = path.resolve(outputDir, fileName)
-    const cssFileStream = fs.createWriteStream(outputFile, { flags: 'w' })
+    logger.info(`Starting to write: ${outputFile}`)
 
-    logger.info(`Starting to write ${fileName}`)
+    const cssFileStream = fs.createWriteStream(outputFile, { flags: 'w' })
     cssFileStream.on('error', (error) => {
         logger.warn('Failed to write %s (%s:%s)', fileName, error.name, error.message)
         logger.debug(error.stack)
@@ -64,7 +64,7 @@ async function generate(outputDir: string, selector: CssSelector, mediaType: Med
         cssFileStream.write(cssRule)
     }
 
-    logger.info('Finished writing', fileName)
+    logger.info('Finished writing: %s', outputFile)
     cssFileStream.end()
 }
 

@@ -83,15 +83,15 @@ export type MalMangaResponse = MalList<MalMangaListItem>
 
 async function fetchFromMal<T>(accessToken: string, refreshToken: string, endpoint: string, config?: AxiosRequestConfig): Promise<T> {
     const url = `${Constants.MAL_API_URL}/${endpoint}`
-    const data = {
+    const requestConfig = {
         ...config,
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
     }
 
-    logger.verbose('Fetching:%s %s', url, data)
-    const res = await axios.get(url, data)
+    logger.verbose('Fetching:%s %s', url, JSON.stringify(config))
+    const res = await axios.get(url, requestConfig)
 
     return res.data as T
 }
@@ -104,6 +104,7 @@ async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: Ax
     try {
         const tokenExpired = dayjs(user.tokenExpires).isBefore(dayjs())
         if (tokenExpired) {
+            logger.verbose('User token has expired and need to be refreshed')
             const malRes = await refreshAccessToken(user.refreshToken)
             await user.update({
                 tokenExpires: dayjs().add(malRes.expires_in).toDate(),
@@ -214,7 +215,7 @@ export async function obtainAccessToken(authCode: string, codeChallenge: string,
         redirect_uri: redirectUrl,
     }
 
-    logger.verbose('Fetching:%s %s', url, data)
+    logger.verbose('Fetching:%s %s', url, JSON.stringify(data))
     const res = await axios.post(url, querystring.stringify(data))
     const malRes = res.data as unknown
 
@@ -240,7 +241,7 @@ async function refreshAccessToken(refreshToken: string): Promise<OauthTokenSucce
         refresh_token: refreshToken,
     }
 
-    logger.verbose('Fetching:%s %s', url, data)
+    logger.verbose('Fetching:%s %s', url, JSON.stringify(data))
     const res = await axios.post(url, querystring.stringify(data))
     const malRes = res.data as unknown
 
