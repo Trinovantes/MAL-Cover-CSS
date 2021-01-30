@@ -1,187 +1,72 @@
-# On Remote Server
+# Local Development
 
-```
-# Create directories
-sudo mkdir -p /var/www/malcovercss.link
-sudo mkdir -p /var/www/letsencrypt
-sudo chown ubuntu:ubuntu /var/www/malcovercss.link
+```sh
+git clone git@github.com:Trinovantes/MAL-Cover-CSS.git
+cd MAL-Cover-CSS
 
-# Install CouchDB
-sudo apt install apt-transport-https gnupg ca-certificates
-echo "deb https://apache.bintray.com/couchdb-deb bionic main" | sudo tee -a /etc/apt/sources.list.d/couchdb.list
-sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 8756C4F765C9AC3CB6B85D62379CE192D401AB61
-sudo apt update
-sudo apt install couchdb
+mkdir -p /var/secrets/
+ln -s ${PWD}/build/secrets /var/secrets/malcovercss
 
-# Install pm2
-sudo npm install pm2 -g
-pm2 install pm2-logrotate
+yarn install
+yarn dockerDev
 ```
 
-Create the nginx configuration file (`/etc/nginx/sites-available/malcovercss.link`):
-```
-#-------------------------------------------------------------------------------
-# malcovercss.link
-#-------------------------------------------------------------------------------
-
-server {
-    listen 80;
-    server_name malcovercss.link www.malcovercss.link;
-
-    include /etc/nginx/snippets/letsencrypt.conf;
-
-    location / {
-        return 301 https://www.malcovercss.link$request_uri;
-    }
-}
-
-server {
-    listen 443;
-    server_name malcovercss.link;
-
-#    ssl_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
-#    ssl_certificate_key /etc/letsencrypt/live/malcovercss.link/privkey.pem;
-#    ssl_trusted_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
-#    include /etc/nginx/snippets/ssl.conf;
-
-    location / {
-        return 301 https://www.malcovercss.link$request_uri;
-    }
-}
-
-server {
-    listen      443;
-    server_name www.malcovercss.link;
-    autoindex   off;
-
-#    ssl_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
-#    ssl_certificate_key /etc/letsencrypt/live/malcovercss.link/privkey.pem;
-#    ssl_trusted_certificate /etc/letsencrypt/live/malcovercss.link/fullchain.pem;
-#    include /etc/nginx/snippets/ssl.conf;
-
-    location / {
-        proxy_pass http://127.0.0.1:3000/;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
+**Note:** We need to manually create the files containing our app's secrets
+```sh
+$ ls build/secrets/
+ENCRYPTION_KEY.txt
+MAL_CLIENT_ID.txt
+MAL_CLIENT_SECRET.txt
+MYSQL_DATABASE.txt
+MYSQL_HOST.txt
+MYSQL_PASSWORD.txt
+MYSQL_USER.txt
 ```
 
-The SSL options are initially commented out because those files do not exist yet. This will allow us to start nginx for the initial authentication without getting `FileDoesNotExist` errors.
+# Deploy to Production
 
-Next symlink the config file to `sites-enabled`:
+## Set up Remote Production Server
+
+On our local machine, update `~/.ssh/config` with production server's information:
 ```
-sudo ln -s /etc/nginx/sites-available/malcovercss.link /etc/nginx/sites-enabled/
-```
-
-Create the common nginx file (`/etc/nginx/snippets/ssl.conf`):
-```
-ssl on;
-
-# certs sent to the client in SERVER HELLO are concatenated in ssl_certificate
-ssl_session_timeout 1d;
-ssl_session_cache shared:SSL:50m;
-ssl_session_tickets off;
-
-# modern configuration. tweak to your needs.
-ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
-ssl_ciphers AES256+EECDH:AES256+EDH:!aNULL;
-ssl_prefer_server_ciphers on;
-
-# HSTS (ngx_http_headers_module is required) (15768000 seconds = 6 months)
-add_header Strict-Transport-Security max-age=15768000;
-add_header X-Frame-Options DENY;
-add_header X-Content-Type-Options nosniff;
-
-# OCSP Stapling ---
-# fetch OCSP records from URL in ssl_certificate and cache them
-ssl_stapling on;
-ssl_stapling_verify on;
+Host digital-ocean
+    User root
+    HostName xxx.xxx.xxx.xxx
 ```
 
-Create the common nginx file (`/etc/nginx/snippets/letsencrypt.conf`):
-```
-location ^~ /.well-known/acme-challenge/ {
-    default_type "text/plain";
-    root /var/www/letsencrypt;
-}
+Run the provision script
+```sh
+# Run this on local machine
+sh build/provision.sh
+
+# Run this on remote server to validate
+certbot renew --dry-run
 ```
 
-Now we can restart nginx (`sudo systemctl restart nginx`) to host the non-SSL version for Let's Encrypt authentication challenge.
+We also need add this line in `/etc/letsencrypt/cli.ini` to ensure nginx reloads whenever we renew our certificates.
 ```
-sudo certbot certonly --webroot -d malcovercss.link -d www.malcovercss.link --webroot-path /var/www/letsencrypt
-```
-
-After this, go back to `/etc/nginx/sites-available/malcovercss.link` and uncomment the SSL options.
-
-# Deploy
-
-On local machine:
-```
-git clone git@github.com:Trinovantes/MyAnimeList-Cover-CSS-Generator.git
-cd MyAnimeList-Cover-CSS-Generator
-pm2 deploy production setup
+deploy-hook = systemctl reload nginx
 ```
 
-Then on remote machine, create and update `config.js` (gitignored) in `/var/www/malcovercss.link/current/src/utils` directory:
-```
-'use strict';
+## Deploy from Local Machine
 
-module.exports = {
+```sh
+# Configure remote context for docker
+docker context create remote --docker "host=ssh://digital-ocean"
+docker context use remote
 
-    COUCHDB_CONFIG : (function() {
-        const USERNAME = '';
-        const PASSWORD = '';
-        const PORT = 5984;
-        return `http://${USERNAME}:${encodeURIComponent(PASSWORD)}@localhost:${PORT}`;
-    })(),
-
-};
+# Builds and deploy to remote host via SSH
+yarn dockerPull
+yarn dockerProdUp
 ```
 
-Finally on local machine:
-```
-pm2 deploy production
-```
+**Note:** The remote machine's `sshd` may need its `MaxSession` increased if the deployment script has connection errors. Read [this thread](https://github.com/docker/compose/issues/6463#issuecomment-623746349) for more information.
 
-# Startup Scripts
+## Deploy from GitHub Actions
 
-## PM2
-```
-pm2 save
-pm2 startup
-```
+Create the following secrets for `production` environment
 
-## CouchDB
-
-First run:
-```
-sudo apt install runit runit-systemd
-sudo mkdir /etc/sv/couchdb
-sudo mkdir /etc/sv/couchdb/log
-```
-
-Create `/etc/sv/couchdb/log/run`
-```
-#!/bin/sh
-exec svlogd -tt /var/log/couchdb
-```
-
-Create `/etc/sv/couchdb/run`
-```
-#!/bin/sh
-export HOME=/opt/couchdb
-exec 2>&1
-exec chpst -u couchdb /opt/couchdb/bin/couchdb
-```
-
-Finally run:
-```
-sudo chmod u+x /etc/sv/couchdb/log/run
-sudo chmod u+x /etc/sv/couchdb/run
-sudo ln -s /etc/sv/couchdb/ /etc/service/couchdb
-sudo sv status couchdb
-```
+* `SSH_USER`
+* `SSH_HOST`
+* `SSH_PRIVATE_KEY`
+* `DOCKER_ACCESS_TOKEN`
