@@ -1,4 +1,8 @@
-# Local Development
+# MAL Cover CSS
+
+Automatically generate CSS to insert cover images into your MyAnimeList.net profile
+
+## Local Development
 
 ```sh
 git clone git@github.com:Trinovantes/MAL-Cover-CSS.git
@@ -23,9 +27,9 @@ MYSQL_PASSWORD.txt
 MYSQL_USER.txt
 ```
 
-# Deploy to Production
+## Deploy to Production
 
-## Set up Remote Production Server
+### Set up Remote Production Server
 
 On our local machine, update `~/.ssh/config` with production server's information:
 ```
@@ -34,7 +38,7 @@ Host digital-ocean
     HostName xxx.xxx.xxx.xxx
 ```
 
-Run the provision script
+Run the provisioning script
 ```sh
 # Run this on local machine
 sh build/provision.sh
@@ -48,7 +52,7 @@ We also need add this line in `/etc/letsencrypt/cli.ini` to ensure nginx reloads
 deploy-hook = systemctl reload nginx
 ```
 
-## Deploy from Local Machine
+### Deploy from Local Machine
 
 ```sh
 # Configure remote context for docker
@@ -62,7 +66,7 @@ yarn dockerProdUp
 
 **Note:** The remote machine's `sshd` may need its `MaxSession` increased if the deployment script has connection errors. Read [this thread](https://github.com/docker/compose/issues/6463#issuecomment-623746349) for more information.
 
-## Deploy from GitHub Actions
+### Deploy from GitHub Actions
 
 Create the following secrets for `production` environment
 
