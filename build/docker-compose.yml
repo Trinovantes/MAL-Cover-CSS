@@ -1,5 +1,12 @@
 services:
+  cache:
+    restart: always
+    image: redis:6.0-alpine
+    logging:
+      driver: local
+
   db:
+    restart: always
     image: mariadb:10
     logging:
       driver: local
@@ -44,11 +51,6 @@ services:
       - MYSQL_DATABASE
       - MYSQL_USER
       - MYSQL_PASSWORD
-
-  cache:
-    image: redis:6.0-alpine
-    logging:
-      driver: local
 
   generator:
     image: ghcr.io/trinovantes/malcovercss-generator
