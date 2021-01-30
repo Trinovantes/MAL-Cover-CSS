@@ -24,7 +24,7 @@
         "dockerDevUp": "           docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d",
         "dockerProdUp": "          docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.production.yml  up -d",
         "dockerDown": "            docker-compose -f build/docker-compose.yml -p malcovercss down --remove-orphans",
-        "dockerPull": "            docker-compose -f build/docker-compose.yml pull",
+        "dockerPull": "            docker-compose -f build/docker-compose.yml pull --quiet",
         "dockerPush": "            docker-compose -f build/docker-compose.yml push",
         "dockerDevBuild": "        docker-compose -f build/docker-compose.yml -f build/docker-compose.development.yml build",
         "dockerProdBuild": "       docker-compose -f build/docker-compose.yml -f build/docker-compose.production.yml  build",
