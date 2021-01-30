@@ -14,6 +14,7 @@ WORKDIR /app
 
 # Need to override NODE_ENV for 'yarn install' so that yarn will install devDependencies for building the app
 COPY yarn.lock package.json ./
+COPY node_modules/          ./node_modules/
 RUN NODE_ENV=development yarn install
 
 COPY tsconfig.json  ./
