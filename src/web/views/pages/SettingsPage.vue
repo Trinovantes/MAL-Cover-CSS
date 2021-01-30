@@ -14,7 +14,7 @@
                 <div class="info">
                     <h3>Last Checked</h3>
                     <div v-if="currentUser.lastChecked">
-                        <p class="info last-checked">
+                        <p class="info">
                             {{ getRelativeTime(currentUser.lastChecked) }}
                         </p>
                         <p>
@@ -22,6 +22,9 @@
                         </p>
                     </div>
                     <div v-else>
+                        <p class="info">
+                            N/A
+                        </p>
                         <p>
                             Your account has not been checked yet. The bot runs once every hour. Please check back again in about an hour.
                         </p>
@@ -73,10 +76,6 @@ export default class SettingsPage extends mixins(Page, AuthenticatedPage, ApiAcc
             background: #eee;
             border-radius: 3px;
             padding: $padding ($padding * 2);
-        }
-
-        &.last-checked::first-letter{
-            text-transform: capitalize;
         }
 
         &.unlink{
