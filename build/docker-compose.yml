@@ -114,16 +114,16 @@ volumes:
 
 secrets:
   ENCRYPTION_KEY:
-    file: ./secrets/ENCRYPTION_KEY.txt
+    file: /var/secrets/malcovercss/ENCRYPTION_KEY.txt
   MAL_CLIENT_ID:
-    file: ./secrets/MAL_CLIENT_ID.txt
+    file: /var/secrets/malcovercss/MAL_CLIENT_ID.txt
   MAL_CLIENT_SECRET:
-    file: ./secrets/MAL_CLIENT_SECRET.txt
+    file: /var/secrets/malcovercss/MAL_CLIENT_SECRET.txt
   MYSQL_HOST:
-    file: ./secrets/MYSQL_HOST.txt
+    file: /var/secrets/malcovercss/MYSQL_HOST.txt
   MYSQL_DATABASE:
-    file: ./secrets/MYSQL_DATABASE.txt
+    file: /var/secrets/malcovercss/MYSQL_DATABASE.txt
   MYSQL_USER:
-    file: ./secrets/MYSQL_USER.txt
+    file: /var/secrets/malcovercss/MYSQL_USER.txt
   MYSQL_PASSWORD:
-    file: ./secrets/MYSQL_PASSWORD.txt
+    file: /var/secrets/malcovercss/MYSQL_PASSWORD.txt
