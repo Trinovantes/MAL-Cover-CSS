@@ -7,8 +7,8 @@ on:
       - master
 
 jobs:
-  deployProduction:
-    name: Deploy to Production
+  build:
+    name: Build
     runs-on: ubuntu-latest
     environment: production
     steps:
@@ -27,15 +27,6 @@ jobs:
     - name: Install Dependencies
       run: yarn install
 
-    - name: Log in to Registry
-      run: echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-    - name: Create SSH Key to Production
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-
     - name: Create Dummy secrets
       run: |
         sudo mkdir -p /var/secrets/malcovercss/
@@ -50,8 +41,27 @@ jobs:
     - name: Build Images
       run: yarn dockerProdBuild
 
+    - name: Log in to Registry
+      run: echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
     - name: Push to Registry
       run: yarn dockerPush
+
+  deployToProduction:
+    needs: build
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+
+    - name: Log in to Registry
+      run: echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Create SSH Key to Production
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
 
     - name: Deploy to Production
       run: |
