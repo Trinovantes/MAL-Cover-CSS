@@ -3,6 +3,9 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require('path')
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const inlineNonVoidElements = require('eslint-plugin-vue/lib/utils/inline-non-void-elements.json')
+
 module.exports = {
     // https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy
     // This option interrupts the configuration hierarchy at this file
@@ -111,5 +114,12 @@ module.exports = {
         '@typescript-eslint/semi': ['error', 'never'],
 
         'no-debugger': 'error',
+
+        'vue/singleline-html-element-content-newline': ['error', {
+            'ignores': [
+                ...inlineNonVoidElements,
+                'router-link',
+            ],
+        }],
     },
 }
