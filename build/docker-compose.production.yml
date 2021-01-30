@@ -3,13 +3,15 @@ services:
     extends:
       file: docker-compose.common.yml
       service: production
+    volumes:
+      - /var/backups/malcovercss:/db/backups
 
   db-backup:
     extends:
       file: docker-compose.common.yml
       service: production
     volumes:
-      - ~/backups/:/db/backups
+      - /var/backups/malcovercss:/db/backups
 
   generator:
     extends:
