@@ -89,3 +89,6 @@ jobs:
 
     - name: Start containers
       run: yarn dockerProdUp
+
+    - name: Prune old images
+      run: docker image prune -f
