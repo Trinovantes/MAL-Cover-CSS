@@ -16,7 +16,7 @@ services:
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/MYSQL_PASSWORD
 
   db-backup:
-    image: malcovercss-db-backup
+    image: ghcr.io/trinovantes/malcovercss-db-backup
     logging:
       driver: local
     build:
@@ -31,7 +31,7 @@ services:
       - MYSQL_PASSWORD
 
   db-migration:
-    image: malcovercss-db-migration
+    image: ghcr.io/trinovantes/malcovercss-db-migration
     logging:
       driver: local
     build:
@@ -51,7 +51,7 @@ services:
       driver: local
 
   generator:
-    image: malcovercss-generator
+    image: ghcr.io/trinovantes/malcovercss-generator
     logging:
       driver: local
     volumes:
@@ -68,7 +68,7 @@ services:
       - MYSQL_PASSWORD
 
   scraper:
-    image: malcovercss-scraper
+    image: ghcr.io/trinovantes/malcovercss-scraper
     logging:
       driver: local
     build:
@@ -86,7 +86,7 @@ services:
       - MYSQL_PASSWORD
 
   www:
-    image: malcovercss-www
+    image: ghcr.io/trinovantes/malcovercss-www
     logging:
       driver: local
     volumes:

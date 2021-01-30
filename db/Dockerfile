@@ -1,5 +1,7 @@
 FROM alpine:3.10 as base
 
+LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
+
 ARG BUILD_ENV=production
 ENV BUILD_ENV=${BUILD_ENV}
 ENV NODE_ENV=${BUILD_ENV}
