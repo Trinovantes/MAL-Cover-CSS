@@ -44,6 +44,9 @@ app.use(express.urlencoded({ extended: false }))
 app.use(morgan(DEFINE.IS_DEV ? 'dev' : 'combined'))
 
 // Set up sessions
+if (!DEFINE.IS_DEV) {
+    app.set('trust proxy', 1)
+}
 app.use(session({
     secret: getSecret(Secrets.ENCRYPTION_KEY),
     resave: false,
