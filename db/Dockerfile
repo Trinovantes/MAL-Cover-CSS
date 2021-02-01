@@ -17,9 +17,8 @@ RUN chmod +x /usr/local/bin/dbmate
 
 WORKDIR /db
 
-COPY migration.sh ./
-COPY backup.sh    ./
-COPY migrations   ./migrations/
+COPY backup.sh clean.sh migration.sh    ./
+COPY migrations/                        ./migrations/
 
 # -----------------------------------------------------------------------------
 FROM builder as backup
