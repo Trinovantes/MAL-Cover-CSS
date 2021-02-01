@@ -1,4 +1,5 @@
 import { readFileSync } from 'fs'
+import Constants from './Constants'
 
 export enum Secrets {
     ENCRYPTION_KEY = 'ENCRYPTION_KEY',
@@ -19,4 +20,15 @@ export function getSecret(key: Secrets): string {
     }
 
     return secretsCache[key] as string
+}
+
+export function getEncryptionKey(): Buffer {
+    const key64 = getSecret(Secrets.ENCRYPTION_KEY)
+    const key = Buffer.from(key64, 'base64')
+
+    if (key.length !== Constants.ENCRYPTION_KEY_LENGTH) {
+        throw new Error(`Encryption key is incorrect size:${key.length} required:${Constants.ENCRYPTION_KEY_LENGTH}`)
+    }
+
+    return key
 }

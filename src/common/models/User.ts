@@ -2,23 +2,12 @@ import crypto from 'crypto'
 import { Model, DataTypes } from 'sequelize'
 
 import Constants from '@common/Constants'
-import { getSecret, Secrets } from '@common/Secrets'
+import { getEncryptionKey } from '@common/Secrets'
 import { sequelize } from './db'
 
 const encryptionKey = getEncryptionKey()
 const textEncoding = 'utf8'
 const databaseEncoding = 'base64'
-
-function getEncryptionKey(): Buffer {
-    const key64 = getSecret(Secrets.ENCRYPTION_KEY)
-    const key = Buffer.from(key64, 'base64')
-
-    if (key.length !== Constants.ENCRYPTION_KEY_LENGTH) {
-        throw new Error(`Encryption key is incorrect size: ${key.length} required:${Constants.ENCRYPTION_KEY_LENGTH}`)
-    }
-
-    return key
-}
 
 interface UserAttributes {
     id: number
