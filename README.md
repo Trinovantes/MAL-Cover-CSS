@@ -15,17 +15,17 @@ yarn install
 make dev
 ```
 
-**Note:** We need to manually create the files containing our app's secrets
-```sh
-$ ls build/secrets/
-ENCRYPTION_KEY.txt
-MAL_CLIENT_ID.txt
-MAL_CLIENT_SECRET.txt
-MYSQL_DATABASE.txt
-MYSQL_HOST.txt
-MYSQL_PASSWORD.txt
-MYSQL_USER.txt
-```
+**Note:** We need to manually create the files containing our app's secrets under `build/secrets`
+
+Secret | Example
+--- | ---
+`ENCRYPTION_KEY.txt` | `openssl rand -base64 32`
+`MAL_CLIENT_ID.txt` | Create app and obtain API access from [MyAnimeList.com](https://myanimelist.net/apiconfig)
+`MAL_CLIENT_SECRET.txt` | Create app and obtain API access from [MyAnimeList.com](https://myanimelist.net/apiconfig)
+`MYSQL_DATABASE.txt` | Database Name
+`MYSQL_HOST.txt` | `db` (network name)
+`MYSQL_PASSWORD.txt` | `openssl rand -base64 20`
+`MYSQL_USER.txt` | Database User
 
 ## Deploy to Production
 
@@ -70,8 +70,10 @@ make prodUp
 
 Create the following secrets for `production` environment
 
-* `SSH_USER`
-* `SSH_HOST`
-* `SSH_PRIVATE_KEY`
-* `SSH_KEYSCAN`
-* `DOCKER_ACCESS_TOKEN`
+Secret | Example
+---    | ---
+`SSH_USER` | Username
+`SSH_HOST`| IP address
+`SSH_PRIVATE_KEY`| `ssh-keygen -N '' -f ~/.ssh/malcovercss-ci -C "root@malcovercss"` <br> Add `malcovercss-ci.pub` to `authorized_keys` <br> Add `malcovercss_ci` (private key) to this secret
+`SSH_KEYSCAN`| `ssh-keyscan -t ecdsa xxx.xxx.xxx.xxx`
+`CR_PAT` | Create a [Personal Access Token](https://github.com/settings/tokens) with read/write permissions for GitHub Container Registry

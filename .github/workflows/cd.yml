@@ -28,7 +28,7 @@ jobs:
         sudo touch    /var/secrets/malcovercss/MYSQL_USER.txt
 
     - name: Log in to registry
-      run: echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Cache node_modules
       uses: actions/cache@v2
@@ -72,7 +72,7 @@ jobs:
         sudo touch    /var/secrets/malcovercss/MYSQL_USER.txt
 
     - name: Log in to registry
-      run: echo "${{ secrets.DOCKER_ACCESS_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      run: echo "${{ secrets.CR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Create SSH key to production
       run: |
