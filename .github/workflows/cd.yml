@@ -41,6 +41,9 @@ jobs:
     - name: Install dependencies
       run: yarn install
 
+    - name: Pull images
+      run: make pull || true
+
     - name: Build images
       run: make prodBuild
 
