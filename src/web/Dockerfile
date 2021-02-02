@@ -23,6 +23,13 @@ COPY src/           ./src/
 
 RUN yarn buildWeb && yarn buildWebClient && yarn buildWebServer
 
+RUN sh -c "\
+    if [ ${BUILD_ENV} = 'development' ]; then\
+        echo 'Skipping yarn install --production because BUILD_ENV=${BUILD_ENV}'; \
+    else \
+        yarn install --production; \
+    fi"
+
 # -----------------------------------------------------------------------------
 FROM base
 # -----------------------------------------------------------------------------
@@ -31,9 +38,8 @@ WORKDIR /app
 
 COPY                static/                           ./static/
 COPY --from=builder /app/dist/                        ./dist/
+COPY --from=builder /app/node_modules/                ./node_modules/
 COPY --from=builder /app/yarn.lock  /app/package.json ./
-
-RUN yarn install --production
 
 CMD sh -c "\
     if [ ${BUILD_ENV} = 'development' ]; then\

@@ -23,6 +23,13 @@ COPY src/           ./src/
 
 RUN yarn buildCron
 
+RUN sh -c "\
+    if [ ${BUILD_ENV} = 'development' ]; then\
+        echo 'Skipping yarn install --production because BUILD_ENV=${BUILD_ENV}'; \
+    else \
+        yarn install --production; \
+    fi"
+
 # -----------------------------------------------------------------------------
 FROM base
 # -----------------------------------------------------------------------------
@@ -30,9 +37,8 @@ FROM base
 WORKDIR /app
 
 COPY --from=builder /app/dist/                        ./dist/
+COPY --from=builder /app/node_modules/                ./node_modules/
 COPY --from=builder /app/yarn.lock  /app/package.json ./
-
-RUN yarn install --production
 
 RUN sh -c "echo '11 * * * * cd /app && yarn runScraper' >> /etc/crontabs/root"
 
