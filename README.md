@@ -12,7 +12,7 @@ mkdir -p /var/secrets/
 ln -s ${PWD}/build/secrets /var/secrets/malcovercss
 
 yarn install
-yarn dockerDev
+make dev
 ```
 
 **Note:** We need to manually create the files containing our app's secrets
@@ -60,8 +60,8 @@ docker context create remote --docker "host=ssh://digital-ocean"
 docker context use remote
 
 # Builds and deploy to remote host via SSH
-yarn dockerPull
-yarn dockerProdUp
+make pull
+make prodUp
 ```
 
 **Note:** The remote machine's `sshd` may need its `MaxSession` increased if the deployment script has connection errors. Read [this thread](https://github.com/docker/compose/issues/6463#issuecomment-623746349) for more information.
@@ -73,4 +73,5 @@ Create the following secrets for `production` environment
 * `SSH_USER`
 * `SSH_HOST`
 * `SSH_PRIVATE_KEY`
+* `SSH_KEYSCAN`
 * `DOCKER_ACCESS_TOKEN`

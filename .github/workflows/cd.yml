@@ -42,10 +42,10 @@ jobs:
       run: yarn install
 
     - name: Build images
-      run: yarn dockerProdBuild
+      run: make prodBuild
 
     - name: Push to registry
-      run: yarn dockerPush
+      run: make push
 
   deployToProduction:
     needs: build
@@ -85,10 +85,10 @@ jobs:
         docker context use remote
 
     - name: Pull from registry
-      run: yarn dockerPull
+      run: make pull
 
     - name: Start containers
-      run: yarn dockerProdUp
+      run: make prodUp
 
     - name: Prune old images
       run: docker image prune -f

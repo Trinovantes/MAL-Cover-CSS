@@ -15,21 +15,7 @@
         "build": "concurrently 'yarn buildCron' 'yarn buildWeb' 'yarn buildWebClient' 'yarn buildWebServer'",
         "dev": "  concurrently 'yarn watchCron' 'yarn watchWeb' 'nodemon -r source-map-support/register --inspect=0.0.0.0:9229 ./dist/web-server/www.js --watch ./dist/web-server'",
         "lint": "   eslint --ext .js,.ts,.vue .",
-        "lintFix": "eslint --ext .js,.ts,.vue . --fix",
-        "dockerDevUpDbMigration": "COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build db-migration",
-        "dockerDevUpDbBackup": "   COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build db-backup",
-        "dockerDevUpGenerator": "  COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build generator",
-        "dockerDevUpScraper": "    COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build scraper",
-        "dockerDevUpWeb": "        COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build www",
-        "dockerDevUp": "           COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d",
-        "dockerProdUp": "          COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.production.yml  up -d",
-        "dockerDown": "            COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -p malcovercss down --remove-orphans",
-        "dockerPull": "            COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml pull --quiet",
-        "dockerPush": "            COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml push",
-        "dockerDevBuild": "        COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -f build/docker-compose.development.yml build",
-        "dockerProdBuild": "       COMPOSE_DOCKER_CLI_BUILD=1 docker-compose -f build/docker-compose.yml -f build/docker-compose.production.yml  build",
-        "dockerDev": " yarn dockerDevBuild  && yarn dockerDevUp",
-        "dockerProd": "yarn dockerProdBuild && yarn dockerProdUp"
+        "lintFix": "eslint --ext .js,.ts,.vue . --fix"
     },
     "babel": {
         "presets": [

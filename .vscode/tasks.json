@@ -4,17 +4,17 @@
         {
             "label": "Compose: generator",
             "type": "shell",
-            "command": "yarn dockerDevUpGenerator",
+            "command": "make devUpGenerator",
         },
         {
             "label": "Compose: scraper",
             "type": "shell",
-            "command": "yarn dockerDevUpScraper",
+            "command": "make devUpScraper",
         },
         {
             "label": "Compose: www",
             "type": "shell",
-            "command": "yarn dockerDevUpWeb",
+            "command": "make devUpWeb",
         },
     ],
 }
