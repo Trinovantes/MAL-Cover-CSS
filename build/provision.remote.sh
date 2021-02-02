@@ -34,6 +34,8 @@ perl -E "print '-' x 80 . \"\n\""
 echo "${NGINX_HTTP}" > /etc/nginx/conf.d/malcovercss.nginx.http.conf
 rm -f /etc/nginx/conf.d/malcovercss.nginx.https.conf
 
+systemctl restart nginx
+
 # -----------------------------------------------------------------------------
 perl -E "print '-' x 80 . \"\n\""
 echo 'Running certbot'
@@ -42,7 +44,6 @@ perl -E "print '-' x 80 . \"\n\""
 
 # Run certbot
 # Cloudflare must have "Always use HTTPS" disabled
-systemctl restart nginx
 mkdir -p /var/www/letsencrypt
 certbot -n -m devops@stephenli.ca --agree-tos certonly \
     --webroot -d malcovercss.link -d www.malcovercss.link \
@@ -52,6 +53,7 @@ certbot -n -m devops@stephenli.ca --agree-tos certonly \
 # Set up https (port 443)
 echo "${NGINX_SSL}"   > /etc/nginx/snippets/malcovercss.nginx.ssl.conf
 echo "${NGINX_HTTPS}" > /etc/nginx/conf.d/malcovercss.nginx.https.conf
+
 systemctl restart nginx
 
 # -----------------------------------------------------------------------------
