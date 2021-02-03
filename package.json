@@ -1,10 +1,9 @@
 {
     "private": true,
     "scripts": {
-        "watchCron": "     webpack --watch --config build/webpack.config.cron.ts",
-        "watchWeb": "      webpack --watch --config build/webpack.config.web.ts",
         "buildCron": "     webpack --config build/webpack.config.cron.ts",
         "buildWeb": "      webpack --config build/webpack.config.web.ts",
+        "watchWeb": "      webpack --config build/webpack.config.web.ts --watch",
         "buildWebClient": "webpack --config build/webpack.config.web.client.ts",
         "buildWebServer": "webpack --config build/webpack.config.web.server.ts",
         "debugGenerator": "node -r source-map-support/register --inspect-brk=0.0.0.0:9229 ./dist/cron/generator.js static/generated",
@@ -12,8 +11,8 @@
         "runGenerator": "  node -r source-map-support/register ./dist/cron/generator.js static/generated",
         "runScraper": "    node -r source-map-support/register ./dist/cron/scraper.js",
         "runWeb": "        node -r source-map-support/register ./dist/web-server/www.js",
-        "build": "concurrently 'yarn buildCron' 'yarn buildWeb' 'yarn buildWebClient' 'yarn buildWebServer'",
-        "dev": "  concurrently 'yarn watchCron' 'yarn watchWeb' 'nodemon -r source-map-support/register --inspect=0.0.0.0:9229 ./dist/web-server/www.js --watch ./dist/web-server'",
+        "build": "concurrently 'yarn buildWeb' 'yarn buildWebClient' 'yarn buildWebServer'",
+        "dev": "  concurrently 'yarn watchWeb' 'nodemon -r source-map-support/register --inspect=0.0.0.0:9229 ./dist/web-server/www.js --watch ./dist/web-server'",
         "lint": "   eslint --ext .js,.ts,.vue .",
         "lintFix": "eslint --ext .js,.ts,.vue . --fix"
     },
