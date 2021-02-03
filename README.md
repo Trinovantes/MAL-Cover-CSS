@@ -20,8 +20,8 @@ make dev
 Secret | Example
 --- | ---
 `ENCRYPTION_KEY.txt` | `openssl rand -base64 32`
-`MAL_CLIENT_ID.txt` | Create app and obtain API access from [MyAnimeList.com](https://myanimelist.net/apiconfig)
-`MAL_CLIENT_SECRET.txt` | Create app and obtain API access from [MyAnimeList.com](https://myanimelist.net/apiconfig)
+`MAL_CLIENT_ID.txt` | Create app and obtain API access from [MyAnimeList.net](https://myanimelist.net/apiconfig)
+`MAL_CLIENT_SECRET.txt` | Create app and obtain API access from [MyAnimeList.net](https://myanimelist.net/apiconfig)
 `MYSQL_DATABASE.txt` | Database Name
 `MYSQL_HOST.txt` | `db` (network name)
 `MYSQL_PASSWORD.txt` | `openssl rand -base64 20`
