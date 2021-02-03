@@ -71,6 +71,11 @@ body {
         }
     }
 
+    pre[class*="language-"] {
+        font-size: 0.75em;
+        line-height: 1em;
+    }
+
     .btn-group{
         display: flex;
     }
