@@ -7,6 +7,12 @@
                 <h2>1. Sign In</h2>
                 <p>You first need to sign in with your <a href="https://myanimelist.net">MyAnimeList.net</a> account. This tool then periodically scans your profile and generates stylesheets to stylize your anime and manga entries.</p>
 
+                <div class="callout warning">
+                    <p>
+                        For privacy reasons, MyAnimeList.net API does <strong>not</strong> return NSFW entries from your anime or manga list. As a result, the generated CSS will not contain rules to add cover images for those entries.
+                    </p>
+                </div>
+
                 <h2>2. Link to a Generated Stylesheet</h2>
                 <p>
                     It may take a few hours after registration before your profile is scanned.
@@ -25,7 +31,7 @@
                 <div class="callout warning">
                     <h3>Important Note on CSS Imports</h3>
                     <p>
-                        Since MyAnimeList.net only allows external images in CSS urls, you will need to use a (technically) invalid import syntax in order for the import to work properly (web browsers will still parse the import properly).
+                        Since MyAnimeList.net only allows external images in CSS urls, you will need to use an invalid import syntax in order to import the CSS file (web browsers will still parse the import properly).
                     </p>
 
                     <CodeBlock
