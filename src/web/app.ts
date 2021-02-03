@@ -26,7 +26,7 @@ import App from '@views/App.vue'
 import { createRouter } from '@web/router'
 import { createStore, IRootState } from '@web/store'
 
-export interface RetVal {
+interface RetVal {
     app: Vue
     router: VueRouter
     store: Store<IRootState>
