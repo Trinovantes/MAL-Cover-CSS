@@ -21,7 +21,7 @@ COPY tsconfig.json  ./
 COPY build/         ./build/
 COPY src/           ./src/
 
-RUN yarn build
+RUN yarn buildWeb && yarn buildWebClient && yarn buildWebServer
 
 RUN sh -c "\
     if [ ${BUILD_ENV} = 'development' ]; then\
