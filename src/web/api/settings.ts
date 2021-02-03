@@ -2,7 +2,7 @@ import express, { Response } from 'express'
 import createHttpError from 'http-errors'
 
 import { UserResponse, SuccessResponse } from '@api/interfaces/Responses'
-import { enforceUserIsLoggedIn, logout } from '@web/api/middleware/user'
+import { enforceUserIsLoggedIn, logout } from '@api/middleware/user'
 
 // ----------------------------------------------------------------------------
 // Router

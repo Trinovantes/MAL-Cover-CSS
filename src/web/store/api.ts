@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-import { LoginRequest } from '@web/api/interfaces/Requests'
-import { RedirectResponse, SuccessResponse, UserResponse } from '@web/api/interfaces/Responses'
+import { LoginRequest } from '@api/interfaces/Requests'
+import { RedirectResponse, SuccessResponse, UserResponse } from '@api/interfaces/Responses'
 import { getHost } from '@common/utils'
 
 async function callApi<T>(endpoint: string, config: AxiosRequestConfig, validator?: (obj: unknown) => obj is T): Promise<T> {

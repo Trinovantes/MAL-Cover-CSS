@@ -1,7 +1,7 @@
-import Component from 'vue-class-component'
-import Vue from 'vue'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
+
 import { mapActions, mapMutations, mapState } from 'vuex'
-import { ErrorResponse, UserResponse } from '@web/api/interfaces/Responses'
+import { ErrorResponse, UserResponse } from '@api/interfaces/Responses'
 
 @Component({
     computed: {
@@ -21,7 +21,7 @@ import { ErrorResponse, UserResponse } from '@web/api/interfaces/Responses'
         ]),
     },
 })
-export class VuexAccessor extends Vue {
+export class VuexAccessor extends Mixins(Vue) {
     currentUser?: UserResponse
     error?: ErrorResponse
 

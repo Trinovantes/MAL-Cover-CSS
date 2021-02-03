@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import Component, { mixins } from 'vue-class-component'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Page } from '@views/mixins/Page'
 import { AuthenticatedPage } from '@views/mixins/AuthenticatedPage'
 import { ApiAccessor } from '@views/mixins/ApiAccessor'
@@ -58,7 +58,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 dayjs.extend(relativeTime)
 
 @Component
-export default class SettingsPage extends mixins(Page, AuthenticatedPage, ApiAccessor) {
+export default class SettingsPage extends Mixins(Page, AuthenticatedPage, ApiAccessor) {
     getPageTitle = 'Settings'
 
     getRelativeTime(date: Date): string {

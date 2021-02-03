@@ -4,7 +4,7 @@ import '@css/main.scss'
 // App
 // ----------------------------------------------------------------------------
 
-import { createApp } from './app'
+import { createApp } from '@web/app'
 
 if (DEFINE.IS_DEV && module.hot) {
     module.hot.accept()

@@ -1,13 +1,13 @@
-import { OauthState } from '@web/api/interfaces/Session'
+import { OauthState } from '@api/interfaces/Session'
 import axios, { AxiosRequestConfig } from 'axios'
 import dayjs from 'dayjs'
 import querystring from 'querystring'
 
-import Constants from './Constants'
-import { User } from './models/User'
-import { getSecret, Secrets } from './Secrets'
-import { hasField, hasExpectedNumFields, isAxiosError, getHost } from './utils'
-import { createLogger } from './utils/logger'
+import Constants from '@common/Constants'
+import { User } from '@common/models/User'
+import { getSecret, Secrets } from '@common/Secrets'
+import { hasField, hasExpectedNumFields, isAxiosError, getHost } from '@common/utils'
+import { createLogger } from '@common/utils/logger'
 
 const logger = createLogger('MyAnimeList')
 

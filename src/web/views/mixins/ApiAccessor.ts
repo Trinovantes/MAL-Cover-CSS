@@ -1,11 +1,12 @@
-import Component from 'vue-class-component'
-import { VuexAccessor } from './VuexAccessor'
+import { Component, Mixins } from 'vue-property-decorator'
+import { VuexAccessor } from '@views/mixins/VuexAccessor'
+
 import { AxiosError } from 'axios'
 
 import { fetchDeleteUser, fetchLoginRedirect, fetchLogoutRedirect } from '@web/store/api'
 
 @Component
-export class ApiAccessor extends VuexAccessor {
+export class ApiAccessor extends Mixins(VuexAccessor) {
     async onClickLogin(): Promise<void> {
         try {
             const url = await fetchLoginRedirect(this.$route.path)

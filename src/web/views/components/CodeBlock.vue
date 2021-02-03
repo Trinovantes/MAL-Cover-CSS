@@ -14,7 +14,7 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component, Prop, Ref } from 'vue-property-decorator'
+import { Vue, Component, Prop, Ref, Mixins } from 'vue-property-decorator'
 
 import Prism from 'prismjs'
 import 'prismjs/plugins/normalize-whitespace/prism-normalize-whitespace'
@@ -26,7 +26,7 @@ import 'prismjs/plugins/line-highlight/prism-line-highlight.css'
 import 'prismjs/plugins/line-numbers/prism-line-numbers.css'
 
 @Component
-export default class CodeBlock extends Vue {
+export default class CodeBlock extends Mixins(Vue) {
     @Prop({ type: String, required: true }) readonly lang!: string
     @Prop({ type: String, required: true }) readonly code!: string
     @Prop({ type: Boolean, default: true }) readonly isFile!: boolean

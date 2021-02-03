@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import Vue from 'vue'
 
-import { createApp } from './app'
+import { createApp } from '@web/app'
 import { IRootState } from '@web/store'
 
 // ----------------------------------------------------------------------------

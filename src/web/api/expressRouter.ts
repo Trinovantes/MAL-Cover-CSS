@@ -1,9 +1,9 @@
 import express, { ErrorRequestHandler } from 'express'
 import createHttpError, { HttpError } from 'http-errors'
 
-import oauthRouter from './oauth'
-import settingsRouter from './settings'
-import { ErrorResponse } from './interfaces/Responses'
+import oauthRouter from '@api/oauth'
+import settingsRouter from '@api/settings'
+import { ErrorResponse } from '@api/interfaces/Responses'
 
 // ----------------------------------------------------------------------------
 // Router

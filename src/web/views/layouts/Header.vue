@@ -55,15 +55,14 @@
 </template>
 
 <script lang="ts">
-import { mixins } from 'vue-class-component'
-import { Component } from 'vue-property-decorator'
+import { Component, Mixins } from 'vue-property-decorator'
 import { ApiAccessor } from '@views/mixins/ApiAccessor'
 import { VuexAccessor } from '@views/mixins/VuexAccessor'
 
 import Constants from '@common/Constants'
 
 @Component
-export default class Header extends mixins(ApiAccessor, VuexAccessor) {
+export default class Header extends Mixins(ApiAccessor, VuexAccessor) {
     readonly appName = Constants.APP_NAME
     expandHeaderItems = false
 }

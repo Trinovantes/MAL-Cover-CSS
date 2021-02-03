@@ -1,5 +1,10 @@
 import { Model, DataTypes } from 'sequelize'
-import { sequelize } from './db'
+
+import { sequelize } from '@common/models/db'
+
+// ----------------------------------------------------------------------------
+// Item
+// ----------------------------------------------------------------------------
 
 export enum MediaType {
     Anime = 'anime',
@@ -13,7 +18,7 @@ interface ItemAttributes {
     imgUrl: string | null
 }
 
-type ItemCreationAttributes = {
+interface ItemCreationAttributes {
     mediaType: MediaType
     malId: number
 }

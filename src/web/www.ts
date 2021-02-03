@@ -8,14 +8,14 @@ import redis from 'redis'
 import session from 'express-session'
 
 import { apiRouter } from '@api/expressRouter'
-import { debugInfo } from '@web/api/middleware/dev'
+import { debugInfo } from '@api/middleware/dev'
 import { setUserInLocals } from '@api/middleware/user'
 import { logger } from '@common/utils/logger'
 import { getSecret, Secrets } from '@common/Secrets'
-import { AppContext } from './entryServer'
 import Constants from '@common/Constants'
 import { normalizePort } from '@common/utils'
 import { sequelize } from '@common/models/db'
+import { AppContext } from '@web/entryServer'
 
 // ----------------------------------------------------------------------------
 // ENV
@@ -84,11 +84,11 @@ async function createViewRouter(app: Express): Promise<Router> {
     // Need runtime require resolution because we will not be installing devDependencies in production
     if (DEFINE.IS_DEV) {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { setupDevMiddleware } = require('./rendererDev') as { setupDevMiddleware: RendererSetup }
+        const { setupDevMiddleware } = require('@web/rendererDev') as { setupDevMiddleware: RendererSetup }
         rendererSetup = setupDevMiddleware
     } else {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { setupProdMiddleware } = require('./rendererProd') as { setupProdMiddleware: RendererSetup }
+        const { setupProdMiddleware } = require('@web/rendererProd') as { setupProdMiddleware: RendererSetup }
         rendererSetup = setupProdMiddleware
     }
 

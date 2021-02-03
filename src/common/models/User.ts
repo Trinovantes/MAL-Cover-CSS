@@ -1,9 +1,13 @@
 import crypto from 'crypto'
 import { Model, DataTypes } from 'sequelize'
 
+import { sequelize } from '@common/models/db'
 import Constants from '@common/Constants'
 import { getEncryptionKey } from '@common/Secrets'
-import { sequelize } from './db'
+
+// ----------------------------------------------------------------------------
+// User
+// ----------------------------------------------------------------------------
 
 const encryptionKey = getEncryptionKey()
 const textEncoding = 'utf8'

@@ -76,7 +76,7 @@
 </template>
 
 <script lang="ts">
-import Component, { mixins } from 'vue-class-component'
+import { Component, Mixins } from 'vue-property-decorator'
 import { VuexAccessor } from '@views/mixins/VuexAccessor'
 import { Page } from '@views/mixins/Page'
 
@@ -85,7 +85,7 @@ import { Page } from '@views/mixins/Page'
         CodeBlock: () => import('@views/components/CodeBlock.vue'),
     },
 })
-export default class GuidePage extends mixins(Page, VuexAccessor) {
+export default class GuidePage extends Mixins(Page, VuexAccessor) {
     getPageTitle = 'Guide'
 }
 </script>

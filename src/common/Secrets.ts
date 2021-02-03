@@ -1,5 +1,5 @@
 import { readFileSync } from 'fs'
-import Constants from './Constants'
+import Constants from '@common/Constants'
 
 export enum Secrets {
     ENCRYPTION_KEY = 'ENCRYPTION_KEY',

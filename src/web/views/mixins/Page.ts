@@ -1,11 +1,10 @@
-import Component from 'vue-class-component'
-import Vue from 'vue'
+import { Component, Mixins, Vue } from 'vue-property-decorator'
 
 import { AppContext } from '@web/entryServer'
 import Constants from '@common/Constants'
 
 @Component
-export class Page extends Vue {
+export class Page extends Mixins(Vue) {
     protected getPageTitle?: string | (() => string)
 
     created(): void {

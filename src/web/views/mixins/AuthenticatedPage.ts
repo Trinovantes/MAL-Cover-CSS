@@ -1,10 +1,10 @@
-import Component, { mixins } from 'vue-class-component'
-import { VuexAccessor } from './VuexAccessor'
+import { Component, Mixins } from 'vue-property-decorator'
+import { VuexAccessor } from '@views/mixins/VuexAccessor'
 
 import { AppContext } from '@web/entryServer'
 
 @Component
-export class AuthenticatedPage extends mixins(VuexAccessor) {
+export class AuthenticatedPage extends Mixins(VuexAccessor) {
     serverPrefetch(): void {
         const ssrContext = this.$ssrContext as AppContext
         const session = ssrContext.req.session

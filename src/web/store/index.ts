@@ -2,8 +2,8 @@ import Vue from 'vue'
 import Vuex, { Store } from 'vuex'
 Vue.use(Vuex)
 
-import { ErrorResponse, UserResponse } from '@web/api/interfaces/Responses'
-import { fetchUser } from './api'
+import { ErrorResponse, UserResponse } from '@api/interfaces/Responses'
+import { fetchUser } from '@web/store/api'
 
 // ----------------------------------------------------------------------------
 // Store

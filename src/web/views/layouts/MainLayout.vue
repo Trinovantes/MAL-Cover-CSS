@@ -7,15 +7,15 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Mixins } from 'vue-property-decorator'
 
 @Component({
     components: {
-        Header: () => import('./Header.vue'),
-        Footer: () => import('./Footer.vue'),
+        Header: () => import('@views/layouts/Header.vue'),
+        Footer: () => import('@views/layouts/Footer.vue'),
     },
 })
-export default class MainLayout extends Vue {
+export default class MainLayout extends Mixins(Vue) {
     // nop
 }
 </script>

@@ -9,14 +9,14 @@
 </template>
 
 <script lang="ts">
-import Component, { mixins } from 'vue-class-component'
+import { Component, Mixins } from 'vue-property-decorator'
 import { Page } from '@views/mixins/Page'
 
 import Constants from '@common/Constants'
 import { AppContext } from '@web/entryServer'
 
 @Component
-export default class Error404Page extends mixins(Page) {
+export default class Error404Page extends Mixins(Page) {
     getPageTitle = 'Page Not Found'
 
     created(): void {

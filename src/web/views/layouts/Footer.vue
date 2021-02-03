@@ -10,10 +10,10 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator'
+import { Vue, Component, Mixins } from 'vue-property-decorator'
 
 @Component
-export default class Footer extends Vue {
+export default class Footer extends Mixins(Vue) {
     // nop
 }
 </script>

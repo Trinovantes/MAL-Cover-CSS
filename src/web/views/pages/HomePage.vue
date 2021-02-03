@@ -44,10 +44,11 @@
 </template>
 
 <script lang="ts">
-import Component, { mixins } from 'vue-class-component'
+import { Component, Mixins } from 'vue-property-decorator'
 import { VuexAccessor } from '@views/mixins/VuexAccessor'
 import { ApiAccessor } from '@views/mixins/ApiAccessor'
 import { Page } from '@views/mixins/Page'
+
 import Constants from '@common/Constants'
 
 @Component({
@@ -55,7 +56,7 @@ import Constants from '@common/Constants'
         CodeBlock: () => import('@views/components/CodeBlock.vue'),
     },
 })
-export default class HomePage extends mixins(Page, VuexAccessor, ApiAccessor) {
+export default class HomePage extends Mixins(Page, VuexAccessor, ApiAccessor) {
     appDesc = Constants.APP_DESC
 }
 </script>

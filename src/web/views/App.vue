@@ -5,14 +5,13 @@
 </template>
 
 <script lang="ts">
-import { Component } from 'vue-property-decorator'
-import { mixins } from 'vue-class-component'
-import { VuexAccessor } from './mixins/VuexAccessor'
+import { Component, Mixins } from 'vue-property-decorator'
+import { VuexAccessor } from '@views/mixins/VuexAccessor'
 
 import { AppContext } from '@web/entryServer'
 
 @Component
-export default class App extends mixins(VuexAccessor) {
+export default class App extends Mixins(VuexAccessor) {
     serverPrefetch(): void {
         const ssrContext = this.$ssrContext as AppContext
         const session = ssrContext.req.session
