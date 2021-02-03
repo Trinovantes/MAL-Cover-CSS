@@ -1,3 +1,4 @@
+FROM amacneil/dbmate:v1.11.0 as dbmate
 FROM alpine:3.10 as base
 
 LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
@@ -6,14 +7,8 @@ ARG BUILD_ENV=production
 ENV BUILD_ENV=${BUILD_ENV}
 ENV NODE_ENV=${BUILD_ENV}
 
-# -----------------------------------------------------------------------------
-FROM base as builder
-# -----------------------------------------------------------------------------
-
 RUN apk add mysql-client
-
-ADD https://github.com/amacneil/dbmate/releases/download/v1.11.0/dbmate-linux-amd64 /usr/local/bin/dbmate
-RUN chmod +x /usr/local/bin/dbmate
+COPY --from=dbmate /usr/local/bin/dbmate /usr/local/bin/dbmate
 
 WORKDIR /db
 
@@ -21,7 +16,7 @@ COPY backup.sh clean.sh migration.sh    ./
 COPY migrations/                        ./migrations/
 
 # -----------------------------------------------------------------------------
-FROM builder as backup
+FROM base as backup
 # -----------------------------------------------------------------------------
 
 RUN sh -c "echo '11 1 * * * cd /db && sh backup.sh' >> /etc/crontabs/root"
@@ -35,7 +30,7 @@ CMD sh -c "\
     fi"
 
 # -----------------------------------------------------------------------------
-FROM builder as migration
+FROM base as migration
 # -----------------------------------------------------------------------------
 
 CMD sh migration.sh && while true; do sleep 86400; done
