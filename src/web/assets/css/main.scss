@@ -59,15 +59,15 @@ body {
         font-size: 1.25em;
     }
 
-    h1, h2, h3, p, pre, ul{
-        margin: ($padding * 2) 0 !important;
+    h1, h2, h3, p, pre[class*="language-"], ul, .callout{
+        margin: ($padding * 2) 0;
 
         @media (min-width: $mobile-breakpoint) {
-            margin: ($padding * 2.5) 0 !important;
+            margin: ($padding * 2.5) 0;
         }
 
         @media (min-width: $mobile-breakpoint * 1.5) {
-            margin: ($padding * 3) 0 !important;
+            margin: ($padding * 3) 0;
         }
     }
 
