@@ -13,7 +13,7 @@ export default {
     DELAY_BETWEEN_SCRAPPING: 24, // hours
     ITEMS_PER_LIST_REQUEST: 100, // 100 max
 
-    COOKIE_DURATION: 7, // days
+    COOKIE_DURATION: 7 * 24 * 3600 * 1000, // ms
     ENCRYPTION_ALGORITHM: 'aes-256-gcm',
     ENCRYPTION_KEY_LENGTH: 32, // bytes
     ENCRYPTION_IV_LENGTH: 12, // bytes

@@ -52,6 +52,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
+        maxAge: Constants.COOKIE_DURATION,
         httpOnly: true, // Cookies will not be available to Document.cookie api
         secure: !DEFINE.IS_DEV, // Cookies only sent over https
     },
