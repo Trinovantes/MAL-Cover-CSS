@@ -89,4 +89,23 @@ body {
             flex: none;
         }
     }
+
+    .callout{
+        border-left: 5px solid;
+        background-color: $dimmed-light;
+        padding: $padding * 2;
+
+        > *:first-child{
+            margin-top: 0;
+        }
+
+        > *:last-child{
+            margin-bottom: 0;
+        }
+
+        &.warning{
+            border-left-color: $warning;
+            background-color: lighten($warning, 30%);
+        }
+    }
 }

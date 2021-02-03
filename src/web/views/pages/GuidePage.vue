@@ -22,15 +22,17 @@
                     code="generatedStylesheets.css"
                 />
 
-                <h3>Important Note on CSS Imports</h3>
-                <p>
-                    Since MyAnimeList.net only allows external images in CSS urls, you will need to use a (technically) invalid import syntax in order for the import to work properly (web browsers will still parse the import properly).
-                </p>
+                <div class="callout warning">
+                    <h3>Important Note on CSS Imports</h3>
+                    <p>
+                        Since MyAnimeList.net only allows external images in CSS urls, you will need to use a (technically) invalid import syntax in order for the import to work properly (web browsers will still parse the import properly).
+                    </p>
 
-                <CodeBlock
-                    lang="css"
-                    code="brokenImport.css"
-                />
+                    <CodeBlock
+                        lang="css"
+                        code="brokenImport.css"
+                    />
+                </div>
 
                 <h3>Example Usage</h3>
                 <p>
