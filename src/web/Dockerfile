@@ -43,7 +43,7 @@ COPY --from=builder /app/yarn.lock  /app/package.json ./
 
 CMD sh -c "\
     if [ ${BUILD_ENV} = 'development' ]; then\
-        yarn dev; \
+        yarn debugWeb; \
     else \
         yarn runWeb; \
     fi"

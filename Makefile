@@ -8,23 +8,23 @@ export COMPOSE_DOCKER_CLI_BUILD := 1
 # -----------------------------------------------------------------------------
 
 devUpGenerator:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build generator
+	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach --build generator
 
 devUpScraper:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build scraper
+	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach --build scraper
 
 devUpWeb:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d --force-recreate --build www
+	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach www
 
 # -----------------------------------------------------------------------------
 # Build
 # -----------------------------------------------------------------------------
 
 devUp:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up -d
+	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach
 
 prodUp:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.production.yml up -d
+	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.production.yml up --detach
 
 devBuild:
 	docker-compose -f build/docker-compose.yml -f build/docker-compose.development.yml build
