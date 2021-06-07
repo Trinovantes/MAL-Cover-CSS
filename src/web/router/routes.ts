@@ -1,32 +1,36 @@
-import { RouteConfig } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router'
 
-const routes: Array<RouteConfig> = [
+export const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
-        component: () => import('@views/layouts/MainLayout.vue'),
+        component: () => import('@/web/layouts/MainLayout.vue'),
         children: [
             {
-                name: 'guide',
-                path: 'guide',
-                component: () => import('@views/pages/GuidePage.vue'),
-            },
-            {
-                name: 'settings',
-                path: 'settings',
-                component: () => import('@views/pages/SettingsPage.vue'),
-            },
-            {
-                name: 'home',
                 path: '',
-                component: () => import('@views/pages/HomePage.vue'),
+                component: () => import('@/web/pages/HomePage.vue'),
             },
             {
-                name: '404',
-                path: '*',
-                component: () => import('@views/pages/404.vue'),
+                path: 'guide',
+                component: () => import('@/web/pages/GuidePage.vue'),
+            },
+            {
+                path: 'example',
+                component: () => import('@/web/pages/ExamplePage.vue'),
+            },
+            {
+                path: 'classic-vs-modern',
+                component: () => import('@/web/pages/ClassicVsModernPage.vue'),
+            },
+            {
+                path: 'settings',
+                component: () => import('@/web/pages/SettingsPage.vue'),
             },
         ],
     },
+    {
+        path: '/:pathMatch(.*)*',
+        redirect: {
+            path: '/',
+        },
+    },
 ]
-
-export default routes

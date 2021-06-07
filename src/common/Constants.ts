@@ -1,21 +1,19 @@
-export default {
-    IS_SSR: (typeof window === 'undefined'),
+export const APP_NAME = 'MAL Cover CSS'
+export const APP_DESC = 'Automatically generate CSS to add cover images for your MyAnimeList classic list designs'
+export const APP_THEME_COLOR = '#2e51a2'
 
-    APP_NAME: 'MAL Cover CSS',
-    APP_DESC: 'Automatically generate CSS to insert cover images into your MyAnimeList.net profile',
+export const MAL_OAUTH_URL = 'https://myanimelist.net/v1'
+export const MAL_API_URL = 'https://api.myanimelist.net/v2'
+export const MAL_OAUTH_RANDOM_STATE_LENGTH = 32
 
-    MAL_OAUTH_URL: 'https://myanimelist.net/v1',
-    MAL_API_URL: 'https://api.myanimelist.net/v2',
-    MAL_OAUTH_REDIRECT_URL: 'api/oauth',
-    MAL_OAUTH_RANDOM_STATE_LENGTH: 32,
+export const DELAY_BETWEEN_REQUESTS = 200 // ms
+export const DELAY_BETWEEN_SCRAPPING = 1 // hours
+export const ITEMS_PER_LIST_REQUEST = 100 // 100 max
 
-    DELAY_BETWEEN_REQUESTS: 200, // ms
-    DELAY_BETWEEN_SCRAPPING: 24, // hours
-    ITEMS_PER_LIST_REQUEST: 100, // 100 max
+export const COOKIE_DURATION = 30 * 24 * 3600 * 1000 // ms
+export const ENCRYPTION_ALGORITHM = 'aes-256-gcm'
+export const ENCRYPTION_KEY_LENGTH = 32 // bytes
+export const ENCRYPTION_IV_LENGTH = 12 // bytes
+export const ENCRYPTION_AUTH_TAG_LENGTH = 16 // bytes
 
-    COOKIE_DURATION: 7 * 24 * 3600 * 1000, // ms
-    ENCRYPTION_ALGORITHM: 'aes-256-gcm',
-    ENCRYPTION_KEY_LENGTH: 32, // bytes
-    ENCRYPTION_IV_LENGTH: 12, // bytes
-    ENCRYPTION_AUTH_TAG_LENGTH: 16, // bytes
-}
+export const DB_FILE = './db/live/malcovercss.sqlite3'

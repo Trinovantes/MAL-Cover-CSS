@@ -1,0 +1,50 @@
+/* This is a snippet from https://www.malcovercss.link/example-covers.css  */
+
+/*
+    1. Import a generated stylesheet
+
+    Your CSS will now contain rules for adding background images to a.animetitle:before
+    For example:
+
+        .animetitle[href^="/anime/820/"]:before{background-image:url(https://api-cdn.myanimelist.net/images/anime/13/13225.jpg);}
+
+    Don't forget to include the slash to escape the import
+*/
+@\import url('https://www.malcovercss.link/generated/all-before.css');
+
+/*
+    2. Style the parent container to make room for the cover image
+*/
+#list_surround table:not(:first-of-type) td a.animetitle {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+
+    box-sizing: border-box;
+    display: block;
+    padding: 20px;
+    padding-bottom: 0px;
+    padding-top: 190px;
+    width: 180px; height: auto;
+
+    position: absolute;
+    bottom: 75px; left: 10px;
+}
+
+/*
+    3. Style this pseudoelement to display the corresponding anime's cover image in its background
+*/
+#list_surround table:not(:first-of-type) td a.animetitle:before {
+    content: '';
+    display: block;
+    width: 180px; height: 250px;
+    z-index: 0;
+
+    position: absolute;
+    bottom: -35px; left: 0;
+
+    background-color: #333;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+}

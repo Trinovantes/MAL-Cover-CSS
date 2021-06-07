@@ -3,47 +3,197 @@ print-%: ; @echo $*=$($*)
 export DOCKER_BUILDKIT          := 1
 export COMPOSE_DOCKER_CLI_BUILD := 1
 
-# -----------------------------------------------------------------------------
-# Individual Starts (for debugging)
-# -----------------------------------------------------------------------------
+backup-dockerfile = ./docker/backup.Dockerfile
+backup-container = malcovercss-backup
+backup-image = ghcr.io/trinovantes/$(backup-container)
 
-devUpGenerator:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach --build generator
+cron-dockerfile = ./docker/cron.Dockerfile
+cron-container = malcovercss-cron
+cron-image = ghcr.io/trinovantes/$(cron-container)
 
-devUpScraper:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach --build scraper
+api-dockerfile = ./docker/api.Dockerfile
+api-container = malcovercss-api
+api-image = ghcr.io/trinovantes/$(api-container)
 
-devUpWeb:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach www
+web-dockerfile = ./docker/web.Dockerfile
+web-container = malcovercss-web
+web-image = ghcr.io/trinovantes/$(web-container)
 
-# -----------------------------------------------------------------------------
-# Build
-# -----------------------------------------------------------------------------
+redis-container = malcovercss-redis
+redis-image = redis
 
-devUp:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.development.yml up --detach
+.PHONY: \
+	build-backup stop-backup run-backup \
+	build-cron stop-cron run-cron \
+	build-api stop-api run-api \
+	build-web stop-web run-web \
+	stop-redis run-redis \
+	pull push clean all
 
-prodUp:
-	docker-compose -f build/docker-compose.yml -p malcovercss -f build/docker-compose.production.yml up --detach
+all: build run
 
-devBuild:
-	docker-compose -f build/docker-compose.yml -f build/docker-compose.development.yml build
+build: \
+	build-backup \
+	build-cron \
+	build-web
 
-prodBuild:
-	docker-compose -f build/docker-compose.yml -f build/docker-compose.production.yml build
+stop: \
+	stop-backup \
+	stop-cron \
+	stop-web \
+	stop-redis
 
-dev: devBuild devUp
-prod: prodBuild prodUp
-
-# -----------------------------------------------------------------------------
-# Helpers
-# -----------------------------------------------------------------------------
-
-down:
-	docker-compose -f build/docker-compose.yml -p malcovercss down --remove-orphans
+run: \
+	run-backup \
+	run-cron \
+	run-web \
+	run-redis
 
 pull:
-	docker-compose -f build/docker-compose.yml pull --quiet
+	docker pull $(backup-image) --quiet
+	docker pull $(cron-image) --quiet
+	docker pull $(api-image) --quiet
+	docker pull $(web-image) --quiet
 
 push:
-	docker-compose -f build/docker-compose.yml push
+	docker push $(backup-image) --quiet
+	docker push $(cron-image) --quiet
+	docker push $(api-image) --quiet
+	docker push $(web-image) --quiet
+
+clean:
+	docker container prune -f
+	docker image prune -f
+
+# -----------------------------------------------------------------------------
+# Backup
+# -----------------------------------------------------------------------------
+
+backup: build-backup run-backup
+
+build-backup:
+	docker build \
+		--file $(backup-dockerfile) \
+		--tag $(backup-image) \
+		--progress=plain \
+		.
+
+stop-backup:
+	docker stop $(backup-container) || true
+	docker rm $(backup-container) || true
+
+run-backup: stop-backup
+	docker run \
+		--mount type=bind,source=/var/www/malcovercss/backups,target=/app/db/backups \
+		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
+		--log-driver local \
+		--restart=always \
+		--detach \
+		--name $(backup-container) \
+		$(backup-image)
+
+# -----------------------------------------------------------------------------
+# Cron
+# -----------------------------------------------------------------------------
+
+cron: build-cron run-cron
+
+build-cron:
+	docker build \
+		--file $(cron-dockerfile) \
+		--tag $(cron-image) \
+		--progress=plain \
+		.
+
+stop-cron:
+	docker stop $(cron-container) || true
+	docker rm $(cron-container) || true
+
+run-cron: stop-cron
+	docker run \
+		--mount type=bind,source=/var/www/malcovercss/generated,target=/app/dist/generated \
+		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
+		--env-file .env \
+		--log-driver local \
+		--restart=always \
+		--detach \
+		--name $(cron-container) \
+		$(cron-image)
+
+# -----------------------------------------------------------------------------
+# Api
+# -----------------------------------------------------------------------------
+
+api: build-api run-api
+
+build-api:
+	docker build \
+		--file $(api-dockerfile) \
+		--tag $(api-image) \
+		--progress=plain \
+		.
+
+stop-api:
+	docker stop $(api-container) || true
+	docker rm $(api-container) || true
+
+run-api: stop-api redis
+	docker run \
+		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
+		--env-file .env \
+		--env REDIS_HOST=malcovercss-redis \
+		--env REDIS_PORT=6379 \
+		--network nginx-network \
+		--log-driver local \
+		--restart=always \
+		--detach \
+		--name $(api-container) \
+		$(api-image)
+
+# -----------------------------------------------------------------------------
+# Web
+# -----------------------------------------------------------------------------
+
+web: build-web run-web
+
+build-web:
+	docker build \
+		--file $(web-dockerfile) \
+		--tag $(web-image) \
+		--progress=plain \
+		.
+
+stop-web:
+	docker stop $(web-container) || true
+	docker rm $(web-container) || true
+
+run-web: stop-web api
+	docker run \
+		--mount type=bind,source=/var/www/malcovercss/generated,target=/app/dist/web/generated,readonly \
+		--publish 9004:80 \
+		--network nginx-network \
+		--log-driver local \
+		--restart=always \
+		--detach \
+		--name $(web-container) \
+		$(web-image)
+
+# -----------------------------------------------------------------------------
+# Redis
+# -----------------------------------------------------------------------------
+
+redis: run-redis
+
+stop-redis:
+	docker stop $(redis-container) || true
+	docker rm $(redis-container) || true
+
+run-redis: stop-redis
+	docker run \
+		--publish 9005:6379 \
+		--network nginx-network \
+		--log-driver local \
+		--restart=always \
+		--detach \
+		--name $(redis-container) \
+		$(redis-image)

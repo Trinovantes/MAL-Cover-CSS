@@ -2,46 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Debug Generator",
-            "request": "attach",
-            "preLaunchTask": "Compose: generator",
-            "restart": true,
-            "port": 1001,
-    
+            "name": "Launch API Server",
             "type": "node",
-            "sourceMaps": true,
-            "remoteRoot": "/app/",
-            "skipFiles": [
-                "<node_internals>/**"
+            "request": "launch",
+
+            "runtimeArgs": [
+                "-r",
+                "source-map-support/register",
+                "-r",
+                "dotenv/config",
             ],
-        },
-        {
-            "name": "Debug Scraper",
-            "request": "attach",
-            "preLaunchTask": "Compose: scraper",
-            "restart": true,
-            "port": 1002,
-    
-            "type": "node",
-            "sourceMaps": true,
-            "remoteRoot": "/app/",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-        },
-        {
-            "name": "Debug Web Server",
-            "request": "attach",
-            "preLaunchTask": "Compose: www",
-            "restart": true,
-            "port": 9229,
-    
-            "type": "node",
-            "sourceMaps": true,
-            "remoteRoot": "/app/",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
+
+            "envFile": "${workspaceRoot}/.env",
+            "program": "${workspaceRoot}/dist/api/www.js",
         },
     ],
 }

@@ -1,13 +1,25 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-Vue.use(VueRouter)
+import { createRouter, createWebHistory, Router } from 'vue-router'
+import { routes } from './routes'
 
-import routes from '@web/router/routes'
+// ----------------------------------------------------------------------------
+// Router
+// ----------------------------------------------------------------------------
 
-export function createRouter(): VueRouter {
-    return new VueRouter({
-        mode: 'history',
-        routes: routes,
-        fallback: false,
+export function createAppRouter(): Router {
+    return createRouter({
+        history: createWebHistory(),
+        routes,
+
+        scrollBehavior(to) {
+            if (to.hash) {
+                return {
+                    el: to.hash,
+                }
+            }
+
+            return {
+                top: 0,
+            }
+        },
     })
 }

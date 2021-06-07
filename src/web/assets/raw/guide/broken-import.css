@@ -1,0 +1,5 @@
+/* Do NOT use this in your list design */
+@import url('https://www.malcovercss.link/generated/all-before.css');
+
+/* Add a slash in your list design's @import */
+@\import url('https://www.malcovercss.link/generated/all-before.css');

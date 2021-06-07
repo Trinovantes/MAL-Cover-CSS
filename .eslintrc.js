@@ -4,12 +4,9 @@
 const path = require('path')
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const inlineNonVoidElements = require('eslint-plugin-vue/lib/utils/inline-non-void-elements.json')
+const INLINE_ELEMENTS = require('eslint-plugin-vue/lib/utils/inline-non-void-elements.json')
 
 module.exports = {
-    // https://eslint.org/docs/user-guide/configuring#configuration-cascading-and-hierarchy
-    // This option interrupts the configuration hierarchy at this file
-    // Remove this if you have an higher level ESLint config file (it usually happens into a monorepos)
     root: true,
 
     parserOptions: {
@@ -17,7 +14,7 @@ module.exports = {
         parser: '@typescript-eslint/parser',
         project: path.resolve(__dirname, './tsconfig.json'),
         tsconfigRootDir: __dirname,
-        ecmaVersion: 2017, // Allows for the parsing of modern ECMAScript features
+        ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
         sourceType: 'module', // Allows for the use of imports
     },
 
@@ -29,7 +26,7 @@ module.exports = {
 
     // Disable warnings for variables that are accessed but not defined in same file
     globals: {
-        DEFINE: 'readonly',
+        'DEFINE': 'readonly',
     },
 
     // Rules order is important, please avoid shuffling them
@@ -38,11 +35,10 @@ module.exports = {
         'eslint:recommended',
         'plugin:@typescript-eslint/recommended',
         'plugin:@typescript-eslint/recommended-requiring-type-checking',
-        'plugin:vue/recommended',
+        'plugin:vue/vue3-recommended',
     ],
 
     plugins: [
-        'standard',
         '@typescript-eslint',
         'vue',
     ],
@@ -65,10 +61,12 @@ module.exports = {
         'import/no-unresolved': 'off',
         'import/no-extraneous-dependencies': 'off',
 
-        'comma-dangle': ['error', 'always-multiline'],
+        'comma-dangle': 'off',
+        '@typescript-eslint/comma-dangle': ['error', 'always-multiline'],
+
         'space-before-function-paren': ['error', 'never'],
         'indent': ['error', 4, {
-            SwitchCase: 1,
+            'SwitchCase': 1,
         }],
 
         'vue/html-indent': ['error', 4],
@@ -78,6 +76,10 @@ module.exports = {
                 max: 1,
                 allowFirstLine: false,
             },
+        }],
+
+        'vue/singleline-html-element-content-newline': ['error', {
+            'ignores': ['ExternalLink', 'pre', 'router-link', ...INLINE_ELEMENTS],
         }],
 
         '@typescript-eslint/type-annotation-spacing': 'error',
@@ -115,11 +117,40 @@ module.exports = {
 
         'no-debugger': 'error',
 
-        'vue/singleline-html-element-content-newline': ['error', {
-            'ignores': [
-                ...inlineNonVoidElements,
-                'router-link',
-            ],
+        '@typescript-eslint/naming-convention': [
+            'error',
+            {
+                'selector': 'default',
+                'format': null,
+                'modifiers': ['requiresQuotes'],
+            },
+            {
+                'selector': 'typeLike',
+                'format': ['PascalCase'],
+            },
+            {
+                'selector': 'parameter',
+                'format': ['strictCamelCase'],
+                'leadingUnderscore': 'allow',
+            },
+            {
+                'selector': 'memberLike',
+                'modifiers': ['private'],
+                'format': ['strictCamelCase'],
+                'leadingUnderscore': 'require',
+            },
+            {
+                'selector': [
+                    'variableLike',
+                    'method',
+                ],
+                'format': ['strictCamelCase', 'UPPER_CASE'],
+            },
+        ],
+
+        '@typescript-eslint/strict-boolean-expressions': ['error', {
+            allowNullableBoolean: true,
+            allowNullableString: true,
         }],
     },
 }

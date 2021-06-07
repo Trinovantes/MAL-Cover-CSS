@@ -1,0 +1,31 @@
+<table border="0" cellpadding="0" cellspacing="0" width="100%">
+    <tr>
+        <td class="td1" style="border-left-width: 1px;">
+            <div style="float: right;">
+                <small>
+                    <a href="/ownlist/anime/820/edit?hideLayout" class="List_LightBox">Edit</a>
+                    -
+                    <a href="javascript:void(0);" id="xmenu820" onclick="getExpand(820, 1);" title="View More Information">More</a>
+                </small>
+            </div>
+            <!-- We can create a unique selector for this <a> tag thanks to its unique href URL -->
+            <a href="/anime/820/Ginga_Eiyuu_Densetsu" target="_blank" class="animetitle" title="Anime Information">
+                <span>Ginga Eiyuu Densetsu</span>
+            </a>
+        </td>
+        <td class="td1" align="center" width="45">
+            <a href="javascript:void(0);" onclick="anime_scoreDisplay(820);" title="Click to bring up a text box to edit your current score">
+                <span id="scoreval820">
+                    10
+                </span>
+            </a>
+            <div id="scorediv820" style="display: none;">
+                <input type="text" onkeydown="anime_checkScoreEnter(event,820);" id="scoretext820" size="2">
+                <input type="button" value="Go" onclick="anime_updateScore(820);">
+            </div>
+        </td>
+    </tr>
+</table>
+
+<!-- We can also create a unique selector for this <div> tag thanks to its unique id -->
+<div id="more820" class="hide" style="width:100%px"></div>
