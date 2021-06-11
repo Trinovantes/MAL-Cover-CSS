@@ -3,6 +3,7 @@
 // ----------------------------------------------------------------------------
 
 $max-page-width: 1280px;
+$mobile-breakpoint: 1023px;
 
 $padding: 16px;
 $column-gap: $padding * 4;
@@ -24,25 +25,14 @@ $light-on-light:   rgba(22, 22, 22, 0.1);
 // Quasar
 // ----------------------------------------------------------------------------
 
-$space-base: $padding;
-
 $primary   : #2e51a2;
 $secondary : lighten($primary, 20%);
 $accent    : darken($primary, 20%);
-
-$dark-page : #121212;
-$dark      : #1d1d1d;
 
 $positive  : #21BA45;
 $negative  : #C10015;
 $info      : #31CCEC;
 $warning   : #F2C037;
 
-// Webpack loaders require ~ prefix to resolve this path as a normal JS module
-@import '~quasar/src/css/variables.sass';
-
-// ----------------------------------------------------------------------------
-// App
-// ----------------------------------------------------------------------------
-
-$mobile-breakpoint: $breakpoint-sm;
+$dark      : #1d1d1d;
+$dark-page : #121212;
