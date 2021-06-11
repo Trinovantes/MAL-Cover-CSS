@@ -1,7 +1,7 @@
 <template>
     <article class="container text-container">
         <h1>
-            Example List Design
+            {{ title }}
         </h1>
 
         <section>
@@ -98,11 +98,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { computed, defineComponent } from 'vue'
+import { useMeta } from 'vue-meta'
+import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
 
 export default defineComponent({
     setup() {
-        //
+        const title = 'Example List Design'
+
+        useMeta(computed(() => {
+            return createPageHeadOptions({
+                title,
+            })
+        }))
+
+        return {
+            title,
+        }
     },
 })
 </script>
