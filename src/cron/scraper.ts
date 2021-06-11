@@ -8,6 +8,7 @@ import { AxiosRequestConfig } from 'axios'
 import dayjs from 'dayjs'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
+import '@/common/utils/setupDayjs'
 
 // ----------------------------------------------------------------------------
 // Sentry
@@ -29,7 +30,7 @@ async function scrapeUsers() {
         name: 'Scrape Users Cron Job',
     })
 
-    const staleUserTime = dayjs().subtract(DELAY_BETWEEN_SCRAPPING, 'hours')
+    const staleUserTime = dayjs.utc().subtract(DELAY_BETWEEN_SCRAPPING, 'hours')
     console.info(`Getting users lastChecked before ${getSqlTimestamp(staleUserTime.toDate())}`)
 
     const users = await User.fetchAllToScrape(staleUserTime.toDate())

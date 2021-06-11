@@ -101,7 +101,7 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
     const redirectUrl = getOauthRedirectUrl()
     const malOauth = await obtainAccessToken(malAuth.code, returnedState.secret, redirectUrl)
     const malUser = await fetchMalUser(malOauth.access_token)
-    const tokenExpires = getSqlTimestamp(dayjs().add(malOauth.expires_in, 'seconds').toDate())
+    const tokenExpires = getSqlTimestamp(dayjs.utc().add(malOauth.expires_in, 'seconds').toDate())
 
     const user = await User.upsert({
         malUserId: malUser.id,

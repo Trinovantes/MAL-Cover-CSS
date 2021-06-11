@@ -70,14 +70,14 @@ export default defineComponent({
                 return 'N/A'
             }
 
-            return dayjs(currentUser.value.lastChecked).fromNow()
+            return dayjs.utc(currentUser.value.lastChecked).fromNow()
         })
         const lastCheckedTitle = computed(() => {
             if (!currentUser.value?.lastChecked) {
                 return 'N/A'
             }
 
-            return dayjs(currentUser.value.lastChecked).format('LLL')
+            return dayjs.utc(currentUser.value.lastChecked).tz(dayjs.tz.guess()).format('LLL')
         })
         const lastCheckedHint = computed(() => {
             if (currentUser.value?.lastChecked) {

@@ -7,16 +7,11 @@ import ExternalLink from './components/Global/ExternalLink.vue'
 import CodeBlock from './components/Global/CodeBlock.vue'
 import { createMetaManager, defaultConfig } from 'vue-meta'
 import { Quasar, Notify } from 'quasar'
-import dayjs from 'dayjs'
-import relativeTime from 'dayjs/plugin/relativeTime'
-import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { createUserStore, userInjectionKey } from './store/User'
 import * as Sentry from '@sentry/browser'
 import { Integrations } from '@sentry/tracing'
 import { SENTRY_DSN } from '@/common/Constants'
-
-dayjs.extend(relativeTime)
-dayjs.extend(localizedFormat)
+import '@/common/utils/setupDayjs'
 
 Sentry.init({
     dsn: SENTRY_DSN,

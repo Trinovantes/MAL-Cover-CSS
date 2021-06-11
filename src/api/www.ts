@@ -16,6 +16,7 @@ import { ErrorResponse } from '@/common/schemas/ApiResponse'
 import axios from 'axios'
 import * as Sentry from '@sentry/node'
 import { Integrations } from '@sentry/tracing'
+import '@/common/utils/setupDayjs'
 
 // -----------------------------------------------------------------------------
 // Express

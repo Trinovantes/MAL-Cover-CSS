@@ -101,12 +101,12 @@ async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: Ax
     assert(user.refreshToken)
 
     try {
-        const tokenHasExpired = dayjs(user.tokenExpires).isBefore(dayjs())
+        const tokenHasExpired = dayjs.utc(user.tokenExpires).isBefore(dayjs.utc())
         if (tokenHasExpired) {
             console.info(`${user.toString()} tokens has expired, going to refresh tokens`)
 
             const malRes = await refreshAccessToken(user.refreshToken)
-            const expires = getSqlTimestamp(dayjs().add(malRes.expires_in, 'seconds').toDate())
+            const expires = getSqlTimestamp(dayjs.utc().add(malRes.expires_in, 'seconds').toDate())
 
             await user.updateTokens({
                 tokenExpires: expires,

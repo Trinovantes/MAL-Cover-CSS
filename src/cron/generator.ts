@@ -4,6 +4,7 @@ import { Item, MediaType } from '@/common/models/Item'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import { SENTRY_DSN } from '@/common/Constants'
+import '@/common/utils/setupDayjs'
 
 // ----------------------------------------------------------------------------
 // Sentry
