@@ -1,4 +1,3 @@
-/* eslint-disable no-unreachable-loop */
 import { Item, MediaType } from '@/common/models/Item'
 import { User } from '@/common/models/User'
 import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
