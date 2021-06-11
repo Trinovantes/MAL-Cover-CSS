@@ -1,6 +1,6 @@
 import { RequestHandler, Request, Response, NextFunction } from 'express'
 import createHttpError from 'http-errors'
-import { User } from '@/api/models/User'
+import { User } from '@/common/models/User'
 import { createAsyncHandler } from '@/api/utils/asyncHandler'
 
 export const setUserInLocals = createAsyncHandler(async(req, res, next) => {

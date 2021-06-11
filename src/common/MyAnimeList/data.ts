@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig } from 'axios'
 import { MAL_API_URL } from '@/common/Constants'
 import assert from 'assert'
-import { User } from '@/api/models/User'
+import { User } from '@/common/models/User'
 import dayjs from 'dayjs'
 import { refreshAccessToken } from './oauth'
-import { getSqlTimestamp } from '@/api/utils/getSqlTimestamp'
+import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 
 // ----------------------------------------------------------------------------
 // v2 API Data

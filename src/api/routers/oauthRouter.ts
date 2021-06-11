@@ -8,13 +8,13 @@ import { MAL_OAUTH_RANDOM_STATE_LENGTH } from '@/common/Constants'
 import { getOauthEndpoint, obtainAccessToken } from '@/common/MyAnimeList/oauth'
 import { clearSession, enforceUserIsLoggedIn } from '@/api/middleware/user'
 import { isOauthState } from '@/common/schemas/OauthState'
-import { User } from '@/api/models/User'
+import { User } from '@/common/models/User'
 import { fetchMalUser } from '@/common/MyAnimeList/data'
 import { createAsyncHandler } from '@/api/utils/asyncHandler'
 import { isOauthAuthSuccess } from '@/common/schemas/OauthSuccess'
 import { isOauthFailure } from '@/common/schemas/OauthFailure'
-import { getSqlTimestamp } from '@/api/utils/getSqlTimestamp'
-import { getSecret, Secrets } from '@/common/utils/secrets'
+import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
+import { getOauthRedirectUrl } from '@/common/utils/secrets'
 
 // ----------------------------------------------------------------------------
 // Router
@@ -58,10 +58,6 @@ oauthRouter.post('/logout', enforceUserIsLoggedIn, createAsyncHandler(async(req,
 // ----------------------------------------------------------------------------
 // Oauth Response
 // ----------------------------------------------------------------------------
-
-export function getOauthRedirectUrl(): string {
-    return `${getSecret(Secrets.HOST_URL)}/api/oauth`
-}
 
 oauthRouter.get('/', createAsyncHandler(async(req, res) => {
     const onError = async(redirect?: string) => {

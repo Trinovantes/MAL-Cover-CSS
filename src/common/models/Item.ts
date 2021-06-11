@@ -1,4 +1,4 @@
-import { getSqlTimestamp } from '@/api/utils/getSqlTimestamp'
+import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 import { dbPromise } from './db'
 import { CreationOmit, DefaultColumns } from './Model'
 

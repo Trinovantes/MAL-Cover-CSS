@@ -47,6 +47,10 @@ export function isHttpsEnabled(): boolean {
     return getSecret(Secrets.HOST_URL).startsWith('https')
 }
 
+export function getOauthRedirectUrl(): string {
+    return `${getSecret(Secrets.HOST_URL)}/api/oauth`
+}
+
 export function getEncryptionKey(): Buffer {
     const key64 = getSecret(Secrets.ENCRYPTION_KEY)
     const key = Buffer.from(key64, 'base64')

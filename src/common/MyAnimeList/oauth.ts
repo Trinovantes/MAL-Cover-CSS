@@ -1,11 +1,10 @@
 import axios from 'axios'
 import { MAL_OAUTH_URL } from '@/common/Constants'
-import { getSecret, Secrets } from '@/common/utils/secrets'
+import { getOauthRedirectUrl, getSecret, Secrets } from '@/common/utils/secrets'
 import querystring from 'querystring'
 import { OauthState } from '@/common/schemas/OauthState'
 import { isOauthFailure } from '@/common/schemas/OauthFailure'
 import { isOauthTokenSuccess, OauthTokenSuccess } from '@/common/schemas/OauthTokenSuccess'
-import { getOauthRedirectUrl } from '@/api/routers/oauthRouter'
 
 // ----------------------------------------------------------------------------
 // v1 API Oauth Responses

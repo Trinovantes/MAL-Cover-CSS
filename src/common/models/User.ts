@@ -1,9 +1,9 @@
-import { decrypt, encrypt } from '@/api/utils/encryption'
+import { decrypt, encrypt } from '@/common/utils/encryption'
 import { UserResponse } from '@/common/schemas/ApiResponse'
 import assert from 'assert'
 import { dbPromise } from './db'
 import { CreationOmit, DefaultColumns } from './Model'
-import { getSqlTimestamp } from '@/api/utils/getSqlTimestamp'
+import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 
 // ----------------------------------------------------------------------------
 // User

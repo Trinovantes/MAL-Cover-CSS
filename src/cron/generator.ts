@@ -1,6 +1,6 @@
 import path from 'path'
 import fs from 'fs'
-import { Item, MediaType } from '@/api/models/Item'
+import { Item, MediaType } from '@/common/models/Item'
 
 // ----------------------------------------------------------------------------
 // Generator

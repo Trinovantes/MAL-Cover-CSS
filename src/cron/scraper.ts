@@ -1,7 +1,7 @@
 /* eslint-disable no-unreachable-loop */
-import { Item, MediaType } from '@/api/models/Item'
-import { User } from '@/api/models/User'
-import { getSqlTimestamp } from '@/api/utils/getSqlTimestamp'
+import { Item, MediaType } from '@/common/models/Item'
+import { User } from '@/common/models/User'
+import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 import { DELAY_BETWEEN_REQUESTS, DELAY_BETWEEN_SCRAPPING, ITEMS_PER_LIST_REQUEST } from '@/common/Constants'
 import { fetchMalAnimeList, fetchMalMangaList } from '@/common/MyAnimeList/data'
 import { sleep } from '@/common/utils/sleep'
