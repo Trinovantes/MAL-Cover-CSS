@@ -23,6 +23,11 @@ import { Integrations } from '@sentry/tracing'
 
 const app = express()
 
+// Express sits behind nginx proxy in production
+const trustProxy = !DEFINE.IS_DEV
+console.info(`Setting trust proxy:${trustProxy}`)
+app.set('trust proxy', trustProxy)
+
 // -----------------------------------------------------------------------------
 // Sentry
 // -----------------------------------------------------------------------------
@@ -63,14 +68,13 @@ app.use(express.urlencoded({ extended: false }))
 // Logging
 app.use(morgan(DEFINE.IS_DEV ? 'dev' : 'combined'))
 
-// Express sits behind nginx proxy in production
-app.set('trust proxy', !DEFINE.IS_DEV)
-
 // Sessions
+console.info(`Setting session secure:${isHttpsEnabled()} REDIS_HOST:${getSecret(Secrets.REDIS_HOST)} REDIS_PORT:${getSecret(Secrets.REDIS_PORT)}`)
 app.use(session({
     secret: getSecret(Secrets.ENCRYPTION_KEY),
     resave: false,
     saveUninitialized: false,
+    proxy: trustProxy,
     cookie: {
         maxAge: COOKIE_DURATION,
         httpOnly: true, // Cookies will not be available to Document.cookie api
