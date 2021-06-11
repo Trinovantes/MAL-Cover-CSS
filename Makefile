@@ -35,17 +35,20 @@ all: build run
 build: \
 	build-backup \
 	build-cron \
+	build-api \
 	build-web
 
 stop: \
 	stop-backup \
 	stop-cron \
+	stop-api \
 	stop-web \
 	stop-redis
 
 run: \
 	run-backup \
 	run-cron \
+	run-api \
 	run-web \
 	run-redis
 
