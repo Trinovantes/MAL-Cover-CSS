@@ -1,3 +1,10 @@
+# MAL Cover CSS
+
+This website was originally created before MyAnimeList launched their new "Modern" templates in 2016.
+
+Back then, "Classic" templates did not include cover images. As a result, everybody relied on third-party tools to generate the CSS needed to insert cover images into each entry's HTML background.
+
+Nowadays, this website is simply a relic of the past for users who do not want to switch and want to continue to use Classic templates.
 
 ## Setting up GitHub Actions
 
