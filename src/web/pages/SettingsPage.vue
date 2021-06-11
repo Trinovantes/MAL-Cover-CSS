@@ -111,6 +111,10 @@ export default defineComponent({
         }
 
         onMounted(async() => {
+            if (DEFINE.IS_PRERENDER) {
+                return
+            }
+
             if (!currentUser.value) {
                 await router.push('/')
             }

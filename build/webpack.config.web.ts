@@ -131,6 +131,7 @@ export default merge(commonConfig, {
                 '/guide',
                 '/example',
                 '/classic-vs-modern',
+                '/settings',
                 '/',
             ],
             puppeteerOptions: {
