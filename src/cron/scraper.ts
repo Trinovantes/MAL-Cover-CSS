@@ -109,7 +109,7 @@ async function deleteUsers() {
 // Main
 // ----------------------------------------------------------------------------
 
-export async function main(): Promise<void> {
+async function main(): Promise<void> {
     await scrapeUsers()
     await deleteUsers()
 }
