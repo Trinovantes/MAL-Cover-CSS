@@ -1,9 +1,5 @@
 <template>
-    <metainfo>
-        <template #title="{ content }">
-            {{ content && content !== APP_NAME ? `${content} | ${APP_NAME}` : APP_NAME }}
-        </template>
-    </metainfo>
+    <metainfo />
 
     <router-view v-slot="{ Component }">
         <template v-if="Component">
@@ -16,7 +12,6 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { APP_NAME } from '@/common/Constants'
 import { useUserStore } from '@/web/store/User'
 import { UserAction } from '@/web/store/User/actions'
 import { UserMutation } from '@/web/store/User/mutations'
@@ -36,7 +31,6 @@ export default defineComponent({
         }
 
         return {
-            APP_NAME,
             saveStatesToDom,
         }
     },

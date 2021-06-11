@@ -1,5 +1,5 @@
 import { MetaSource } from 'vue-meta'
-import { APP_THEME_COLOR } from '@/common/Constants'
+import { APP_NAME, APP_THEME_COLOR } from '@/common/Constants'
 import { merge } from 'lodash'
 
 interface PageHeadOptions {
@@ -10,7 +10,10 @@ interface PageHeadOptions {
 }
 
 export function createPageHeadOptions(options: PageHeadOptions): MetaSource {
-    const title = options.title
+    const title = options.title === APP_NAME
+        ? APP_NAME
+        : `${options.title} | ${APP_NAME}`
+
     const headOptions: Record<string, string | Record<string, string>> = {
         title,
         og: {
