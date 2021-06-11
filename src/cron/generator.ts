@@ -1,6 +1,19 @@
 import path from 'path'
 import fs from 'fs'
 import { Item, MediaType } from '@/common/models/Item'
+import * as Sentry from '@sentry/node'
+import '@sentry/tracing'
+import { SENTRY_DSN } from '@/common/Constants'
+
+// ----------------------------------------------------------------------------
+// Sentry
+// ----------------------------------------------------------------------------
+
+Sentry.init({
+    dsn: SENTRY_DSN,
+    tracesSampleRate: 1.0,
+    enabled: !DEFINE.IS_DEV,
+})
 
 // ----------------------------------------------------------------------------
 // Generator
@@ -25,6 +38,10 @@ async function generateCss() {
     }
 
     console.info(`Starting to generate css into ${outputDir}`)
+    const transaction = Sentry.startTransaction({
+        op: 'generateCss',
+        name: 'Generate CSS Cron Job',
+    })
 
     const selectors = Object.values(CssSelector)
     const mediaTypes = [...Object.values(MediaType), undefined]
@@ -32,12 +49,17 @@ async function generateCss() {
 
     for (const combo of comboToGenerate) {
         try {
+            const child = transaction.startChild({ op: 'generate', description: `generate(${outputDir}, ${combo[0]}, ${combo[1]})` })
             await generate(outputDir, combo[0], combo[1])
+            child.finish()
         } catch (err) {
             console.warn('Failed to generate', comboToGenerate)
             console.warn(err)
+            Sentry.captureException(err)
         }
     }
+
+    transaction.finish()
 }
 
 async function generate(outputDir: string, selector: CssSelector, mediaType?: MediaType) {

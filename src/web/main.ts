@@ -11,9 +11,21 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import localizedFormat from 'dayjs/plugin/localizedFormat'
 import { createUserStore, userInjectionKey } from './store/User'
+import * as Sentry from '@sentry/browser'
+import { Integrations } from '@sentry/tracing'
+import { SENTRY_DSN } from '@/common/Constants'
 
 dayjs.extend(relativeTime)
 dayjs.extend(localizedFormat)
+
+Sentry.init({
+    dsn: SENTRY_DSN,
+    integrations: [
+        new Integrations.BrowserTracing(),
+    ],
+    tracesSampleRate: 1.0,
+    enabled: !DEFINE.IS_DEV,
+})
 
 async function main() {
     // Vue
@@ -53,4 +65,5 @@ async function main() {
 
 main().catch((err) => {
     console.warn(err)
+    Sentry.captureException(err)
 })

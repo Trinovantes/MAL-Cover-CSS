@@ -17,3 +17,5 @@ export const ENCRYPTION_IV_LENGTH = 12 // bytes
 export const ENCRYPTION_AUTH_TAG_LENGTH = 16 // bytes
 
 export const DB_FILE = './db/live/malcovercss.sqlite3'
+
+export const SENTRY_DSN = 'https://8b8ac206cace4704956e4ebeed1420a3@o504161.ingest.sentry.io/5590526'

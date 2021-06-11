@@ -5,7 +5,7 @@ import morgan from 'morgan'
 import redis from 'redis'
 import session from 'express-session'
 import { getSecret, isHttpsEnabled, Secrets } from '@/common/utils/secrets'
-import { COOKIE_DURATION } from '@/common/Constants'
+import { COOKIE_DURATION, SENTRY_DSN } from '@/common/Constants'
 import { normalizePort } from './utils/normalizePort'
 import { setUserInLocals } from './middleware/user'
 import { debugInfo } from './middleware/dev'
@@ -14,12 +14,43 @@ import { oauthRouter } from './routers/oauthRouter'
 import { settingsRouter } from './routers/settingsRouter'
 import { ErrorResponse } from '@/common/schemas/ApiResponse'
 import axios from 'axios'
+import * as Sentry from '@sentry/node'
+import { Integrations } from '@sentry/tracing'
 
 // -----------------------------------------------------------------------------
 // Express
 // -----------------------------------------------------------------------------
 
 const app = express()
+
+// -----------------------------------------------------------------------------
+// Sentry
+// -----------------------------------------------------------------------------
+
+Sentry.init({
+    dsn: SENTRY_DSN,
+    integrations: [
+        // Enable HTTP calls tracing
+        new Sentry.Integrations.Http({ tracing: true }),
+        // Enable Express.js middleware tracing
+        new Integrations.Express({
+            // To trace all requests to the default router
+            app,
+            // Alternatively, you can specify the routes you want to trace:
+            // router: someRouter,
+        }),
+    ],
+
+    // We recommend adjusting this value in production, or using tracesSampler for finer control
+    tracesSampleRate: 1.0,
+    enabled: !DEFINE.IS_DEV,
+})
+
+// RequestHandler creates a separate execution context using domains, so that every transaction/span/breadcrumb is attached to its own Hub instance
+app.use(Sentry.Handlers.requestHandler())
+
+// TracingHandler creates a trace for every incoming request
+app.use(Sentry.Handlers.tracingHandler())
 
 // -----------------------------------------------------------------------------
 // Middlewars
@@ -89,6 +120,7 @@ const errorHander: ErrorRequestHandler = (err, req, res, next) => {
     res.json(response)
 }
 
+app.use(Sentry.Handlers.requestHandler())
 app.use(errorHander)
 
 // -----------------------------------------------------------------------------
