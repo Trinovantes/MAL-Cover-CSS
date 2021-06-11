@@ -167,7 +167,7 @@ stop-web:
 	docker stop $(web-container) || true
 	docker rm $(web-container) || true
 
-run-web: stop-web api
+run-web: stop-web run-api
 	docker run \
 		--mount type=bind,source=/var/www/malcovercss/generated,target=/app/dist/web/generated,readonly \
 		--publish 9004:80 \
