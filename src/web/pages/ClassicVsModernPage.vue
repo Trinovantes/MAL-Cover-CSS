@@ -40,14 +40,17 @@
 import { computed, defineComponent } from 'vue'
 import { useMeta } from 'vue-meta'
 import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
+import { getSocialImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
     setup() {
         const title = 'Classic vs. Modern Templates'
+        const img = getSocialImage('classic-vs-modern/modern-template.png')
 
         useMeta(computed(() => {
             return createPageHeadOptions({
                 title,
+                image: img.src,
             })
         }))
 

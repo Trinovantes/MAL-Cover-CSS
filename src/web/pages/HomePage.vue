@@ -118,13 +118,17 @@ import { computed, defineComponent } from 'vue'
 import { useMeta } from 'vue-meta'
 import { login } from '@/web/utils/api'
 import { useUserStore } from '@/web/store/User'
+import { getSocialImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
     setup() {
+        const img = getSocialImage('home/example-covers.jpg')
+
         useMeta(computed(() => {
             return createPageHeadOptions({
                 title: APP_NAME,
                 desc: APP_DESC,
+                image: img.src,
             })
         }))
 

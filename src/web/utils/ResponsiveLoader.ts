@@ -14,6 +14,7 @@ export interface ResponsiveImage {
     toString(): () => string
 }
 
-export async function getImage(filename: string): Promise<ResponsiveImage> {
-    return import(`@/web/assets/img/${filename}`) as Promise<ResponsiveImage>
+export function getSocialImage(filename: string): ResponsiveImage {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    return require(`@/web/assets/img/${filename}?size=400`) as ResponsiveImage
 }

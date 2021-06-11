@@ -101,14 +101,17 @@
 import { computed, defineComponent } from 'vue'
 import { useMeta } from 'vue-meta'
 import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
+import { getSocialImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
     setup() {
         const title = 'Example List Design'
+        const img = getSocialImage('home/example-covers.jpg')
 
         useMeta(computed(() => {
             return createPageHeadOptions({
                 title,
+                image: img.src,
             })
         }))
 
