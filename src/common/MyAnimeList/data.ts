@@ -91,7 +91,7 @@ async function fetchFromMal<T>(accessToken: string, endpoint: string, config?: A
     return res.data as T
 }
 
-export async function fetchMalUser(accessToken: string, config?: AxiosRequestConfig): Promise<MalUser> {
+export function fetchMalUser(accessToken: string, config?: AxiosRequestConfig): Promise<MalUser> {
     return fetchFromMal<MalUser>(accessToken, 'users/@me', config)
 }
 
@@ -118,16 +118,21 @@ async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: Ax
         return await fetchFromMal(user.accessToken, endpoint, config)
     } catch (err) {
         // Check if it's a known error
-        if (axios.isAxiosError(err) && err.response?.status === 401) {
-            console.info(`${user.toString()} has revoked their authorization, going delete the user`)
+        if (axios.isAxiosError(err) && err.response) {
+            if (err.response.status === 401) {
+                console.info(`${user.toString()} has revoked their authorization, going delete the user`)
 
-            await user.updateTokens({
-                tokenExpires: null,
-                accessToken: null,
-                refreshToken: null,
-            })
+                await user.updateTokens({
+                    tokenExpires: null,
+                    accessToken: null,
+                    refreshToken: null,
+                })
 
-            return null
+                return null
+            } else if (err.response.status >= 500) {
+                console.info(`MyAnimeList server error ${err.response.status}`)
+                return null
+            }
         }
 
         // Unknown error
@@ -136,10 +141,10 @@ async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: Ax
     }
 }
 
-export async function fetchMalAnimeList(user: User, config: AxiosRequestConfig): Promise<MalAnimeResponse | null> {
+export function fetchMalAnimeList(user: User, config: AxiosRequestConfig): Promise<MalAnimeResponse | null> {
     return fetchUserDataFromMal<MalAnimeResponse>(user, 'users/@me/animelist', config)
 }
 
-export async function fetchMalMangaList(user: User, config: AxiosRequestConfig): Promise<MalMangaResponse | null> {
+export function fetchMalMangaList(user: User, config: AxiosRequestConfig): Promise<MalMangaResponse | null> {
     return fetchUserDataFromMal<MalMangaResponse>(user, 'users/@me/mangalist', config)
 }
