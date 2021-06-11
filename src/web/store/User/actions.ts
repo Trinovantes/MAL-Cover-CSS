@@ -36,6 +36,11 @@ export interface UserActions {
 
 export const actions: ActionTree<UserState, UserState> & UserActions = {
     [UserAction.INIT]: async({ commit }) => {
+        // Don't load user from api during prerender
+        if (DEFINE.IS_PRERENDER) {
+            return
+        }
+
         const user = await fetchUser()
         commit(UserMutation.SET_USER, user)
     },
