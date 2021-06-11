@@ -7,12 +7,14 @@
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from 'vue'
+import { defineComponent } from 'vue'
+import Header from './Header.vue'
+import Footer from './Footer.vue'
 
 export default defineComponent({
     components: {
-        Header: defineAsyncComponent(() => import('./Header.vue')),
-        Footer: defineAsyncComponent(() => import('./Footer.vue')),
+        Header,
+        Footer,
     },
 })
 </script>
