@@ -25,7 +25,9 @@ RUN yarn install
 
 # Build app
 COPY build/                     ./build/
-COPY src/                       ./src/
+COPY src/@types/                ./src/@types/
+COPY src/common/                ./src/common/
+COPY src/web/                   ./src/web/
 RUN yarn buildWeb
 
 # -----------------------------------------------------------------------------

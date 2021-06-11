@@ -11,7 +11,9 @@ RUN yarn install
 
 # Build app
 COPY build/                     ./build/
-COPY src/                       ./src/
+COPY src/@types/                ./src/@types/
+COPY src/common/                ./src/common/
+COPY src/api/                   ./src/api/
 RUN yarn buildApi
 
 # -----------------------------------------------------------------------------
