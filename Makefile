@@ -65,6 +65,7 @@ push:
 	docker push $(web-image) --quiet
 
 clean:
+	rm -rf ./dist ./node_modules/.cache
 	docker container prune -f
 	docker image prune -f
 
