@@ -29,19 +29,14 @@ export default defineComponent({
 footer.layout-footer{
     font-size: 1rem;
 
-    a{
-        color: white;
-        text-decoration: none;
-
-        &:hover{
-            color: #999;
-        }
-    }
-
     &.copyright{
-        background: $dark;
+        background: $dark-page;
         color: #999;
         padding: ($padding * 3) 0;
+
+        a{
+            color: white;
+        }
 
         p{
             margin: math.div($padding, 2) 0;
