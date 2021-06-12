@@ -197,14 +197,14 @@ header.layout-header {
                 height: $padding * 2;
             }
 
-            a{
-                border-top: 1px solid $light-on-dark;
+            a:not(.q-btn){
+                border-bottom: 1px solid $light-on-dark;
                 padding-left: 0;
                 padding-right: 0;
                 width: 100%;
 
-                &:last-of-type{
-                    border-bottom: 1px solid $light-on-dark;
+                &:first-of-type{
+                    border-top: 1px solid $light-on-dark;
                 }
             }
 
