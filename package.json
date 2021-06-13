@@ -22,7 +22,6 @@
         ]
     },
     "dependencies": {
-        "@highlightjs/vue-plugin": "^1.0.2",
         "@sentry/browser": "^6.6.0",
         "@sentry/node": "^6.6.0",
         "@sentry/tracing": "^6.6.0",
