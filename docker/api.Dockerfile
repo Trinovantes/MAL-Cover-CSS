@@ -14,7 +14,8 @@ COPY build/                     ./build/
 COPY src/@types/                ./src/@types/
 COPY src/common/                ./src/common/
 COPY src/api/                   ./src/api/
-RUN yarn buildApi
+RUN --mount=type=secret,id=GIT_HASH \
+    yarn buildApi
 
 # -----------------------------------------------------------------------------
 FROM amacneil/dbmate:v1.11.0 as dbmate

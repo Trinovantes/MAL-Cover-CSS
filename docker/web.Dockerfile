@@ -28,7 +28,8 @@ COPY build/                     ./build/
 COPY src/@types/                ./src/@types/
 COPY src/common/                ./src/common/
 COPY src/web/                   ./src/web/
-RUN yarn buildWeb
+RUN --mount=type=secret,id=GIT_HASH \
+    yarn buildWeb
 
 # -----------------------------------------------------------------------------
 FROM nginx:alpine

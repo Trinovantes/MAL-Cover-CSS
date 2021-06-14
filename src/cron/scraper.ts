@@ -16,6 +16,7 @@ import '@/common/utils/setupDayjs'
 
 Sentry.init({
     dsn: SENTRY_DSN,
+    release: DEFINE.GIT_HASH,
     tracesSampleRate: 1.0,
     enabled: !DEFINE.IS_DEV,
 })

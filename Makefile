@@ -1,5 +1,6 @@
 print-%: ; @echo $*=$($*)
 
+export GIT_HASH                 := $(shell git rev-parse HEAD)
 export DOCKER_BUILDKIT          := 1
 export COMPOSE_DOCKER_CLI_BUILD := 1
 
@@ -107,6 +108,7 @@ build-cron:
 		--file $(cron-dockerfile) \
 		--tag $(cron-image) \
 		--progress=plain \
+		--secret id=GIT_HASH \
 		.
 
 stop-cron:
@@ -135,6 +137,7 @@ build-api:
 		--file $(api-dockerfile) \
 		--tag $(api-image) \
 		--progress=plain \
+		--secret id=GIT_HASH \
 		.
 
 stop-api:
@@ -165,6 +168,7 @@ build-web:
 		--file $(web-dockerfile) \
 		--tag $(web-image) \
 		--progress=plain \
+		--secret id=GIT_HASH \
 		.
 
 stop-web:

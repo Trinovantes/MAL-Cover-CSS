@@ -1,6 +1,7 @@
 import path from 'path'
 import webpack, { DefinePlugin } from 'webpack'
 import { VueLoaderPlugin } from 'vue-loader'
+import { getGitHash } from './secrets'
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -10,6 +11,7 @@ import { VueLoaderPlugin } from 'vue-loader'
 const rootDir = path.resolve()
 
 export const isDev = (process.env.NODE_ENV === 'development')
+export const gitHash = getGitHash(rootDir)
 export const publicPath = '/public/'
 
 export const distDir = path.resolve(rootDir, 'dist')
@@ -52,6 +54,7 @@ export const commonConfig: webpack.Configuration = {
             __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
 
             'DEFINE.IS_DEV': JSON.stringify(isDev),
+            'DEFINE.GIT_HASH': JSON.stringify(gitHash),
         }),
         new VueLoaderPlugin(),
     ],

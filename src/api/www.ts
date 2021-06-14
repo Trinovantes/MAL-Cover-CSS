@@ -35,6 +35,7 @@ app.set('trust proxy', trustProxy)
 
 Sentry.init({
     dsn: SENTRY_DSN,
+    release: DEFINE.GIT_HASH,
     integrations: [
         // Enable HTTP calls tracing
         new Sentry.Integrations.Http({ tracing: true }),

@@ -7,6 +7,7 @@ import { createApp } from './app'
 
 Sentry.init({
     dsn: SENTRY_DSN,
+    release: DEFINE.GIT_HASH,
     integrations: [
         new Integrations.BrowserTracing(),
     ],
