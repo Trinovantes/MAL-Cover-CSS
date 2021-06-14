@@ -3,7 +3,7 @@
 
     <router-view v-slot="{ Component }">
         <template v-if="Component">
-            <suspense @resolve="saveStatesToDom">
+            <suspense>
                 <component :is="Component" />
             </suspense>
         </template>
@@ -18,20 +18,11 @@ import { UserMutation } from '@/web/store/User/mutations'
 
 export default defineComponent({
     async setup() {
-        const saveStatesToDom = () => {
-            document.dispatchEvent(new Event(DEFINE.PRERENDER_READY_EVENT))
-        }
-
         const userStore = useUserStore()
         try {
             await userStore.dispatch(UserAction.INIT)
         } catch (err) {
-            console.info('Failed to init User')
             userStore.commit(UserMutation.RESET_STATE)
-        }
-
-        return {
-            saveStatesToDom,
         }
     },
 })

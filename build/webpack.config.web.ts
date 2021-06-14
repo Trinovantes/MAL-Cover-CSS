@@ -2,38 +2,73 @@ import path from 'path'
 import { merge } from 'webpack-merge'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
-import { commonConfig, isDev, staticDir, srcWebDir, distWebDir, rawDirRegexp } from './webpack.common'
-import { PRERENDER_STATUS_KEY, PuppeteerPrerenderPlugin } from 'puppeteer-prerender-plugin'
-import { DefinePlugin } from 'webpack'
+import { commonConfig, isDev, staticDir, srcWebDir, rawDirRegexp, publicPath, manifestFilePath, distWebPublicDir, distWebDir } from './webpack.common'
+import { Chunk } from 'webpack'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import { JSDOM } from 'jsdom'
+import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 
 // ----------------------------------------------------------------------------
-// Web
+// Client
 // ----------------------------------------------------------------------------
+
+function createFilenameFn(ext: string) {
+    return (pathData: unknown): string => {
+        const defaultChunkName = isDev
+            ? `[name].${ext}`
+            : `[name].[contenthash].${ext}`
+
+        const data = pathData as { chunk: Chunk }
+        const filename = data.chunk.id
+        if (typeof filename !== 'string') {
+            return defaultChunkName
+        }
+
+        const pathParts = filename.split('_')
+        pathParts.reverse()
+        if (pathParts[0] !== 'vue') {
+            return defaultChunkName
+        }
+
+        return defaultChunkName.replace('[name]', pathParts[1])
+    }
+}
 
 export default merge(commonConfig, {
     target: 'web',
 
     entry: {
-        main: path.resolve(srcWebDir, 'main.ts'),
+        main: path.resolve(srcWebDir, 'entryClient.ts'),
     },
 
     output: {
-        path: distWebDir,
-        publicPath: '/',
-        filename: isDev
-            ? '[name].js'
-            : '[name].[contenthash].js',
-        chunkFilename: isDev
-            ? '[name].js'
-            : '[name].[contenthash].js',
+        path: distWebPublicDir,
+        publicPath: publicPath,
+        filename: createFilenameFn('js'),
+        chunkFilename: createFilenameFn('js'),
+    },
+
+    optimization: {
+        chunkIds: 'named',
     },
 
     devServer: {
         host: 'test.malcovercss.link',
         port: 9004,
-        historyApiFallback: true,
+        historyApiFallback: {
+            index: 'app.html',
+        },
+        contentBase: [
+            distWebDir,
+            staticDir,
+        ],
+        contentBasePublicPath: [
+            '/',
+            '/',
+        ],
+        index: 'app.html',
+        writeToDisk: (filePath) => {
+            return filePath.endsWith('.html')
+        },
         proxy: {
             '/api': 'http://localhost:3000',
         },
@@ -44,9 +79,7 @@ export default merge(commonConfig, {
             {
                 test: /\.(sass|scss)$/,
                 use: [
-                    isDev
-                        ? 'style-loader'
-                        : MiniCssExtractPlugin.loader,
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
                     {
                         loader: 'sass-loader',
@@ -64,9 +97,7 @@ export default merge(commonConfig, {
                 test: /\.(css)$/,
                 exclude: rawDirRegexp,
                 use: [
-                    isDev
-                        ? 'style-loader'
-                        : MiniCssExtractPlugin.loader,
+                    MiniCssExtractPlugin.loader,
                     'css-loader',
                 ],
             },
@@ -95,52 +126,20 @@ export default merge(commonConfig, {
             patterns: [
                 {
                     from: staticDir,
+                    to: distWebDir,
                 },
             ],
         }),
         new MiniCssExtractPlugin({
-            filename: isDev
-                ? '[name].css'
-                : '[name].[contenthash].css',
-            chunkFilename: isDev
-                ? '[name].css'
-                : '[name].[contenthash].css',
+            filename: createFilenameFn('css'),
+            chunkFilename: createFilenameFn('css'),
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(srcWebDir, 'index.html'),
+            filename: path.resolve(distWebDir, 'app.html'),
         }),
-        new DefinePlugin({
-            'DEFINE.IS_PRERENDER': `window.${PRERENDER_STATUS_KEY}`,
-            'DEFINE.PRERENDER_READY_EVENT': JSON.stringify('__RENDERED__'),
-        }),
-        new PuppeteerPrerenderPlugin({
-            enabled: !isDev,
-            renderAfterEvent: '__RENDERED__',
-            outputDir: distWebDir,
-            postProcess: (result) => {
-                const dom = new JSDOM(result.html)
-                const app = dom.window.document.querySelector('div#app')
-                if (app) {
-                    // Remove app HTML since Vue 3 cannot hydrate non-SSR markup
-                    app.innerHTML = ''
-                }
-
-                result.html = dom.serialize()
-            },
-            routes: [
-                '/guide',
-                '/example',
-                '/classic-vs-modern',
-                '/settings',
-                '/',
-            ],
-            puppeteerOptions: {
-                headless: true,
-                args: [
-                    '--no-sandbox',
-                    '--disable-setuid-sandbox',
-                ],
-            },
+        new WebpackManifestPlugin({
+            fileName: manifestFilePath,
         }),
     ],
 })

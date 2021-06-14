@@ -2,9 +2,11 @@
     <article class="hero-unit">
         <div class="container vertical">
             <section>
-                <q-img
-                    :src="require('@/web/assets/img/home/example-covers.jpg').src"
-                />
+                <ClientOnly>
+                    <q-img
+                        :src="require('@/web/assets/img/home/example-covers.jpg').src"
+                    />
+                </ClientOnly>
             </section>
             <section>
                 <h1>
@@ -16,8 +18,8 @@
                     :code="require('@/web/assets/raw/home/example-usage.css')"
                 />
 
-                <div class="btn-group">
-                    <ClientOnly>
+                <ClientOnly>
+                    <div class="btn-group">
                         <q-btn
                             v-if="currentUser"
                             color="secondary"
@@ -34,17 +36,17 @@
                             label="Log in with MAL to track your lists"
                             @click="login($route.path)"
                         />
-                    </ClientOnly>
 
-                    <q-btn
-                        outline
-                        unelevated
-                        no-caps
-                        color="white"
-                        label="Guide"
-                        to="guide"
-                    />
-                </div>
+                        <q-btn
+                            outline
+                            unelevated
+                            no-caps
+                            color="white"
+                            label="Guide"
+                            to="guide"
+                        />
+                    </div>
+                </ClientOnly>
             </section>
         </div>
     </article>
@@ -52,9 +54,11 @@
     <article class="hero-unit">
         <div class="container">
             <section>
-                <q-img
-                    :src="require('@/web/assets/img/home/example-covers.jpg').src"
-                />
+                <ClientOnly>
+                    <q-img
+                        :src="require('@/web/assets/img/home/example-covers.jpg').src"
+                    />
+                </ClientOnly>
             </section>
             <section>
                 <h1>
@@ -86,9 +90,11 @@
     <article class="hero-unit">
         <div class="container">
             <section>
-                <q-img
-                    :src="require('@/web/assets/img/home/modern-image-settings.png').src"
-                />
+                <ClientOnly>
+                    <q-img
+                        :src="require('@/web/assets/img/home/modern-image-settings.png').src"
+                    />
+                </ClientOnly>
             </section>
             <section>
                 <h1>
@@ -123,6 +129,8 @@ import { useUserStore } from '@/web/store/User'
 import { getSocialImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
+    name: 'HomePage',
+
     setup() {
         const img = getSocialImage('home/example-covers.jpg')
 
@@ -238,6 +246,10 @@ article.hero-unit{
 
                 margin-left: auto;
                 margin-right: auto;
+            }
+
+            section{
+                align-items: center;
             }
 
             .btn-group{

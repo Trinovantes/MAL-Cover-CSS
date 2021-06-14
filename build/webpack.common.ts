@@ -7,13 +7,18 @@ import { VueLoaderPlugin } from 'vue-loader'
 // ----------------------------------------------------------------------------
 
 export const isDev = (process.env.NODE_ENV === 'development')
+export const publicPath = '/public/'
 
 const rootDir = path.resolve() // Assume we are running from the project root
 
 export const distDir = path.resolve(rootDir, 'dist')
 export const distCronDir = path.resolve(distDir, 'cron')
 export const distApiDir = path.resolve(distDir, 'api')
+
 export const distWebDir = path.resolve(distDir, 'web')
+export const distWebPublicDir = path.resolve(distDir, 'web', 'public')
+export const distSsgDir = path.resolve(distDir, 'ssg')
+export const manifestFilePath = path.resolve(distDir, 'ssg', 'ssr-manifest.json')
 
 export const srcDir = path.resolve(rootDir, 'src')
 export const srcCronDir = path.resolve(srcDir, 'cron')

@@ -1,5 +1,4 @@
-import './assets/css/main.scss'
-import { createApp } from 'vue'
+import { createSSRApp } from 'vue'
 import { createAppRouter } from './router'
 import AppLoader from './components/AppLoader.vue'
 import ClientOnly from './components/Global/ClientOnly.vue'
@@ -8,29 +7,36 @@ import CodeBlock from './components/Global/CodeBlock.vue'
 import { createMetaManager, defaultConfig } from 'vue-meta'
 import { Quasar, Notify } from 'quasar'
 import { createUserStore, userInjectionKey } from './store/User'
-import * as Sentry from '@sentry/browser'
-import { Integrations } from '@sentry/tracing'
-import { SENTRY_DSN } from '@/common/Constants'
-import '@/common/utils/setupDayjs'
+import { Router } from 'vue-router'
+import { SSRContext } from '@vue/server-renderer'
+import express from 'express'
 
-Sentry.init({
-    dsn: SENTRY_DSN,
-    integrations: [
-        new Integrations.BrowserTracing(),
-    ],
-    tracesSampleRate: 1.0,
-    enabled: !DEFINE.IS_DEV,
-})
+interface CreatedApp {
+    app: ReturnType<typeof createSSRApp>
+    router: Router
+    userStore: ReturnType<typeof createUserStore>
+}
 
-async function main() {
+export type AppContext = SSRContext & {
+    url: string
+
+    // Required by Quasar
+    req: express.Request
+    res: express.Response
+    _modules: Set<unknown>
+    _meta: Record<string, unknown>
+}
+
+export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
     // Vue
-    const app = createApp(AppLoader)
+    const app = createSSRApp(AppLoader)
+
     app.component('ClientOnly', ClientOnly)
     app.component('ExternalLink', ExternalLink)
     app.component('CodeBlock', CodeBlock)
 
     // Vue Router
-    const router = createAppRouter()
+    const router = await createAppRouter(ssrContext)
     app.use(router)
     await router.isReady()
 
@@ -39,7 +45,8 @@ async function main() {
     app.use(userStore, userInjectionKey)
 
     // Vue Meta
-    const metaManager = createMetaManager(!!DEFINE.IS_PRERENDER, {
+    const isSsr = (ssrContext !== undefined)
+    const metaManager = createMetaManager(isSsr, {
         ...defaultConfig,
         'theme-color': {
             tag: 'meta',
@@ -53,12 +60,11 @@ async function main() {
         plugins: {
             Notify,
         },
-    })
+    }, ssrContext)
 
-    app.mount('#app')
+    return {
+        app,
+        router,
+        userStore,
+    }
 }
-
-main().catch((err) => {
-    console.warn(err)
-    Sentry.captureException(err)
-})

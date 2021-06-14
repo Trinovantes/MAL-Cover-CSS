@@ -1,16 +1,21 @@
 <template>
-    <slot v-if="isNotPrerender" />
+    <template v-if="show">
+        <slot />
+    </template>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 
 export default defineComponent({
     setup() {
-        const isNotPrerender = !DEFINE.IS_PRERENDER
+        const show = ref(false)
+        onMounted(() => {
+            show.value = true
+        })
 
         return {
-            isNotPrerender,
+            show,
         }
     },
 })

@@ -9,13 +9,15 @@
                 This website was originally created before MyAnimeList launched their new "Modern" templates in 2016.
             </p>
 
-            <q-img
-                :src="require('@/web/assets/img/classic-vs-modern/modern-template.png?size=800').src"
-            >
-                <span class="caption">
-                    Default "Modern" template
-                </span>
-            </q-img>
+            <ClientOnly>
+                <q-img
+                    :src="require('@/web/assets/img/classic-vs-modern/modern-template.png?size=800').src"
+                >
+                    <span class="caption">
+                        Default "Modern" template
+                    </span>
+                </q-img>
+            </ClientOnly>
 
             <p>
                 Back then, "Classic" templates did not include cover images. As a result, everybody relied on third-party tools to generate the CSS needed to insert cover images into each entry's HTML background.
@@ -25,13 +27,15 @@
                 Nowadays, this website is simply a relic of the past for users who do not want to switch and want to continue to use Classic templates.
             </p>
 
-            <q-img
-                :src="require('@/web/assets/img/classic-vs-modern/enable-modern-cover-image.png?size=800').src"
-            >
-                <span class="caption">
-                    Modern templates can include cover images without third-party tools
-                </span>
-            </q-img>
+            <ClientOnly>
+                <q-img
+                    :src="require('@/web/assets/img/classic-vs-modern/enable-modern-cover-image.png?size=800').src"
+                >
+                    <span class="caption">
+                        Modern templates can include cover images without third-party tools
+                    </span>
+                </q-img>
+            </ClientOnly>
         </section>
     </article>
 </template>
@@ -43,6 +47,8 @@ import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
 import { getSocialImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
+    name: 'ClassicVsModernPage',
+
     setup() {
         const title = 'Classic vs. Modern Templates'
         const img = getSocialImage('classic-vs-modern/modern-template.png')

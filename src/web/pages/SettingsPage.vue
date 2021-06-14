@@ -53,6 +53,8 @@ import { UserMutation } from '@/web/store/User/mutations'
 import dayjs from 'dayjs'
 
 export default defineComponent({
+    name: 'SettingsPage',
+
     setup() {
         const title = 'Settings'
 
@@ -111,10 +113,6 @@ export default defineComponent({
         }
 
         onMounted(async() => {
-            if (DEFINE.IS_PRERENDER) {
-                return
-            }
-
             if (!currentUser.value) {
                 await router.push('/')
             }
