@@ -74,15 +74,17 @@
                     :code="require('@/web/assets/raw/home/how-to-use-example-covers.css')"
                 />
 
-                <div class="btn-group">
-                    <q-btn
-                        outline
-                        unelevated
-                        no-caps
-                        label="Learn More"
-                        to="/example"
-                    />
-                </div>
+                <ClientOnly>
+                    <div class="btn-group">
+                        <q-btn
+                            outline
+                            unelevated
+                            no-caps
+                            label="How to Set Up Example"
+                            to="/example"
+                        />
+                    </div>
+                </ClientOnly>
             </section>
         </div>
     </article>
@@ -105,15 +107,17 @@
                     Modern list designs already have an option to directly embed cover images into your lists
                 </h2>
 
-                <div class="btn-group">
-                    <q-btn
-                        outline
-                        unelevated
-                        no-caps
-                        label="Learn More"
-                        to="/classic-vs-modern"
-                    />
-                </div>
+                <ClientOnly>
+                    <div class="btn-group">
+                        <q-btn
+                            outline
+                            unelevated
+                            no-caps
+                            label="Learn More about Modern Templates"
+                            to="/classic-vs-modern"
+                        />
+                    </div>
+                </ClientOnly>
             </section>
         </div>
     </article>
