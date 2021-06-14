@@ -54,6 +54,7 @@ export const commonConfig: webpack.Configuration = {
             __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
 
             'DEFINE.IS_DEV': JSON.stringify(isDev),
+            'DEFINE.IS_SSR': "(typeof window === 'undefined')",
             'DEFINE.GIT_HASH': JSON.stringify(gitHash),
         }),
         new VueLoaderPlugin(),

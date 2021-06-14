@@ -45,8 +45,7 @@ export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
     app.use(userStore, userInjectionKey)
 
     // Vue Meta
-    const isSsr = (ssrContext !== undefined)
-    const metaManager = createMetaManager(isSsr, {
+    const metaManager = createMetaManager(DEFINE.IS_SSR, {
         ...defaultConfig,
         'theme-color': {
             tag: 'meta',

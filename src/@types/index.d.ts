@@ -1,6 +1,7 @@
 declare global {
     const DEFINE: {
         IS_DEV: boolean
+        IS_SSR: boolean
         GIT_HASH: string
 
         // web-ssg specific
