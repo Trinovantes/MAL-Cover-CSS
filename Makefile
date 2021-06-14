@@ -194,6 +194,7 @@ stop-redis:
 
 run-redis: stop-redis
 	docker run \
+		--mount type=bind,source=/var/www/malcovercss/redis,target=/data \
 		--publish 9005:6379 \
 		--network nginx-network \
 		--log-driver local \
