@@ -17,22 +17,24 @@
                 />
 
                 <div class="btn-group">
-                    <q-btn
-                        v-if="currentUser"
-                        color="secondary"
-                        unelevated
-                        no-caps
-                        label="Go to Settings"
-                        to="/settings"
-                    />
-                    <q-btn
-                        v-else
-                        color="positive"
-                        unelevated
-                        no-caps
-                        label="Log in with MAL to track your lists"
-                        @click="login($route.path)"
-                    />
+                    <ClientOnly>
+                        <q-btn
+                            v-if="currentUser"
+                            color="secondary"
+                            unelevated
+                            no-caps
+                            label="Go to Settings"
+                            to="/settings"
+                        />
+                        <q-btn
+                            v-else
+                            color="positive"
+                            unelevated
+                            no-caps
+                            label="Log in with MAL to track your lists"
+                            @click="login($route.path)"
+                        />
+                    </ClientOnly>
 
                     <q-btn
                         outline
