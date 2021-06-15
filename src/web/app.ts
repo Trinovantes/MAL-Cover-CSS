@@ -31,7 +31,6 @@ export type AppContext = SSRContext & {
 export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
     // Vue
     const app = createSSRApp(AppLoader)
-
     app.component('ClientOnly', ClientOnly)
     app.component('ExternalLink', ExternalLink)
     app.component('CodeBlock', CodeBlock)
