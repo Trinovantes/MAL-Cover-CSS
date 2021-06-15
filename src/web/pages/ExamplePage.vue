@@ -14,11 +14,9 @@
                     This example list design can only style your score. If wish to include additional information (e.g. tags) in your lists, then you need to make additional changes to the CSS yourself.
                 </p>
 
-                <ClientOnly>
-                    <q-img
-                        :src="require('@/web/assets/img/example/only-show-score.png?size=800').src"
-                    />
-                </ClientOnly>
+                <ResponsiveImage
+                    :img="require('@/web/assets/img/example/only-show-score.png?size=800')"
+                />
             </div>
 
             <h2>
@@ -29,11 +27,9 @@
                 First, go into <ExternalLink href="https://myanimelist.net/ownlist/style">List Style Design</ExternalLink> and click on Classic template.
             </p>
 
-            <ClientOnly>
-                <q-img
-                    :src="require('@/web/assets/img/example/enable-classic-template.png?size=800').src"
-                />
-            </ClientOnly>
+            <ResponsiveImage
+                :img="require('@/web/assets/img/example/enable-classic-template.png?size=800')"
+            />
 
             <h2>
                 2. Create advanced CSS list design
@@ -43,11 +39,9 @@
                 After enabling Classic template, you can then go into Advanced CSS List Design and create a new Advanced CSS List Design.
             </p>
 
-            <ClientOnly>
-                <q-img
-                    :src="require('@/web/assets/img/example/create-advanced-css.png?size=800').src"
-                />
-            </ClientOnly>
+            <ResponsiveImage
+                :img="require('@/web/assets/img/example/create-advanced-css.png?size=800')"
+            />
 
             <p>
                 Next paste the following code into the textbox and click Save.
@@ -58,11 +52,9 @@
                 :code="require('@/web/assets/raw/home/how-to-use-example-covers.css')"
             />
 
-            <ClientOnly>
-                <q-img
-                    :src="require('@/web/assets/img/example/save-advanced-css.png?size=800').src"
-                />
-            </ClientOnly>
+            <ResponsiveImage
+                :img="require('@/web/assets/img/example/save-advanced-css.png?size=800')"
+            />
 
             <div class="callout">
                 <h3>
@@ -82,11 +74,9 @@
                 Finally, follow the link in the notice MyAnimeList showed you in the previous step to go into your List Style settings and set your anime/manga lists to use your new design.
             </p>
 
-            <ClientOnly>
-                <q-img
-                    :src="require('@/web/assets/img/example/set-list-style.png?size=800').src"
-                />
-            </ClientOnly>
+            <ResponsiveImage
+                :img="require('@/web/assets/img/example/set-list-style.png?size=800')"
+            />
         </section>
 
         <aside>
@@ -95,15 +85,10 @@
                     You can see this example list design in action on my <ExternalLink href="https://myanimelist.net/animelist/Trinovantes">profile page</ExternalLink>.
                 </p>
 
-                <ClientOnly>
-                    <q-img
-                        :src="require('@/web/assets/img/home/example-covers.jpg?size=400').src"
-                    >
-                        <span class="caption">
-                            Example List Design
-                        </span>
-                    </q-img>
-                </ClientOnly>
+                <ResponsiveImage
+                    :img="require('@/web/assets/img/home/example-covers.jpg?size=400')"
+                    caption="Example List Design"
+                />
             </div>
         </aside>
     </article>

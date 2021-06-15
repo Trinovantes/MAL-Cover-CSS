@@ -65,7 +65,7 @@ main.page{
         margin: 0;
     }
 
-    .q-img{
+    figure{
         border: math.div($padding, 2) solid $light-on-light;
         border-radius: math.div($padding, 4);
         display: block;

@@ -2,11 +2,9 @@
     <article class="hero-unit">
         <div class="container vertical">
             <section>
-                <ClientOnly>
-                    <q-img
-                        :src="require('@/web/assets/img/home/example-covers.jpg').src"
-                    />
-                </ClientOnly>
+                <ResponsiveImage
+                    :img="require('@/web/assets/img/home/example-covers.jpg')"
+                />
             </section>
             <section>
                 <h1>
@@ -54,11 +52,9 @@
     <article class="hero-unit">
         <div class="container">
             <section>
-                <ClientOnly>
-                    <q-img
-                        :src="require('@/web/assets/img/home/example-covers.jpg').src"
-                    />
-                </ClientOnly>
+                <ResponsiveImage
+                    :img="require('@/web/assets/img/home/example-covers.jpg')"
+                />
             </section>
             <section>
                 <h1>
@@ -92,11 +88,9 @@
     <article class="hero-unit">
         <div class="container">
             <section>
-                <ClientOnly>
-                    <q-img
-                        :src="require('@/web/assets/img/home/modern-image-settings.png').src"
-                    />
-                </ClientOnly>
+                <ResponsiveImage
+                    :img="require('@/web/assets/img/home/modern-image-settings.png')"
+                />
             </section>
             <section>
                 <h1>
@@ -175,7 +169,7 @@ article.hero-unit{
         margin: 0;
     }
 
-    .q-img{
+    img{
         border-radius: math.div($padding, 4);
         box-shadow:
             0 0.4px 1.3px rgba(0, 0, 0, 0.045),
@@ -260,7 +254,7 @@ article.hero-unit{
                 justify-content: center;
             }
 
-            .q-img{
+            img{
                 max-height: 40vh;
             }
         }

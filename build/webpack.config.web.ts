@@ -114,6 +114,7 @@ export default merge(commonConfig, {
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             adapter: require('responsive-loader/sharp'),
                             format: 'webp',
+                            placeholder: true,
                         },
                     },
                 ],

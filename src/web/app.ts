@@ -4,6 +4,7 @@ import AppLoader from './components/AppLoader.vue'
 import ClientOnly from './components/Global/ClientOnly.vue'
 import ExternalLink from './components/Global/ExternalLink.vue'
 import CodeBlock from './components/Global/CodeBlock.vue'
+import ResponsiveImage from './components/Global/ResponsiveImage.vue'
 import { createMetaManager, defaultConfig } from 'vue-meta'
 import { Quasar, Notify } from 'quasar'
 import { createUserStore, userInjectionKey } from './store/User'
@@ -34,6 +35,7 @@ export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
     app.component('ClientOnly', ClientOnly)
     app.component('ExternalLink', ExternalLink)
     app.component('CodeBlock', CodeBlock)
+    app.component('ResponsiveImage', ResponsiveImage)
 
     // Vue Router
     const router = await createAppRouter(ssrContext)
