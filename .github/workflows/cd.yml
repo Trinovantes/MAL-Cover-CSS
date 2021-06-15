@@ -7,6 +7,7 @@ on:
       - master
     paths-ignore:
       - yarn.lock
+      - README.md
 
 env:
   CRON_IMAGE: ghcr.io/trinovantes/malcovercss-cron

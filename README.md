@@ -14,4 +14,11 @@ Secret | Description
 `SSH_HOST`| IP address of server
 `SSH_PRIVATE_KEY`| `ssh-keygen -N '' -f ~/.ssh/github-actions -C "github-actions"` <br> Add `github-actions.pub` to `~/.ssh/authorized_keys` <br> Add `github-actions` to this secret
 `SSH_KEYSCAN`| `ssh-keyscan -t ecdsa SSH_HOST`
-`ENV_FILE` | <pre>CLIENT_ID=XXX<br>CLIENT_SECRET=XXX</pre>
+
+### `ENV_FILE`
+```
+HOST_URL            http://www.malcovercss.link
+ENCRYPTION_KEY      openssl rand -base64 32
+MAL_CLIENT_ID       From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
+MAL_CLIENT_SECRET   From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
+```
