@@ -65,10 +65,34 @@ main.page{
         margin: 0;
     }
 
+    h2, h3, h4, h5, h6,
+    p,
+    pre,
+    ul,
+    ol,
+    figure,
+    .q-form,
+    .q-field,
+    .btn-group,
+    .callout{
+        margin: ($padding * 2) 0;
+
+        &:first-child{
+            margin-top: 0;
+        }
+
+        &:last-child{
+            margin-bottom: 0;
+        }
+    }
+
+    h2, h3, h4, h5, h6{
+        margin-top: ($padding * 4);
+    }
+
     figure{
         border: math.div($padding, 2) solid $light-on-light;
         border-radius: math.div($padding, 4);
-        display: block;
     }
 }
 </style>

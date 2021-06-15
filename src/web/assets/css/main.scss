@@ -2,7 +2,7 @@
 @import 'quasar/dist/quasar.prod.css';
 
 // ----------------------------------------------------------------------------
-// Typography
+// General Elements
 // ----------------------------------------------------------------------------
 
 :root {
@@ -33,30 +33,6 @@ a:not(.q-btn){
     &:hover{
         text-decoration: underline;
     }
-}
-
-h1, h2, h3, h4, h5, h6,
-p,
-pre,
-ul,
-ol,
-figure,
-.q-form,
-.q-field,
-.callout{
-    margin: ($padding * 2) 0;
-
-    &:first-child{
-        margin-top: 0;
-    }
-
-    &:last-child{
-        margin-bottom: 0;
-    }
-}
-
-h1, h2, h3, h4, h5, h6{
-    margin-top: ($padding * 4);
 }
 
 h1 {
@@ -106,11 +82,6 @@ pre{
 // Helper Classes
 // ----------------------------------------------------------------------------
 
-.btn-group{
-    display: flex;
-    gap: $padding;
-}
-
 .hspace{
     flex: 1;
 
@@ -119,6 +90,11 @@ pre{
             display: none;
         }
     }
+}
+
+.btn-group{
+    display: flex;
+    gap: $padding;
 }
 
 .callout{
