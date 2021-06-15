@@ -32,35 +32,37 @@
 
                 <div class="hspace" />
 
-                <ClientOnly v-if="currentUser">
-                    <router-link to="/settings" @click="closeHeaderItems">
-                        Settings
-                    </router-link>
+                <ClientOnly>
+                    <template v-if="currentUser">
+                        <router-link to="/settings" @click="closeHeaderItems">
+                            Settings
+                        </router-link>
 
-                    <div class="seperator" />
+                        <div class="seperator" />
 
-                    <q-btn
-                        color="negative"
-                        unelevated
-                        rounded
-                        no-caps
-                        no-wrap
-                        label="Log Out"
-                        @click="logout(); closeHeaderItems()"
-                    />
-                </ClientOnly>
-                <ClientOnly v-else>
-                    <div class="seperator" />
+                        <q-btn
+                            color="negative"
+                            unelevated
+                            rounded
+                            no-caps
+                            no-wrap
+                            label="Log Out"
+                            @click="logout(); closeHeaderItems()"
+                        />
+                    </template>
+                    <template v-else>
+                        <div class="seperator" />
 
-                    <q-btn
-                        color="positive"
-                        unelevated
-                        rounded
-                        no-caps
-                        no-wrap
-                        label="Log In"
-                        @click="login($route.path); closeHeaderItems()"
-                    />
+                        <q-btn
+                            color="positive"
+                            unelevated
+                            rounded
+                            no-caps
+                            no-wrap
+                            label="Log In"
+                            @click="login($route.path); closeHeaderItems()"
+                        />
+                    </template>
                 </ClientOnly>
             </nav>
         </div>
