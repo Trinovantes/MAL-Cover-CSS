@@ -35,7 +35,6 @@
             </p>
 
             <CodeBlock
-                lang="css"
                 :code="require('@/web/assets/raw/guide/generated-stylesheets.css')"
             />
 
@@ -46,7 +45,6 @@
                 </p>
 
                 <CodeBlock
-                    lang="css"
                     :code="require('@/web/assets/raw/guide/broken-import.css')"
                 />
             </div>
@@ -62,7 +60,6 @@
             </p>
 
             <CodeBlock
-                lang="html"
                 :code="require('@/web/assets/raw/guide/example-list-entry.html')"
                 highlights="11-13,40"
             />
@@ -74,7 +71,6 @@
             </p>
 
             <CodeBlock
-                lang="css"
                 :code="require('@/web/assets/raw/guide/example-usage.css')"
                 highlights="1,19"
             />

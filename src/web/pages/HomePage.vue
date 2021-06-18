@@ -12,7 +12,6 @@
                 </h1>
 
                 <CodeBlock
-                    lang="css"
                     :code="require('@/web/assets/raw/home/example-usage.css')"
                 />
 
@@ -66,7 +65,6 @@
                 </h2>
 
                 <CodeBlock
-                    lang="css"
                     :code="require('@/web/assets/raw/home/how-to-use-example-covers.css')"
                 />
 

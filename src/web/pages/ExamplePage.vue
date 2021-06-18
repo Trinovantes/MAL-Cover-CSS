@@ -48,7 +48,6 @@
             </p>
 
             <CodeBlock
-                lang="css"
                 :code="require('@/web/assets/raw/home/how-to-use-example-covers.css')"
             />
 
