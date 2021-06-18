@@ -6,8 +6,10 @@ on:
     branches:
       - master
     paths-ignore:
-      - yarn.lock
       - README.md
+      - .vscode
+      - .editorconfig
+      - .gitignore
 
 env:
   CRON_IMAGE: ghcr.io/trinovantes/malcovercss-cron
