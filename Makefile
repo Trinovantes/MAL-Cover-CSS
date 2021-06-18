@@ -178,7 +178,7 @@ stop-web:
 run-web: stop-web run-api
 	docker run \
 		--mount type=bind,source=/var/www/malcovercss/generated,target=/app/dist/web/generated,readonly \
-		--publish 9004:80 \
+		--publish 9040:80 \
 		--network nginx-network \
 		--log-driver local \
 		--restart=always \
@@ -199,7 +199,7 @@ stop-redis:
 run-redis: stop-redis
 	docker run \
 		--mount type=bind,source=/var/www/malcovercss/redis,target=/data \
-		--publish 9005:6379 \
+		--publish 9041:6379 \
 		--network nginx-network \
 		--log-driver local \
 		--restart=always \

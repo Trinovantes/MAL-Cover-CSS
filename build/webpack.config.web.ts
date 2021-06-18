@@ -53,7 +53,7 @@ export default merge(commonConfig, {
 
     devServer: {
         host: 'test.malcovercss.link',
-        port: 9004,
+        port: 9040,
         historyApiFallback: {
             index: 'app.html',
         },
