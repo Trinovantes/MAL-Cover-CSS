@@ -39,10 +39,6 @@ export default defineComponent({
             type: String,
             default: '100vw',
         },
-        isContain: {
-            type: Boolean,
-            default: true,
-        },
         caption: {
             type: String,
             default: '',
