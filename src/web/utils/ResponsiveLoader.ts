@@ -13,8 +13,3 @@ export interface ResponsiveImage {
 
     toString(): () => string
 }
-
-export function getSocialImage(filename: string): ResponsiveImage {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    return require(`@/web/assets/img/${filename}?size=400`) as ResponsiveImage
-}

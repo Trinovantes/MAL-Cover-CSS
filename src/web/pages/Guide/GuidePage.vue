@@ -35,7 +35,7 @@
             </p>
 
             <CodeBlock
-                :code="require('@/web/assets/raw/guide/generated-stylesheets.css')"
+                :code="require('./raw/generated-stylesheets.css')"
             />
 
             <div class="callout warning">
@@ -45,7 +45,7 @@
                 </p>
 
                 <CodeBlock
-                    :code="require('@/web/assets/raw/guide/broken-import.css')"
+                    :code="require('./raw/broken-import.css')"
                 />
             </div>
 
@@ -60,7 +60,7 @@
             </p>
 
             <CodeBlock
-                :code="require('@/web/assets/raw/guide/example-list-entry.html')"
+                :code="require('./raw/example-list-entry.html')"
                 highlights="11-13,40"
             />
 
@@ -71,7 +71,7 @@
             </p>
 
             <CodeBlock
-                :code="require('@/web/assets/raw/guide/example-usage.css')"
+                :code="require('./raw/example-usage.css')"
                 highlights="1,19"
             />
         </section>

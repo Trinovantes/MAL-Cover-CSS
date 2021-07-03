@@ -7,23 +7,23 @@ export const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                component: () => import('@/web/pages/HomePage.vue'),
+                component: () => import('@/web/pages/Home/HomePage.vue'),
             },
             {
                 path: 'guide',
-                component: () => import('@/web/pages/GuidePage.vue'),
+                component: () => import('@/web/pages/Guide/GuidePage.vue'),
             },
             {
                 path: 'example',
-                component: () => import('@/web/pages/ExamplePage.vue'),
+                component: () => import('@/web/pages/Example/ExamplePage.vue'),
             },
             {
                 path: 'classic-vs-modern',
-                component: () => import('@/web/pages/ClassicVsModernPage.vue'),
+                component: () => import('@/web/pages/ClassicVsModern/ClassicVsModernPage.vue'),
             },
             {
                 path: 'settings',
-                component: () => import('@/web/pages/SettingsPage.vue'),
+                component: () => import('@/web/pages/Settings/SettingsPage.vue'),
             },
         ],
     },

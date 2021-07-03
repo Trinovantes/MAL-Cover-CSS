@@ -15,7 +15,7 @@
                 </p>
 
                 <ResponsiveImage
-                    :img="require('@/web/assets/img/example/only-show-score.png?size=800')"
+                    :img="require('./img/only-show-score.png?size=800')"
                 />
             </div>
 
@@ -28,7 +28,7 @@
             </p>
 
             <ResponsiveImage
-                :img="require('@/web/assets/img/example/enable-classic-template.png?size=800')"
+                :img="require('./img/enable-classic-template.png?size=800')"
             />
 
             <h2>
@@ -40,7 +40,7 @@
             </p>
 
             <ResponsiveImage
-                :img="require('@/web/assets/img/example/create-advanced-css.png?size=800')"
+                :img="require('./img/create-advanced-css.png?size=800')"
             />
 
             <p>
@@ -48,11 +48,11 @@
             </p>
 
             <CodeBlock
-                :code="require('@/web/assets/raw/home/how-to-use-example-covers.css')"
+                :code="require('../Home/raw/how-to-use-example-covers.css')"
             />
 
             <ResponsiveImage
-                :img="require('@/web/assets/img/example/save-advanced-css.png?size=800')"
+                :img="require('./img/save-advanced-css.png?size=800')"
             />
 
             <div class="callout">
@@ -74,7 +74,7 @@
             </p>
 
             <ResponsiveImage
-                :img="require('@/web/assets/img/example/set-list-style.png?size=800')"
+                :img="require('./img/set-list-style.png?size=800')"
             />
         </section>
 
@@ -85,7 +85,7 @@
                 </p>
 
                 <ResponsiveImage
-                    :img="require('@/web/assets/img/home/example-covers.jpg?size=400')"
+                    :img="require('@/web/assets/img/example-covers.jpg?size=400')"
                     caption="Example List Design"
                 />
             </div>
@@ -97,14 +97,16 @@
 import { computed, defineComponent } from 'vue'
 import { useMeta } from 'vue-meta'
 import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
-import { getSocialImage } from '@/web/utils/ResponsiveLoader'
+import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
     name: 'ExamplePage',
 
     setup() {
         const title = 'Example List Design'
-        const img = getSocialImage('home/example-covers.jpg')
+
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const img = require('@/web/assets/img/example-covers.jpg') as ResponsiveImage
 
         useMeta(computed(() => {
             return createPageHeadOptions({

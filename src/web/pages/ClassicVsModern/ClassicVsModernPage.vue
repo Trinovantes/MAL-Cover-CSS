@@ -10,7 +10,7 @@
             </p>
 
             <ResponsiveImage
-                :img="require('@/web/assets/img/classic-vs-modern/modern-template.png?size=800')"
+                :img="require('./img/modern-template.png?size=800')"
                 caption="Default &quot;Modern&quot; template"
             />
 
@@ -23,7 +23,7 @@
             </p>
 
             <ResponsiveImage
-                :img="require('@/web/assets/img/classic-vs-modern/enable-modern-cover-image.png?size=800')"
+                :img="require('./img/enable-modern-cover-image.png?size=800')"
                 caption="Modern templates can include cover images without third-party tools"
             />
         </section>
@@ -34,14 +34,16 @@
 import { computed, defineComponent } from 'vue'
 import { useMeta } from 'vue-meta'
 import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
-import { getSocialImage } from '@/web/utils/ResponsiveLoader'
+import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
     name: 'ClassicVsModernPage',
 
     setup() {
         const title = 'Classic vs. Modern Templates'
-        const img = getSocialImage('classic-vs-modern/modern-template.png')
+
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const img = require('./img/modern-template.png') as ResponsiveImage
 
         useMeta(computed(() => {
             return createPageHeadOptions({

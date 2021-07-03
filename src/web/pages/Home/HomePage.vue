@@ -3,7 +3,7 @@
         <div class="container vertical">
             <section>
                 <ResponsiveImage
-                    :img="require('@/web/assets/img/home/example-covers.jpg')"
+                    :img="require('@/web/assets/img/example-covers.jpg')"
                 />
             </section>
             <section>
@@ -12,7 +12,7 @@
                 </h1>
 
                 <CodeBlock
-                    :code="require('@/web/assets/raw/home/example-usage.css')"
+                    :code="require('./raw/example-usage.css')"
                 />
 
                 <ClientOnly>
@@ -52,7 +52,7 @@
         <div class="container">
             <section>
                 <ResponsiveImage
-                    :img="require('@/web/assets/img/home/example-covers.jpg')"
+                    :img="require('@/web/assets/img/example-covers.jpg')"
                 />
             </section>
             <section>
@@ -65,7 +65,7 @@
                 </h2>
 
                 <CodeBlock
-                    :code="require('@/web/assets/raw/home/how-to-use-example-covers.css')"
+                    :code="require('./raw/how-to-use-example-covers.css')"
                 />
 
                 <ClientOnly>
@@ -87,7 +87,7 @@
         <div class="container">
             <section>
                 <ResponsiveImage
-                    :img="require('@/web/assets/img/home/modern-image-settings.png')"
+                    :img="require('./img/modern-image-settings.png')"
                 />
             </section>
             <section>
@@ -122,13 +122,14 @@ import { computed, defineComponent } from 'vue'
 import { useMeta } from 'vue-meta'
 import { login } from '@/web/utils/api'
 import { useUserStore } from '@/web/store/User'
-import { getSocialImage } from '@/web/utils/ResponsiveLoader'
+import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
     name: 'HomePage',
 
     setup() {
-        const img = getSocialImage('home/example-covers.jpg')
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const img = require('@/web/assets/img/example-covers.jpg') as ResponsiveImage
 
         useMeta(computed(() => {
             return createPageHeadOptions({

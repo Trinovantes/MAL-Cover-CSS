@@ -28,7 +28,7 @@ export const srcApiDir = path.resolve(srcDir, 'api')
 export const srcWebDir = path.resolve(srcDir, 'web')
 export const staticDir = path.resolve(srcDir, 'web', 'static')
 
-export const rawDirRegexp = /\/assets\/raw\//
+export const rawDirRegexp = /\/raw\//
 
 // ----------------------------------------------------------------------------
 // Common
