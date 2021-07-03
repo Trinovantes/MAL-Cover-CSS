@@ -56,6 +56,7 @@ export const commonConfig: webpack.Configuration = {
             'DEFINE.IS_DEV': JSON.stringify(isDev),
             'DEFINE.IS_SSR': "(typeof window === 'undefined')",
             'DEFINE.GIT_HASH': JSON.stringify(gitHash),
+            'DEFINE.SOCIAL_IMAGE_SIZE': JSON.stringify(800),
         }),
         new VueLoaderPlugin(),
     ],

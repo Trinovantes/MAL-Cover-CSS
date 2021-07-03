@@ -129,7 +129,7 @@ export default defineComponent({
 
     setup() {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const img = require('@/web/assets/img/example-covers.jpg') as ResponsiveImage
+        const img = require(`@/web/assets/img/example-covers.jpg?size=${DEFINE.SOCIAL_IMAGE_SIZE}`) as ResponsiveImage
 
         useMeta(computed(() => {
             return createPageHeadOptions({

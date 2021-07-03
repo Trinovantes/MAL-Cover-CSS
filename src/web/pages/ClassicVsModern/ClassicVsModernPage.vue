@@ -43,7 +43,7 @@ export default defineComponent({
         const title = 'Classic vs. Modern Templates'
 
         // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const img = require('./img/modern-template.png') as ResponsiveImage
+        const img = require(`./img/modern-template.png?size=${DEFINE.SOCIAL_IMAGE_SIZE}`) as ResponsiveImage
 
         useMeta(computed(() => {
             return createPageHeadOptions({

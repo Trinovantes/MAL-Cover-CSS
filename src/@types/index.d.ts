@@ -3,6 +3,7 @@ declare global {
         IS_DEV: boolean
         IS_SSR: boolean
         GIT_HASH: string
+        SOCIAL_IMAGE_SIZE: number
 
         // web-ssg specific
         PUBLIC_DIR: string
