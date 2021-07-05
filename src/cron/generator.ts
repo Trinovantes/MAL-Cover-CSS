@@ -137,5 +137,6 @@ async function main() {
 
 main().catch((err) => {
     console.warn(err)
+    Sentry.captureException(err)
     process.exit(1)
 })
