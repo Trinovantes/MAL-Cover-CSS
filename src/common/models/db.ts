@@ -10,3 +10,11 @@ export const dbPromise = open({
     filename: DB_FILE,
     driver: sqlite3.Database,
 })
+
+export interface DefaultColumns {
+    id: number
+    createdAt: string
+    updatedAt: string
+}
+
+export type CreationOmit = 'id' | 'createdAt' | 'updatedAt'

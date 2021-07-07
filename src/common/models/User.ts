@@ -1,15 +1,14 @@
 import { decrypt, encrypt } from '@/common/utils/encryption'
 import { UserResponse } from '@/common/schemas/ApiResponse'
 import assert from 'assert'
-import { dbPromise } from './db'
-import { CreationOmit, DefaultColumns } from './Model'
+import { CreationOmit, dbPromise, DefaultColumns } from './db'
 import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 
 // ----------------------------------------------------------------------------
 // User
 // ----------------------------------------------------------------------------
 
-type UserAttributes = DefaultColumns &{
+type UserAttributes = DefaultColumns & {
     malUserId: number
     malUsername: string
     lastChecked: string | null
