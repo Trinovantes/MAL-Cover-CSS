@@ -2,7 +2,8 @@ export const APP_NAME = 'MAL Cover CSS'
 export const APP_DESC = 'Automatically generate CSS to add cover images for your MyAnimeList classic list designs'
 export const APP_THEME_COLOR = '#2e51a2'
 
-export const MAL_OAUTH_URL = 'https://myanimelist.net/v1'
+export const MAL_AUTHORIZE_URL = 'https://myanimelist.net/v1/oauth2/authorize'
+export const MAL_TOKEN_URL = 'https://myanimelist.net/v1/oauth2/token'
 export const MAL_API_URL = 'https://api.myanimelist.net/v2'
 export const MAL_OAUTH_RANDOM_STATE_LENGTH = 32
 

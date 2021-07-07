@@ -1,10 +1,10 @@
 import axios from 'axios'
-import { MAL_OAUTH_URL } from '@/common/Constants'
+import { MAL_AUTHORIZE_URL, MAL_TOKEN_URL } from '@/common/Constants'
 import { getOauthRedirectUrl, getSecret, Secrets } from '@/common/utils/secrets'
 import querystring from 'querystring'
 import { OauthState } from '@/common/schemas/OauthState'
-import { isOauthFailure } from '@/common/schemas/OauthFailure'
-import { isOauthTokenSuccess, OauthTokenSuccess } from '@/common/schemas/OauthTokenSuccess'
+import { isOauthFailure } from './schemas/OauthFailure'
+import { isOauthTokenSuccess, OauthTokenSuccess } from './schemas/OauthTokenSuccess'
 
 // ----------------------------------------------------------------------------
 // v1 API Oauth Responses
@@ -22,12 +22,11 @@ export function getOauthEndpoint(oauthState: OauthState): string {
         code_challenge_method: 'plain',
     }
 
-    const url = `${MAL_OAUTH_URL}/oauth2/authorize?${querystring.stringify(query)}`
+    const url = `${MAL_AUTHORIZE_URL}?${querystring.stringify(query)}`
     return url
 }
 
 export async function obtainAccessToken(authCode: string, codeChallenge: string, redirectUrl: string): Promise<OauthTokenSuccess> {
-    const url = `${MAL_OAUTH_URL}/oauth2/token`
     const query = {
         client_id: getSecret(Secrets.MAL_CLIENT_ID),
         client_secret: getSecret(Secrets.MAL_CLIENT_SECRET),
@@ -37,25 +36,22 @@ export async function obtainAccessToken(authCode: string, codeChallenge: string,
         redirect_uri: redirectUrl,
     }
 
-    console.info('Fetching (obtainAccessToken)', url)
-    const res = await axios.post(url, querystring.stringify(query))
+    console.info('Fetching (obtainAccessToken)', MAL_TOKEN_URL)
+    const res = await axios.post(MAL_TOKEN_URL, querystring.stringify(query))
     const malRes = res.data as unknown
 
     if (isOauthFailure(malRes)) {
-        console.info(malRes)
-        throw new Error('Failed to obtain access token')
+        throw new Error(`Failed to obtain access token (${malRes.error})`)
     }
 
     if (!isOauthTokenSuccess(malRes)) {
-        console.info(malRes)
-        throw new Error('Unexpected malRes')
+        throw new Error(`Unexpected malRes: ${JSON.stringify(malRes)}`)
     }
 
     return malRes
 }
 
 export async function refreshAccessToken(refreshToken: string): Promise<OauthTokenSuccess> {
-    const url = `${MAL_OAUTH_URL}/oauth2/token`
     const query = {
         client_id: getSecret(Secrets.MAL_CLIENT_ID),
         client_secret: getSecret(Secrets.MAL_CLIENT_SECRET),
@@ -63,18 +59,16 @@ export async function refreshAccessToken(refreshToken: string): Promise<OauthTok
         refresh_token: refreshToken,
     }
 
-    console.info('Fetching (refreshAccessToken)', url)
-    const res = await axios.post(url, querystring.stringify(query))
+    console.info('Fetching (refreshAccessToken)', MAL_TOKEN_URL)
+    const res = await axios.post(MAL_TOKEN_URL, querystring.stringify(query))
     const malRes = res.data as unknown
 
     if (isOauthFailure(malRes)) {
-        console.info(malRes)
-        throw new Error('Failed to refresh access token')
+        throw new Error(`Failed to obtain access token (${malRes.error})`)
     }
 
     if (!isOauthTokenSuccess(malRes)) {
-        console.info(malRes)
-        throw new Error('Unexpected malRes')
+        throw new Error(`Unexpected malRes: ${JSON.stringify(malRes)}`)
     }
 
     return malRes

@@ -11,8 +11,8 @@ import { isOauthState } from '@/common/schemas/OauthState'
 import { User } from '@/common/models/User'
 import { fetchMalUser } from '@/common/services/MyAnimeList/data'
 import { createAsyncHandler } from '@/api/utils/asyncHandler'
-import { isOauthAuthSuccess } from '@/common/schemas/OauthSuccess'
-import { isOauthFailure } from '@/common/schemas/OauthFailure'
+import { isOauthAuthSuccess } from '@/common/services/MyAnimeList/schemas/OauthAuthSuccess'
+import { isOauthFailure } from '@/common/services/MyAnimeList/schemas/OauthFailure'
 import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 import { getOauthRedirectUrl } from '@/common/utils/secrets'
 
@@ -84,16 +84,16 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
         return
     }
 
+    // Oauth failure (e.g. user decline request)
+    if (isOauthFailure(malAuth)) {
+        console.info('Failed to get access token', malAuth)
+        await onError(returnedState.restorePath)
+        return
+    }
+
     // Valid response from MAL
     if (!isOauthAuthSuccess(malAuth)) {
-        if (isOauthFailure(malAuth)) {
-            // Example: user manually declined request
-            console.info('Failed to authenticate', malAuth)
-        } else {
-            // Unexpected object in query (e.g. user manually visiting this endpoint)
-            console.info('Unexpected malAuth', malAuth)
-        }
-
+        console.info('Unexpected malAuth', malAuth)
         await onError(returnedState.restorePath)
         return
     }
@@ -113,6 +113,5 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
 
     console.info(`Upserted user ${malUser.name}`)
     req.session.currentUser = user.toSessionData()
-
     res.redirect('/settings')
 }))
