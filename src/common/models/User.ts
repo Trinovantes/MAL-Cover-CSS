@@ -21,11 +21,16 @@ export class User {
     static readonly TABLE = 'Users'
 
     private _attrs: UserAttributes
-    private _isDeleted = false
+    private _isDeleted
 
     // ------------------------------------------------------------------------
     // Constructor
     // ------------------------------------------------------------------------
+
+    private constructor(attrs: UserAttributes) {
+        this._attrs = Object.assign({}, attrs)
+        this._isDeleted = false
+    }
 
     static async upsert(attrs: Omit<UserAttributes, CreationOmit | 'lastChecked'>): Promise<User> {
         assert(attrs.tokenExpires)
@@ -108,10 +113,6 @@ export class User {
         ;`)
 
         return rows.map((row) => new User(row))
-    }
-
-    private constructor(attrs: UserAttributes) {
-        this._attrs = Object.assign({}, attrs)
     }
 
     // ------------------------------------------------------------------------

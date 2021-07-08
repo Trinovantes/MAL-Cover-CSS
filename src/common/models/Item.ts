@@ -25,6 +25,10 @@ export class Item {
     // Constructor
     // ------------------------------------------------------------------------
 
+    private constructor(attrs: ItemAttributes) {
+        this._attrs = attrs
+    }
+
     static async upsert(attrs: Omit<ItemAttributes, CreationOmit>): Promise<Item> {
         const now = getSqlTimestamp()
 
@@ -90,10 +94,6 @@ export class Item {
         }
 
         return rows.map((row) => new Item(row))
-    }
-
-    private constructor(attrs: ItemAttributes) {
-        this._attrs = attrs
     }
 
     // ------------------------------------------------------------------------
