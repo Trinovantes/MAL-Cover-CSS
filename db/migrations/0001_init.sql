@@ -1,6 +1,6 @@
 -- migrate:up
 
-CREATE TABLE IF NOT EXISTS `Users` (
+CREATE TABLE `Users` (
     `id`            INTEGER         NOT NULL,
     `malUsername`   TEXT            NOT NULL,
     `malUserId`     INTEGER         NOT NULL UNIQUE,
@@ -24,7 +24,7 @@ CREATE TABLE `ItemType` (
 INSERT INTO ItemType(itemType, sequence) VALUES ('anime', 1);
 INSERT INTO ItemType(itemType, sequence) VALUES ('manga', 2);
 
-CREATE TABLE IF NOT EXISTS `Items` (
+CREATE TABLE `Items` (
     `id`            INTEGER         NOT NULL,
     `mediaType`     TEXT            NOT NULL REFERENCES ItemType(itemType),
     `malId`         INTEGER         NOT NULL,
@@ -38,5 +38,5 @@ CREATE TABLE IF NOT EXISTS `Items` (
 
 -- migrate:down
 
-DROP TABLE IF EXISTS `Users`;
-DROP TABLE IF EXISTS `Items`;
+DROP TABLE `Users`;
+DROP TABLE `Items`;
