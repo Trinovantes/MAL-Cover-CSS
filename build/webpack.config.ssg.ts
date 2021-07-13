@@ -1,6 +1,5 @@
-import path from 'path'
 import { merge } from 'webpack-merge'
-import { commonConfig, srcWebDir, publicPath, manifestFilePath, distWebPublicDir, distWebDir, distSsgDir, rawDirRegexp } from './webpack.common'
+import { commonConfig, srcWebDir, publicPath, manifestFilePath, distWebPublicDir, distSsgDir, rawDirRegexp, distWebDir } from './webpack.common'
 import { PuppeteerPrerenderPlugin } from 'puppeteer-prerender-plugin'
 import { DefinePlugin } from 'webpack'
 import nodeExternals from 'webpack-node-externals'
@@ -79,8 +78,9 @@ export default merge(commonConfig, {
         new PuppeteerPrerenderPlugin({
             enabled: true,
             enablePageJs: false,
-            entryDir: distWebDir,
-            entryFile: path.resolve(distSsgDir, 'www.js'),
+            entryDir: distSsgDir,
+            entryFile: 'www.js',
+            outputDir: distWebDir,
             routes: [
                 '/guide',
                 '/example',
