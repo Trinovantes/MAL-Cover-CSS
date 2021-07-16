@@ -10,8 +10,8 @@
         "devWeb": "   cross-env NODE_ENV=development webpack serve   --config build/webpack.config.web.ts",
         "buildCron": "cross-env NODE_ENV=production  webpack         --config build/webpack.config.cron.ts",
         "buildApi": " cross-env NODE_ENV=production  webpack         --config build/webpack.config.api.ts",
-        "buildWeb": " cross-env NODE_ENV=production  webpack         --config build/webpack.config.web.ts && webpack --config build/webpack.config.ssg.ts",
-        "stageWeb": " cross-env NODE_ENV=development webpack         --config build/webpack.config.web.ts && webpack --config build/webpack.config.ssg.ts",
+        "buildWeb": " cross-env NODE_ENV=production  webpack         --config build/webpack.config.web.ts && cross-env NODE_ENV=production  webpack --config build/webpack.config.ssg.ts",
+        "stageWeb": " cross-env NODE_ENV=development webpack         --config build/webpack.config.web.ts && cross-env NODE_ENV=development webpack --config build/webpack.config.ssg.ts",
         "dev": "  concurrently 'yarn devCron'   'yarn devApi'   'yarn devWeb'",
         "build": "concurrently 'yarn buildCron' 'yarn buildApi' 'yarn buildWeb'",
         "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore ."

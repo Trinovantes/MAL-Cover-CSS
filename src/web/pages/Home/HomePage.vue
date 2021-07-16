@@ -15,8 +15,8 @@
                     :code="require('./raw/example-usage.css')"
                 />
 
-                <ClientOnly>
-                    <div class="btn-group">
+                <div class="btn-group">
+                    <ClientOnly>
                         <q-btn
                             v-if="currentUser"
                             color="secondary"
@@ -33,17 +33,17 @@
                             label="Log in with MAL to track your lists"
                             @click="login($route.path)"
                         />
+                    </ClientOnly>
 
-                        <q-btn
-                            outline
-                            unelevated
-                            no-caps
-                            color="white"
-                            label="Guide"
-                            to="guide"
-                        />
-                    </div>
-                </ClientOnly>
+                    <q-btn
+                        outline
+                        unelevated
+                        no-caps
+                        color="white"
+                        label="Guide"
+                        to="guide"
+                    />
+                </div>
             </section>
         </div>
     </article>
@@ -68,17 +68,15 @@
                     :code="require('./raw/how-to-use-example-covers.css')"
                 />
 
-                <ClientOnly>
-                    <div class="btn-group">
-                        <q-btn
-                            outline
-                            unelevated
-                            no-caps
-                            label="How to Set Up Example"
-                            to="/example"
-                        />
-                    </div>
-                </ClientOnly>
+                <div class="btn-group">
+                    <q-btn
+                        outline
+                        unelevated
+                        no-caps
+                        label="How to Set Up Example"
+                        to="/example"
+                    />
+                </div>
             </section>
         </div>
     </article>
@@ -99,17 +97,15 @@
                     Modern list designs already have an option to directly embed cover images into your lists
                 </h2>
 
-                <ClientOnly>
-                    <div class="btn-group">
-                        <q-btn
-                            outline
-                            unelevated
-                            no-caps
-                            label="Learn More about Modern Templates"
-                            to="/classic-vs-modern"
-                        />
-                    </div>
-                </ClientOnly>
+                <div class="btn-group">
+                    <q-btn
+                        outline
+                        unelevated
+                        no-caps
+                        label="Learn More about Modern Templates"
+                        to="/classic-vs-modern"
+                    />
+                </div>
             </section>
         </div>
     </article>
