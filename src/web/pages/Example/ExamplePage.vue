@@ -14,7 +14,7 @@
                     This example list design can only style your score. If wish to include additional information (e.g. tags) in your lists, then you need to make additional changes to the CSS yourself.
                 </p>
 
-                <ResponsiveImage
+                <SimpleImage
                     :img="require('./img/only-show-score.png?size=800')"
                 />
             </div>
@@ -27,7 +27,7 @@
                 First, go into <ExternalLink href="https://myanimelist.net/ownlist/style">List Style Design</ExternalLink> and click on Classic template.
             </p>
 
-            <ResponsiveImage
+            <SimpleImage
                 :img="require('./img/enable-classic-template.png?size=800')"
             />
 
@@ -39,7 +39,7 @@
                 After enabling Classic template, you can then go into Advanced CSS List Design and create a new Advanced CSS List Design.
             </p>
 
-            <ResponsiveImage
+            <SimpleImage
                 :img="require('./img/create-advanced-css.png?size=800')"
             />
 
@@ -51,7 +51,7 @@
                 :code="require('../Home/raw/how-to-use-example-covers.css')"
             />
 
-            <ResponsiveImage
+            <SimpleImage
                 :img="require('./img/save-advanced-css.png?size=800')"
             />
 
@@ -73,7 +73,7 @@
                 Finally, follow the link in the notice MyAnimeList showed you in the previous step to go into your List Style settings and set your anime/manga lists to use your new design.
             </p>
 
-            <ResponsiveImage
+            <SimpleImage
                 :img="require('./img/set-list-style.png?size=800')"
             />
         </section>
@@ -84,10 +84,11 @@
                     You can see this example list design in action on my <ExternalLink href="https://myanimelist.net/animelist/Trinovantes">profile page</ExternalLink>.
                 </p>
 
-                <ResponsiveImage
+                <SimpleImage
                     :img="require('@/web/assets/img/example-covers.jpg?size=400')"
-                    caption="Example List Design"
-                />
+                >
+                    Example List Design
+                </SimpleImage>
             </div>
         </aside>
     </article>

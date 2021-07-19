@@ -9,10 +9,11 @@
                 This website was originally created before MyAnimeList launched their new "Modern" templates in 2016.
             </p>
 
-            <ResponsiveImage
+            <SimpleImage
                 :img="require('./img/modern-template.png?size=800')"
-                caption="Default &quot;Modern&quot; template"
-            />
+            >
+                Default "Modern" template
+            </SimpleImage>
 
             <p>
                 Back then, "Classic" templates did not include cover images. As a result, everybody relied on third-party tools to generate the CSS needed to insert cover images into each entry's HTML background.
@@ -22,10 +23,11 @@
                 Nowadays, this website is simply a relic of the past for users who do not want to switch and want to continue to use Classic templates.
             </p>
 
-            <ResponsiveImage
+            <SimpleImage
                 :img="require('./img/enable-modern-cover-image.png?size=800')"
-                caption="Modern templates can include cover images without third-party tools"
-            />
+            >
+                Modern templates can include cover images without third-party tools
+            </SimpleImage>
         </section>
     </article>
 </template>

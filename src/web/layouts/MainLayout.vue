@@ -88,7 +88,7 @@ main.page{
         margin-top: ($padding * 4);
     }
 
-    figure{
+    picture{
         border: math.div($padding, 2) solid $light-on-light;
         border-radius: math.div($padding, 4);
     }

@@ -2,7 +2,7 @@
     <article class="hero-unit">
         <div class="container vertical">
             <section>
-                <ResponsiveImage
+                <SimpleImage
                     :img="require('@/web/assets/img/example-covers.jpg')"
                 />
             </section>
@@ -51,7 +51,7 @@
     <article class="hero-unit">
         <div class="container">
             <section>
-                <ResponsiveImage
+                <SimpleImage
                     :img="require('@/web/assets/img/example-covers.jpg')"
                 />
             </section>
@@ -84,7 +84,7 @@
     <article class="hero-unit">
         <div class="container">
             <section>
-                <ResponsiveImage
+                <SimpleImage
                     :img="require('./img/modern-image-settings.png')"
                 />
             </section>
