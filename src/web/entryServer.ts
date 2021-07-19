@@ -29,6 +29,18 @@ const server = new VueSsgServer<AppContext>({
 
     async onPostRender(app, ssrContext) {
         await renderMetaToString(app, ssrContext)
+
+        const appContext = ssrContext
+        if (!appContext.teleports) {
+            appContext.teleports = {}
+        }
+        if (!appContext.teleports.head) {
+            appContext.teleports.head = ''
+        }
+
+        appContext.teleports.head += `
+            <link rel="icon" type="image/png" href="/favicon.png">
+        `
     },
 })
 
