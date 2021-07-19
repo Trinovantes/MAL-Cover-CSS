@@ -5,7 +5,7 @@ declare global {
         GIT_HASH: string
         SOCIAL_IMAGE_SIZE: number
 
-        // web-ssg specific
+        // ssg specific
         PUBLIC_DIR: string
         PUBLIC_PATH: string
         CLIENT_ENTRY_JS: string
