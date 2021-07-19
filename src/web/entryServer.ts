@@ -2,14 +2,15 @@ import { VueSsgServer } from 'puppeteer-prerender-plugin'
 import { AppContext, createApp } from './app'
 import { renderMetaToString } from 'vue-meta/ssr'
 
-const server = new VueSsgServer({
+const server = new VueSsgServer<AppContext>({
     staticDir: DEFINE.PUBLIC_DIR,
     publicPath: DEFINE.PUBLIC_PATH,
     clientEntryJs: DEFINE.CLIENT_ENTRY_JS,
     clientEntryCss: DEFINE.CLIENT_ENTRY_CSS,
     manifestFile: DEFINE.MANIFEST_FILE,
 
-    createSsrContext(req, res) {
+    // eslint-disable-next-line @typescript-eslint/require-await
+    async createSsrContext(req, res) {
         const appContext: AppContext = {
             url: req.originalUrl,
 
@@ -22,8 +23,8 @@ const server = new VueSsgServer({
         return appContext
     },
 
-    createApp(ssrContext) {
-        return createApp(ssrContext as AppContext)
+    async createApp(ssrContext) {
+        return await createApp(ssrContext)
     },
 
     async onPostRender(app, ssrContext) {

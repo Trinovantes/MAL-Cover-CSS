@@ -5891,10 +5891,10 @@ punycode@^2.1.0, punycode@^2.1.1:
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-2.1.1.tgz#b58b010ac40c22c5657616c8d2c2c02c7bf479ec"
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
-puppeteer-prerender-plugin@^2.3.1:
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/puppeteer-prerender-plugin/-/puppeteer-prerender-plugin-2.4.1.tgz#6b7c5d2fb7e5df34e64d07db24485cb64183620e"
-  integrity sha512-6PJsKV/EEgNiEXVRdwcHY5EuGmhQzD6vztdXVO1smDYlWbWwYtKfZk3wJ9aWmyDhSSCKWwp4tpUCao0XJKtgMQ==
+puppeteer-prerender-plugin@^2.4.4:
+  version "2.4.4"
+  resolved "https://registry.yarnpkg.com/puppeteer-prerender-plugin/-/puppeteer-prerender-plugin-2.4.4.tgz#84e21b6d073c10d9dad9b44d9096ff361f6efbee"
+  integrity sha512-2wVTLmEWAAINrhyvnZlcVZyNJE5w+Jsu0L4SPtKU3pv+guQVIWHoCGfWyhFMJeYaxaxVko2pRYiyjt3alYSeMQ==
   dependencies:
     "@vue/server-renderer" "^3.1.1"
     ajv "^8.6.0"
