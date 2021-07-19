@@ -121,8 +121,6 @@ import { useUserStore } from '@/web/store/User'
 import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
-    name: 'HomePage',
-
     setup() {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const img = require(`@/web/assets/img/example-covers.jpg?size=${DEFINE.SOCIAL_IMAGE_SIZE}`) as ResponsiveImage

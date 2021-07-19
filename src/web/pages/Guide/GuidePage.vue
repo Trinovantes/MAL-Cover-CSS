@@ -84,8 +84,6 @@ import { computed, defineComponent } from 'vue'
 import { useMeta } from 'vue-meta'
 
 export default defineComponent({
-    name: 'GuidePage',
-
     setup() {
         const title = 'Guide'
 

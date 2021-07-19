@@ -1,14 +1,11 @@
 import { merge } from 'webpack-merge'
-import { commonConfig, distApiDir, srcApiDir } from './webpack.common'
-import nodeExternals from 'webpack-node-externals'
+import { commonNodeConfig, distApiDir, srcApiDir } from './webpack.common'
 
 // ----------------------------------------------------------------------------
 // Api
 // ----------------------------------------------------------------------------
 
-export default merge(commonConfig, {
-    target: 'node',
-
+export default merge(commonNodeConfig, {
     entry: {
         www: `${srcApiDir}/www.ts`,
     },
@@ -16,8 +13,4 @@ export default merge(commonConfig, {
     output: {
         path: distApiDir,
     },
-
-    externals: [
-        nodeExternals(),
-    ],
 })

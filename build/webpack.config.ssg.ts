@@ -1,71 +1,20 @@
 import { merge } from 'webpack-merge'
-import { commonConfig, srcWebDir, publicPath, manifestFilePath, distWebPublicDir, distSsgDir, rawDirRegexp, distWebDir } from './webpack.common'
+import { srcWebDir, publicPath, manifestFilePath, distWebPublicDir, distSsgDir, distWebDir, commonNodeConfig } from './webpack.common'
 import { PuppeteerPrerenderPlugin } from 'puppeteer-prerender-plugin'
 import { DefinePlugin } from 'webpack'
-import nodeExternals from 'webpack-node-externals'
 
 // ----------------------------------------------------------------------------
 // Server
 // ----------------------------------------------------------------------------
 
-export default merge(commonConfig, {
-    target: 'node',
-
+export default merge(commonNodeConfig, {
     entry: {
         www: `${srcWebDir}/entryServer.ts`,
     },
 
     output: {
         path: distSsgDir,
-
-        // This tells the server bundle to use Node-style exports
-        libraryTarget: 'commonjs2',
     },
-
-    module: {
-        rules: [
-            {
-                // Do not inject css in the server bundle
-                test: /\.(css|sass|scss)$/,
-                use: 'null-loader',
-                exclude: rawDirRegexp,
-            },
-            {
-                // Do not inject fonts in the server bundle
-                test: /\.(ttf|eot|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                use: 'null-loader',
-            },
-            {
-                test: /\.(jpe?g|png|gif|svg|webp)$/i,
-                use: [
-                    {
-                        loader: 'responsive-loader',
-                        options: {
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            adapter: require('responsive-loader/sharp'),
-                            format: 'webp',
-                            placeholder: true,
-                            publicPath: publicPath,
-                            emitFile: false,
-                        },
-                    },
-                ],
-            },
-        ],
-    },
-
-    externals: [
-        // Do not externalize dependencies that need to be processed by webpack.
-        // You should also whitelist deps that modify `global` (e.g. polyfills)
-        nodeExternals({
-            allowlist: [
-                /^vue*/,
-                /\.(css|sass|scss)$/,
-                /\.(vue)$/,
-                /\.(html)$/,
-            ],
-        }),
-    ],
 
     plugins: [
         new DefinePlugin({
@@ -82,17 +31,9 @@ export default merge(commonConfig, {
             entryFile: 'www.js',
             outputDir: distWebDir,
             routes: [
-                '/guide',
-                '/example',
-                '/classic-vs-modern',
-                '/settings',
                 '/',
             ],
-            postProcess(result) {
-                result.html = result.html.replace(
-                    '<link rel="icon" type="image/ico" href="/favicon.ico">',
-                    '<link rel="icon" type="image/png" href="/favicon.png">')
-            },
+            discoverNewRoutes: true,
             puppeteerOptions: {
                 headless: true,
                 args: [

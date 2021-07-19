@@ -2,6 +2,9 @@ import path from 'path'
 import webpack, { DefinePlugin } from 'webpack'
 import { VueLoaderPlugin } from 'vue-loader'
 import { getGitHash } from './secrets'
+import merge from 'webpack-merge'
+import MiniCssExtractPlugin from 'mini-css-extract-plugin'
+import nodeExternals from 'webpack-node-externals'
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -11,6 +14,7 @@ import { getGitHash } from './secrets'
 const rootDir = path.resolve()
 
 export const isDev = (process.env.NODE_ENV === 'development')
+export const manifestFileName = 'ssr-manifest.json'
 export const gitHash = getGitHash(rootDir)
 export const publicPath = '/public/'
 
@@ -20,7 +24,7 @@ export const distApiDir = path.resolve(distDir, 'api')
 export const distWebDir = path.resolve(distDir, 'web')
 export const distWebPublicDir = path.resolve(distDir, 'web', 'public')
 export const distSsgDir = path.resolve(distDir, 'ssg')
-export const manifestFilePath = path.resolve(distDir, 'ssg', 'ssr-manifest.json')
+export const manifestFilePath = path.resolve(distDir, 'ssg', manifestFileName)
 
 export const srcDir = path.resolve(rootDir, 'src')
 export const srcCronDir = path.resolve(srcDir, 'cron')
@@ -34,7 +38,7 @@ export const rawDirRegexp = /\/raw\//
 // Common
 // ----------------------------------------------------------------------------
 
-export const commonConfig: webpack.Configuration = {
+const commonConfig: webpack.Configuration = {
     mode: isDev
         ? 'development'
         : 'production',
@@ -75,7 +79,12 @@ export const commonConfig: webpack.Configuration = {
             },
             {
                 test: /\.vue$/,
-                use: 'vue-loader',
+                use: [{
+                    loader: 'vue-loader',
+                    options: {
+                        exposeFilename: true,
+                    },
+                }],
             },
             {
                 test: rawDirRegexp,
@@ -84,3 +93,112 @@ export const commonConfig: webpack.Configuration = {
         ],
     },
 }
+
+export const commonWebConfig = merge(commonConfig, {
+    target: 'web',
+
+    module: {
+        rules: [
+            {
+                test: /\.(sass|scss)$/,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            additionalData: (content: string, loaderContext: { resourcePath: string }): string => {
+                                return (loaderContext.resourcePath.endsWith('sass'))
+                                    ? '@use "sass:math"\n @import "@/web/assets/css/variables.scss"\n' + content
+                                    : '@use "sass:math";  @import "@/web/assets/css/variables.scss"; ' + content
+                            },
+                        },
+                    },
+                ],
+            },
+            {
+                test: /\.(css)$/,
+                exclude: rawDirRegexp,
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                ],
+            },
+            {
+                test: /\.(ttf|eot|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                type: 'asset',
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg|webp)$/i,
+                use: [
+                    {
+                        loader: 'responsive-loader',
+                        options: {
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                            adapter: require('responsive-loader/sharp'),
+                            format: 'webp',
+                            placeholder: true,
+                            publicPath: publicPath,
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+})
+
+export const commonNodeConfig = merge(commonConfig, {
+    target: 'node',
+
+    output: {
+        // This tells the server bundle to use Node-style exports
+        libraryTarget: 'commonjs2',
+    },
+
+    module: {
+        rules: [
+            {
+                // Do not emit css in the server bundle
+                test: /\.(css|sass|scss)$/,
+                use: 'null-loader',
+                exclude: rawDirRegexp,
+            },
+            {
+                // Do not emit fonts in the server bundle
+                test: /\.(ttf|eot|woff(2)?)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                use: 'null-loader',
+            },
+            {
+                test: /\.(jpe?g|png|gif|svg|webp)$/i,
+                use: [
+                    {
+                        loader: 'responsive-loader',
+                        options: {
+                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                            adapter: require('responsive-loader/sharp'),
+                            format: 'webp',
+                            placeholder: true,
+                            publicPath: publicPath,
+
+                            // Do not emit images in the server bundle
+                            emitFile: false,
+                        },
+                    },
+                ],
+            },
+        ],
+    },
+
+    externals: [
+        // Do not externalize dependencies that need to be processed by webpack.
+        // You should also whitelist deps that modify `global` (e.g. polyfills)
+        nodeExternals({
+            allowlist: [
+                /^vue*/,
+                /\.(css|sass|scss)$/,
+                /\.(vue)$/,
+                /\.(html)$/,
+            ],
+        }),
+    ],
+})

@@ -100,8 +100,6 @@ import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
 import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
-    name: 'ExamplePage',
-
     setup() {
         const title = 'Example List Design'
 

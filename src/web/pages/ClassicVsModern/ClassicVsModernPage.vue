@@ -37,8 +37,6 @@ import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
 import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
 
 export default defineComponent({
-    name: 'ClassicVsModernPage',
-
     setup() {
         const title = 'Classic vs. Modern Templates'
 

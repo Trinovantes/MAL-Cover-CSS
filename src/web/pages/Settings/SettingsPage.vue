@@ -55,8 +55,6 @@ import { UserMutation } from '@/web/store/User/mutations'
 import dayjs from 'dayjs'
 
 export default defineComponent({
-    name: 'SettingsPage',
-
     setup() {
         const title = 'Settings'
 

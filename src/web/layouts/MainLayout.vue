@@ -12,8 +12,6 @@ import Header from './Header.vue'
 import Footer from './Footer.vue'
 
 export default defineComponent({
-    name: 'MainLayout',
-
     components: {
         Header,
         Footer,
