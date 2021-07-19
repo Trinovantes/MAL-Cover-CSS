@@ -4,6 +4,7 @@
             <section>
                 <SimpleImage
                     :img="require('@/web/assets/img/example-covers.jpg')"
+                    :render-on-server="true"
                 />
             </section>
             <section>

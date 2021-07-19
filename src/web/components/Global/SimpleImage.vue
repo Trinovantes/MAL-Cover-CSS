@@ -69,11 +69,15 @@ export default defineComponent({
             type: String,
             default: '100vw',
         },
+        renderOnServer: {
+            type: Boolean,
+            default: false,
+        },
     },
 
-    setup() {
+    setup(props) {
         const containerRef = ref<HTMLDivElement | null>(null)
-        const hasScrolledIntoView = ref(false)
+        const hasScrolledIntoView = ref(props.renderOnServer)
         let observer: IntersectionObserver | null = null
 
         // Set up intersection observer
@@ -99,17 +103,19 @@ export default defineComponent({
         // Set up image loading
         const imageRef = ref<HTMLImageElement | null>(null)
         const isReady = ref(false)
-        onMounted(() => {
-            watch(imageRef, (imageRef) => {
-                if (!imageRef) {
-                    return
-                }
+        const checkIsReady = () => {
+            if (!imageRef.value) {
+                return
+            }
 
-                isReady.value = imageRef.complete
-                imageRef.onload = () => {
-                    isReady.value = true
-                }
-            })
+            isReady.value = imageRef.value.complete
+            imageRef.value.onload = () => {
+                isReady.value = true
+            }
+        }
+        onMounted(() => {
+            watch(imageRef, checkIsReady)
+            checkIsReady()
         })
 
         return {
