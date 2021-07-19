@@ -1,6 +1,6 @@
 <template>
     <article class="hero-unit">
-        <div class="container vertical">
+        <div class="container full-height-container vertical">
             <section>
                 <SimpleImage
                     :img="require('@/web/assets/img/example-covers.jpg')"
@@ -49,7 +49,7 @@
     </article>
 
     <article class="hero-unit">
-        <div class="container">
+        <div class="container full-height-container">
             <section>
                 <SimpleImage
                     :img="require('@/web/assets/img/example-covers.jpg')"
@@ -82,7 +82,7 @@
     </article>
 
     <article class="hero-unit">
-        <div class="container">
+        <div class="container full-height-container">
             <section>
                 <SimpleImage
                     :img="require('./img/modern-image-settings.png')"
@@ -162,22 +162,17 @@ article.hero-unit{
         margin: 0;
     }
 
-    img{
-        border-radius: math.div($padding, 4);
-        box-shadow:
-            0 0.4px 1.3px rgba(0, 0, 0, 0.045),
-            0 1.1px 3.2px rgba(0, 0, 0, 0.065),
-            0 2px 6px rgba(0, 0, 0, 0.08),
-            0 3.6px 10.7px rgba(0, 0, 0, 0.095),
-            0 6.7px 20.1px rgba(0, 0, 0, 0.115),
-            0 16px 48px rgba(0, 0, 0, 0.16)
-        ;
-
-        min-width: 300px;
-        max-height: calc(100vh - #{$header-height} - #{$padding * 16});
-
-        @media (max-width: $mobile-breakpoint) {
-            max-height: 40vh;
+    .simple-image{
+        img{
+            border-radius: math.div($padding, 4);
+            box-shadow:
+                0 0.4px 1.3px rgba(0, 0, 0, 0.045),
+                0 1.1px 3.2px rgba(0, 0, 0, 0.065),
+                0 2px 6px rgba(0, 0, 0, 0.08),
+                0 3.6px 10.7px rgba(0, 0, 0, 0.095),
+                0 6.7px 20.1px rgba(0, 0, 0, 0.115),
+                0 16px 48px rgba(0, 0, 0, 0.16)
+            ;
         }
     }
 
@@ -208,7 +203,6 @@ article.hero-unit{
     }
 
     .container{
-        min-height: calc(100vh - #{$header-height});
         padding-top: $vspace;
         padding-bottom: $vspace;
 

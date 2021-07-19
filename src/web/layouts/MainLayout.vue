@@ -1,6 +1,6 @@
 <template>
     <Header />
-    <main class="page">
+    <main class="page full-height-container">
         <router-view />
     </main>
     <Footer />
@@ -21,8 +21,7 @@ export default defineComponent({
 
 <style lang="scss">
 main.page{
-    min-height: 100vh;
-    padding-top: $header-height;
+    margin-top: $header-height;
 }
 
 .container{
@@ -36,6 +35,10 @@ main.page{
     @media (max-width: $mobile-breakpoint) {
         width: 100%;
     }
+}
+
+.full-height-container{
+    min-height: calc(100vh - #{$header-height});
 }
 
 .text-container{
@@ -66,12 +69,11 @@ main.page{
     h2, h3, h4, h5, h6,
     p,
     pre,
-    ul,
-    ol,
-    figure,
+    ul, ol, dl,
+    .simple-image,
     .q-form,
     .q-field,
-    .btn-group,
+    .grid,
     .callout{
         margin: ($padding * 2) 0;
 
@@ -86,6 +88,88 @@ main.page{
 
     h2, h3, h4, h5, h6{
         margin-top: ($padding * 4);
+
+        & + h2,
+        & + h3,
+        & + h4,
+        & + h5,
+        & + h6{
+            margin-top: $padding * 2;
+        }
+    }
+
+    ul, ol, dl{
+        padding-left: $padding * 2;
+
+        ul, ol, dl{
+            margin: $padding 0 !important;
+        }
+    }
+    ul{
+        list-style-type: disc;
+    }
+    ol{
+        list-style-type: decimal;
+    }
+    dl{
+        dt{
+            font-weight: bold;
+        }
+        dd{
+            margin-left: $padding * 2;
+        }
+    }
+
+    em{
+        font-style: italic;
+    }
+
+    strong{
+        font-weight: bold;
+    }
+
+    code{
+        background: $light-on-light;
+        border-radius: math.div($padding, 4);
+        font-family: 'Courier New', Courier, monospace;
+        padding: math.div($padding, 4) math.div($padding, 2);
+    }
+
+    table{
+        thead{
+            font-weight: bold;
+
+            tr{
+                border-top: 1px solid;
+            }
+        }
+
+        tr{
+            border-bottom: 1px solid;
+        }
+
+        td{
+            padding: math.div($padding, 2) $padding;
+        }
+    }
+
+    .grid{
+        display: grid;
+        gap: $padding * 2;
+
+        > *{
+            margin: 0 !important;
+        }
+
+        .simple-image{
+            justify-content: start;
+        }
+    }
+
+    @for $i from 2 through 6{
+        .grid-#{$i}{
+            grid-template-columns: repeat(#{$i}, 1fr);
+        }
     }
 
     picture{
