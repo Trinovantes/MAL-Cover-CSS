@@ -120,5 +120,6 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
 
     console.info(`Upserted user ${malUser.name}`)
     req.session.currentUser = user.toSessionData()
+    req.session.oauthState = undefined
     res.redirect('/settings')
 }))
