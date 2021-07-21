@@ -65,13 +65,20 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
         res.redirect(redirect ?? '/')
     }
 
-    const malAuth = req.query
-    const encodedState = malAuth.state as string
-    const returnedState = JSON.parse(decodeURIComponent(encodedState)) as unknown
+    const urlQuery = req.query
+
+    // Check if state exists in query
+    const encodedState = urlQuery.state
+    if (typeof encodedState !== 'string') {
+        console.info('Invalid oauth state', urlQuery)
+        await onError()
+        return
+    }
 
     // Check if returned state is valid
+    const returnedState = JSON.parse(decodeURIComponent(encodedState)) as unknown
     if (!isOauthState(returnedState)) {
-        console.info('Malformed oauth state in malAuth', malAuth)
+        console.info('Malformed oauth state in urlQuery', urlQuery)
         await onError()
         return
     }
@@ -85,21 +92,21 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
     }
 
     // Oauth failure (e.g. user decline request)
-    if (isOauthFailure(malAuth)) {
-        console.info('Failed to get access token', malAuth)
+    if (isOauthFailure(urlQuery)) {
+        console.info('Failed to get access token', urlQuery)
         await onError(returnedState.restorePath)
         return
     }
 
-    // Valid response from MAL
-    if (!isOauthAuthSuccess(malAuth)) {
-        console.info('Unexpected malAuth', malAuth)
+    // Check if oauth was successful
+    if (!isOauthAuthSuccess(urlQuery)) {
+        console.info('Unexpected urlQuery', urlQuery)
         await onError(returnedState.restorePath)
         return
     }
 
     const redirectUrl = getOauthRedirectUrl()
-    const malOauth = await obtainAccessToken(malAuth.code, returnedState.secret, redirectUrl)
+    const malOauth = await obtainAccessToken(urlQuery.code, returnedState.secret, redirectUrl)
     const malUser = await fetchMalUser(malOauth.access_token)
     const tokenExpires = getSqlTimestamp(dayjs.utc().add(malOauth.expires_in, 'seconds').toDate())
 
