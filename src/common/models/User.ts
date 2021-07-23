@@ -47,12 +47,12 @@ export class User {
             VALUES(@malUsername, @malUserId, NULL, @tokenExpires, @accessToken, @refreshToken, @createdAt, @updatedAt)
                 ON CONFLICT(malUserId) DO UPDATE
                     SET
-                        malUsername = @malUsername      ,
+                        malUsername  = @malUsername     ,
                         tokenExpires = @tokenExpires    ,
-                        accessToken = @accessToken      ,
+                        accessToken  = @accessToken     ,
                         refreshToken = @refreshToken    ,
-                        updatedAt = @updatedAt
-        ;`, {
+                        updatedAt    = @updatedAt       ;
+        `, {
             '@malUsername': attrs.malUsername,
             '@malUserId': attrs.malUserId,
             '@tokenExpires': attrs.tokenExpires,
@@ -78,8 +78,8 @@ export class User {
         const db = await dbPromise
         const userAttrs = await db.get<UserAttributes>(`
             SELECT * FROM ${User.TABLE}
-            WHERE malUserId = @malUserId
-        ;`, {
+            WHERE malUserId = @malUserId;
+        `, {
             '@malUserId': malUserId,
         })
 
@@ -95,8 +95,8 @@ export class User {
         const rows = await db.all<Array<UserAttributes>>(`
             SELECT * FROM ${User.TABLE}
             WHERE lastChecked IS NULL
-            OR    lastChecked < @staleTime
-        ;`, {
+            OR    lastChecked < @staleTime;
+        `, {
             '@staleTime': getSqlTimestamp(staleTime),
         })
 
@@ -108,9 +108,9 @@ export class User {
         const rows = await db.all<Array<UserAttributes>>(`
             SELECT * FROM ${User.TABLE}
             WHERE tokenExpires IS NULL
-            AND   accessToken IS NULL
-            AND   refreshToken IS NULL
-        ;`)
+            AND   accessToken  IS NULL
+            AND   refreshToken IS NULL;
+        `)
 
         return rows.map((row) => new User(row))
     }
@@ -125,8 +125,8 @@ export class User {
         const db = await dbPromise
         const result = await db.run(`
             DELETE FROM ${User.TABLE}
-            WHERE id = @id
-        ;`, {
+            WHERE id = @id;
+        `, {
             '@id': this._attrs.id,
         })
 
@@ -146,8 +146,8 @@ export class User {
             SET
                 lastChecked = @lastChecked
             WHERE
-                id = @id
-        ;`, {
+                id = @id;
+        `, {
             '@lastChecked': lastChecked,
             '@id': this._attrs.id,
         })
@@ -168,13 +168,13 @@ export class User {
         const result = await db.run(`
             UPDATE ${User.TABLE}
             SET
-                tokenExpires = @tokenExpires,
-                accessToken = @accessToken,
-                refreshToken = @refreshToken,
+                tokenExpires = @tokenExpires    ,
+                accessToken  = @accessToken     ,
+                refreshToken = @refreshToken    ,
                 updatedAt = @updatedAt
             WHERE
-                id = @id
-        ;`, {
+                id = @id;
+        `, {
             '@tokenExpires': this.tokenExpires,
             '@accessToken': this._attrs.accessToken, // Need to access the encrypted value
             '@refreshToken': this._attrs.refreshToken, // Need to access the encrypted value

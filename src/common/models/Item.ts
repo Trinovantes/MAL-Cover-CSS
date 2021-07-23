@@ -36,9 +36,9 @@ export class Item {
         const result = await db.run(`
             INSERT INTO ${Item.TABLE}(mediaType, malId, imgUrl, createdAt, updatedAt) VALUES(@mediaType, @malId, @imgUrl, @createdAt, @updatedAt)
                 ON CONFLICT(mediaType, malId) DO UPDATE SET
-                    imgUrl = @imgUrl        ,
-                    updatedAt = @updatedAt
-        ;`, {
+                    imgUrl    = @imgUrl     ,
+                    updatedAt = @updatedAt  ;
+        `, {
             '@mediaType': attrs.mediaType,
             '@malId': attrs.malId,
             '@imgUrl': attrs.imgUrl,
@@ -63,8 +63,8 @@ export class Item {
         const itemAttrs = await db.get<ItemAttributes>(`
             SELECT * FROM ${Item.TABLE}
             WHERE mediaType = @mediaType
-            AND   malId     = @malId
-        ;`, {
+            AND   malId     = @malId;
+        `, {
             '@mediaType': mediaType,
             '@malId': malId,
         })
@@ -83,14 +83,14 @@ export class Item {
         if (mediaType) {
             rows = await db.all<Array<ItemAttributes>>(`
                 SELECT * FROM ${Item.TABLE}
-                WHERE mediaType = @mediaType
-            ;`, {
+                WHERE mediaType = @mediaType;
+            `, {
                 '@mediaType': mediaType,
             })
         } else {
             rows = await db.all<Array<ItemAttributes>>(`
-                SELECT * FROM ${Item.TABLE}
-            ;`)
+                SELECT * FROM ${Item.TABLE};
+            `)
         }
 
         return rows.map((row) => new Item(row))
