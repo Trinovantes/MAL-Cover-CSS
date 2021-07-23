@@ -1,7 +1,8 @@
 import { decrypt, encrypt } from '@/common/utils/encryption'
 import { UserResponse } from '@/common/schemas/ApiResponse'
 import assert from 'assert'
-import { CreationOmit, dbPromise, DefaultColumns } from './db'
+import { CreationOmit, DefaultColumns } from './attrs'
+import { getDbClient } from '@/common/db/client'
 import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 
 // ----------------------------------------------------------------------------
@@ -41,8 +42,8 @@ export class User {
         const encryptedRefreshToken = encrypt(attrs.refreshToken)
         const now = getSqlTimestamp()
 
-        const db = await dbPromise
-        const result = await db.run(`
+        const dbClient = await getDbClient()
+        const result = await dbClient.run(`
             INSERT INTO ${User.TABLE}(malUsername, malUserId, lastChecked, tokenExpires, accessToken, refreshToken, createdAt, updatedAt)
             VALUES(@malUsername, @malUserId, NULL, @tokenExpires, @accessToken, @refreshToken, @createdAt, @updatedAt)
                 ON CONFLICT(malUserId) DO UPDATE
@@ -75,8 +76,8 @@ export class User {
     }
 
     static async fetch(malUserId: number): Promise<User | null> {
-        const db = await dbPromise
-        const userAttrs = await db.get<UserAttributes>(`
+        const dbClient = await getDbClient()
+        const userAttrs = await dbClient.get<UserAttributes>(`
             SELECT * FROM ${User.TABLE}
             WHERE malUserId = @malUserId;
         `, {
@@ -91,8 +92,8 @@ export class User {
     }
 
     static async fetchAllToScrape(staleTime: Date): Promise<Array<User>> {
-        const db = await dbPromise
-        const rows = await db.all<Array<UserAttributes>>(`
+        const dbClient = await getDbClient()
+        const rows = await dbClient.all<Array<UserAttributes>>(`
             SELECT * FROM ${User.TABLE}
             WHERE lastChecked IS NULL
             OR    lastChecked < @staleTime;
@@ -104,8 +105,8 @@ export class User {
     }
 
     static async fetchAllToDelete(): Promise<Array<User>> {
-        const db = await dbPromise
-        const rows = await db.all<Array<UserAttributes>>(`
+        const dbClient = await getDbClient()
+        const rows = await dbClient.all<Array<UserAttributes>>(`
             SELECT * FROM ${User.TABLE}
             WHERE tokenExpires IS NULL
             AND   accessToken  IS NULL
@@ -122,8 +123,8 @@ export class User {
     async destroy(): Promise<void> {
         assert(!this._isDeleted)
 
-        const db = await dbPromise
-        const result = await db.run(`
+        const dbClient = await getDbClient()
+        const result = await dbClient.run(`
             DELETE FROM ${User.TABLE}
             WHERE id = @id;
         `, {
@@ -140,8 +141,8 @@ export class User {
     async updateLastChecked(lastChecked: string): Promise<void> {
         assert(!this._isDeleted)
 
-        const db = await dbPromise
-        const result = await db.run(`
+        const dbClient = await getDbClient()
+        const result = await dbClient.run(`
             UPDATE ${User.TABLE}
             SET
                 lastChecked = @lastChecked
@@ -164,8 +165,8 @@ export class User {
         this.accessToken = newAttrs.accessToken
         this.refreshToken = newAttrs.refreshToken
 
-        const db = await dbPromise
-        const result = await db.run(`
+        const dbClient = await getDbClient()
+        const result = await dbClient.run(`
             UPDATE ${User.TABLE}
             SET
                 tokenExpires = @tokenExpires    ,

@@ -1,5 +1,6 @@
 import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
-import { CreationOmit, dbPromise, DefaultColumns } from './db'
+import { getDbClient } from '@/common/db/client'
+import { CreationOmit, DefaultColumns } from './attrs'
 
 // ----------------------------------------------------------------------------
 // Item
@@ -32,8 +33,8 @@ export class Item {
     static async upsert(attrs: Omit<ItemAttributes, CreationOmit>): Promise<Item> {
         const now = getSqlTimestamp()
 
-        const db = await dbPromise
-        const result = await db.run(`
+        const dbClient = await getDbClient()
+        const result = await dbClient.run(`
             INSERT INTO ${Item.TABLE}(mediaType, malId, imgUrl, createdAt, updatedAt) VALUES(@mediaType, @malId, @imgUrl, @createdAt, @updatedAt)
                 ON CONFLICT(mediaType, malId) DO UPDATE SET
                     imgUrl    = @imgUrl     ,
@@ -59,8 +60,8 @@ export class Item {
     }
 
     static async fetch(mediaType: MediaType, malId: number): Promise<Item | null> {
-        const db = await dbPromise
-        const itemAttrs = await db.get<ItemAttributes>(`
+        const dbClient = await getDbClient()
+        const itemAttrs = await dbClient.get<ItemAttributes>(`
             SELECT * FROM ${Item.TABLE}
             WHERE mediaType = @mediaType
             AND   malId     = @malId;
@@ -77,18 +78,18 @@ export class Item {
     }
 
     static async fetchAll(mediaType?: MediaType): Promise<Array<Item>> {
-        const db = await dbPromise
+        const dbClient = await getDbClient()
         let rows: Array<ItemAttributes>
 
         if (mediaType) {
-            rows = await db.all<Array<ItemAttributes>>(`
+            rows = await dbClient.all<Array<ItemAttributes>>(`
                 SELECT * FROM ${Item.TABLE}
                 WHERE mediaType = @mediaType;
             `, {
                 '@mediaType': mediaType,
             })
         } else {
-            rows = await db.all<Array<ItemAttributes>>(`
+            rows = await dbClient.all<Array<ItemAttributes>>(`
                 SELECT * FROM ${Item.TABLE};
             `)
         }
