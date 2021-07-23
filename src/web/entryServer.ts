@@ -14,6 +14,10 @@ const server = new VueSsgServer<AppContext>({
         const appContext: AppContext = {
             url: req.originalUrl,
 
+            teleports: {
+                noScript: '<noscript><span class="noscript">This website requires JavaScript</span></noscript>',
+            },
+
             req: req,
             res: res,
             _modules: new Set(),

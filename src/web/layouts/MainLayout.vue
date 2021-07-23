@@ -24,6 +24,14 @@ main.page{
     margin-top: $header-height;
 }
 
+noscript{
+    display: block;
+    position: fixed;
+    top: $header-height;
+    width: 100%;
+    z-index: 9;
+}
+
 .container{
     margin-left: auto;
     margin-right: auto;
