@@ -18,7 +18,7 @@ export default defineComponent({
             type: String,
             default: '',
         },
-        autodetect: {
+        autoDetect: {
             type: Boolean,
             default: true,
         },
@@ -33,8 +33,8 @@ export default defineComponent({
             language.value = newLanguage
         })
 
-        const autodetect = computed(() => props.autodetect || !language.value)
-        const cannotDetectLanguage = computed(() => !autodetect.value && !hljs.getLanguage(language.value))
+        const autoDetect = computed(() => !language.value && props.autoDetect)
+        const cannotDetectLanguage = computed(() => !autoDetect.value && !hljs.getLanguage(language.value))
 
         const className = computed((): string => {
             let cssClass = ''
@@ -59,7 +59,7 @@ export default defineComponent({
                 return
             }
 
-            if (autodetect.value) {
+            if (autoDetect.value) {
                 const result = hljs.highlightAuto(props.code)
                 language.value = result.language ?? ''
                 highlightedCode.value = result.value
@@ -72,10 +72,7 @@ export default defineComponent({
             }
         }
 
-        watch([cannotDetectLanguage, autodetect, props], updateCode, {
-            deep: true,
-        })
-
+        watch([cannotDetectLanguage, autoDetect, props], updateCode, { deep: true })
         updateCode()
 
         return {
