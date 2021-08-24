@@ -44,6 +44,7 @@ const server = new VueSsgServer<AppContext>({
 
         appContext.teleports.head += `
             <link rel="icon" type="image/png" href="/favicon.png">
+            <link href="https://fonts.googleapis.com/css2?family=Material+Icons" rel="stylesheet">
         `
     },
 })
