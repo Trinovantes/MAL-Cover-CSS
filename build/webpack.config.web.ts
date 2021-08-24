@@ -36,26 +36,30 @@ export default merge(commonWebConfig, {
     devServer: {
         host: 'test.malcovercss.link',
         port: 9040,
-        index: 'app.html',
+        devMiddleware: {
+            index: 'app.html',
+            writeToDisk: (filePath) => {
+                // Since output.publicPath is '/public', app.html can only be accessed at /public/index.html
+                // Instead, we need to write it to disk and have webpack-dev-server serve it from '/' (contentBasePublicPath)
+                if (filePath.endsWith('.html')) {
+                    return true
+                }
+
+                // Emit ssr-manifest.json for debugging
+                if (filePath.endsWith('.json')) {
+                    return true
+                }
+
+                return false
+            },
+        },
         historyApiFallback: {
             index: 'app.html',
         },
-        writeToDisk: (filePath) => {
-            // Since output.publicPath is '/public', app.html can only be accessed at /public/index.html
-            // Instead, we need to write it to disk and have webpack-dev-server serve it from '/' (contentBasePublicPath)
-            if (filePath.endsWith('.html')) {
-                return true
-            }
-
-            // Emit ssr-manifest.json for debugging
-            if (filePath.endsWith('.json')) {
-                return true
-            }
-
-            return false
+        static: {
+            directory: distWebDir, // TODO include staticDir, pending types
+            publicPath: '/',
         },
-        contentBase: [distWebDir, staticDir],
-        contentBasePublicPath: '/',
         proxy: {
             '/api': 'http://localhost:3000',
         },
