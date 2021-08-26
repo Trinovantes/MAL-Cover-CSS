@@ -56,10 +56,16 @@ export default merge(commonWebConfig, {
         historyApiFallback: {
             index: 'app.html',
         },
-        static: {
-            directory: distWebDir, // TODO include staticDir, pending types
-            publicPath: '/',
-        },
+        static: [
+            {
+                directory: distWebDir,
+                publicPath: '/',
+            },
+            {
+                directory: staticDir,
+                publicPath: '/',
+            },
+        ],
         proxy: {
             '/api': 'http://localhost:3000',
         },
