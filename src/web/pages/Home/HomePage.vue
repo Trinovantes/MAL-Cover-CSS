@@ -195,7 +195,7 @@ article.hero-unit{
         }
     }
 
-    @media (max-width: $mobile-breakpoint) {
+    @media (max-width: $large-mobile-breakpoint) {
         border-bottom: 1px solid $light-on-light;
 
         &:last-of-type{
@@ -251,7 +251,7 @@ article.hero-unit{
             @include vertical-container;
         }
 
-        @media (max-width: $mobile-breakpoint) {
+        @media (max-width: $large-mobile-breakpoint) {
             @include vertical-container;
             min-height: 0;
         }
@@ -267,7 +267,7 @@ article.hero-unit{
     &:nth-child(2) .container{
         flex-direction: row-reverse;
 
-        @media (max-width: $mobile-breakpoint) {
+        @media (max-width: $large-mobile-breakpoint) {
             // Intentionally not reversed so text/image alternate on mobile
             flex-direction: column;
         }

@@ -40,7 +40,7 @@ noscript{
     padding-right: $padding * 2;
     width: 80%;
 
-    @media (max-width: $mobile-breakpoint) {
+    @media (max-width: $large-mobile-breakpoint) {
         width: 100%;
     }
 }
@@ -65,7 +65,7 @@ noscript{
         grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     }
 
-    @media (max-width: $mobile-breakpoint) {
+    @media (max-width: $large-mobile-breakpoint) {
         grid-template-columns: minmax(0, 1fr);
     }
 

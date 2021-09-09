@@ -116,7 +116,7 @@ header.layout-header {
         padding-left: $padding;
         padding-right: $padding;
 
-        @media (max-width: $mobile-breakpoint) {
+        @media (max-width: $large-mobile-breakpoint) {
             flex-wrap: wrap;
             padding-left: $padding * 2;
             padding-right: $padding * 2;
@@ -142,7 +142,7 @@ header.layout-header {
     .header-logo{
         font-weight: bold;
 
-        @media (max-width: $mobile-breakpoint) {
+        @media (max-width: $large-mobile-breakpoint) {
             width: 100%;
             display: grid;
             grid-template-columns: $header-btn-size 1fr $header-btn-size;
@@ -161,7 +161,7 @@ header.layout-header {
             width: $header-btn-size;
             height: $header-btn-size;
 
-            @media (max-width: $mobile-breakpoint) {
+            @media (max-width: $large-mobile-breakpoint) {
                 display: inherit;
             }
         }
@@ -172,7 +172,7 @@ header.layout-header {
         display: flex;
         flex: 1;
 
-        @media (max-width: $mobile-breakpoint) {
+        @media (max-width: $large-mobile-breakpoint) {
             display: block;
             flex: none;
             overflow: hidden;
