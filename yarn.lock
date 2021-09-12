@@ -5338,9 +5338,9 @@ punycode@^2.1.0, punycode@^2.1.1:
   integrity sha512-XRsRjdf+j5ml+y/6GKHPZbrF/8p2Yga0JPtdqTIY2Xe5ohJPD9saDJJLPvp9+NSBprVvevdXZybnj2cv8OEd0A==
 
 puppeteer-prerender-plugin@^3.0.2:
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/puppeteer-prerender-plugin/-/puppeteer-prerender-plugin-3.0.2.tgz#a2f360c8f25e4420a45490d861d44e3ef3848418"
-  integrity sha512-NoS98uS45sW+22V0NIOkwFv9rZvMT2YkS8MRMlxRRQyrJPJPQMgETR2p669jVXwoJfshDrOR5h+1eimcu85UyA==
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/puppeteer-prerender-plugin/-/puppeteer-prerender-plugin-3.0.3.tgz#6de1815883a9a86a7d2f28d5379ea94fdc50aa4c"
+  integrity sha512-jUBMtFb/89HDlUa+iKElJNO0Oh2Jd4UuQe+mdadBm52kgE37GD6xr4kbmcUAs5CyEsCc9HAT04HPnuS/uZcsyg==
   dependencies:
     ajv "^8.6.0"
     express "^4.17.1"
