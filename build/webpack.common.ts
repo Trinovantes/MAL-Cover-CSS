@@ -82,6 +82,7 @@ const commonConfig: webpack.Configuration = {
                 use: [{
                     loader: 'vue-loader',
                     options: {
+                        transpileOnly: true,
                         exposeFilename: true,
                     },
                 }],
