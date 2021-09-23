@@ -19,8 +19,8 @@
                 <img
                     ref="imageRef"
                     :src="img.src"
-                    :width="(width ?? img.width) || null"
-                    :height="(height ?? img.height) || null"
+                    :width="(width ?? img.width) || undefined"
+                    :height="(height ?? img.height) || undefined"
                     :sizes="sizes"
                     :title="title"
                     :alt="alt ?? title"
@@ -50,20 +50,20 @@ export default defineComponent({
             required: true,
         },
         title: {
-            type: String as PropType<string | null>,
-            default: null,
+            type: String as PropType<string | undefined>,
+            default: undefined,
         },
         alt: {
-            type: String as PropType<string | null>,
-            default: null,
+            type: String as PropType<string | undefined>,
+            default: undefined,
         },
         width: {
-            type: Number,
-            default: null,
+            type: Number as PropType<number | undefined>,
+            default: undefined,
         },
         height: {
-            type: Number,
-            default: null,
+            type: Number as PropType<number | undefined>,
+            default: undefined,
         },
         sizes: {
             type: String,
