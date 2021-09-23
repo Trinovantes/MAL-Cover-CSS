@@ -71,9 +71,10 @@ const commonConfig: webpack.Configuration = {
                 test: /\.tsx?$/,
                 exclude: /node_modules/,
                 use: [{
-                    loader: 'ts-loader',
+                    loader: 'esbuild-loader',
                     options: {
-                        appendTsSuffixTo: [/\.vue$/],
+                        loader: 'ts',
+                        target: 'es2020',
                     },
                 }],
             },
