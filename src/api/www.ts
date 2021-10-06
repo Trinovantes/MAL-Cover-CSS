@@ -60,7 +60,7 @@ app.use(Sentry.Handlers.requestHandler())
 app.use(Sentry.Handlers.tracingHandler())
 
 // -----------------------------------------------------------------------------
-// Middlewars
+// Middlewares
 // -----------------------------------------------------------------------------
 
 // Handle non-GET request bodies
