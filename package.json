@@ -40,7 +40,7 @@
         "lodash": "^4.17.21",
         "morgan": "^1.10.0",
         "quasar": "^2.0.0-beta.14",
-        "redis": "^4.0.2",
+        "redis": "^3",
         "source-map-support": "^0.5.19",
         "sqlite": "^4.0.23",
         "sqlite3": "^5.0.2",
