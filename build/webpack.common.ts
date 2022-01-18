@@ -140,7 +140,7 @@ export const commonWebConfig = merge(commonConfig, {
                             adapter: require('responsive-loader/sharp'),
                             format: 'webp',
                             placeholder: true,
-                            publicPath: publicPath,
+                            publicPath,
                         },
                     },
                 ],
@@ -180,7 +180,7 @@ export const commonNodeConfig = merge(commonConfig, {
                             adapter: require('responsive-loader/sharp'),
                             format: 'webp',
                             placeholder: true,
-                            publicPath: publicPath,
+                            publicPath,
 
                             // Do not emit images in the server bundle
                             emitFile: false,

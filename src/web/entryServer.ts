@@ -18,8 +18,8 @@ const server = new VueSsgServer<AppContext>({
                 noScript: '<noscript><span class="noscript">This website requires JavaScript</span></noscript>',
             },
 
-            req: req,
-            res: res,
+            req,
+            res,
             _modules: new Set(),
             _meta: {},
         }

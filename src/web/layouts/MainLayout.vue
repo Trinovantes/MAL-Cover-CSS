@@ -1,20 +1,20 @@
 <template>
-    <Header />
+    <MainLayoutHeader />
     <main class="page full-height-container">
         <router-view />
     </main>
-    <Footer />
+    <MainLayoutFooter />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import Header from './Header.vue'
-import Footer from './Footer.vue'
+import MainLayoutHeader from './MainLayoutHeader.vue'
+import MainLayoutFooter from './MainLayoutFooter.vue'
 
 export default defineComponent({
     components: {
-        Header,
-        Footer,
+        MainLayoutHeader,
+        MainLayoutFooter,
     },
 })
 </script>

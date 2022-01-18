@@ -68,7 +68,7 @@ async function scrapeUser(user: User, mediaType: MediaType, offset = 0) {
     const config: AxiosRequestConfig = {
         params: {
             limit: ITEMS_PER_LIST_REQUEST,
-            offset: offset,
+            offset,
         },
     }
 
@@ -81,9 +81,9 @@ async function scrapeUser(user: User, mediaType: MediaType, offset = 0) {
         const imgUrl = malItem.node.main_picture?.medium ?? null
 
         await Item.upsert({
-            mediaType: mediaType,
-            malId: malId,
-            imgUrl: imgUrl,
+            mediaType,
+            malId,
+            imgUrl,
         })
     }
 

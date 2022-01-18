@@ -6,6 +6,7 @@ import { staticDir, srcWebDir, publicPath, manifestFilePath, distWebPublicDir, d
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
 import { createOutputNameFn } from './createOutputNameFn'
+import 'webpack-dev-server'
 
 // ----------------------------------------------------------------------------
 // Client
@@ -20,7 +21,7 @@ export default merge(commonWebConfig, {
 
     output: {
         path: distWebPublicDir,
-        publicPath: publicPath,
+        publicPath,
         filename: createOutputNameFn('js', true),
         chunkFilename: createOutputNameFn('js', false),
     },

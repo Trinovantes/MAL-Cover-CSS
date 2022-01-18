@@ -113,7 +113,7 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
     const user = await User.upsert({
         malUserId: malUser.id,
         malUsername: malUser.name,
-        tokenExpires: tokenExpires,
+        tokenExpires,
         accessToken: malOauth.access_token,
         refreshToken: malOauth.refresh_token,
     })
