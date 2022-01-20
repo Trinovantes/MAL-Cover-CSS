@@ -1,16 +1,3 @@
-<template>
-    <footer class="layout-footer copyright">
-        <div class="container">
-            <p>
-                &copy; {{ year }} {{ APP_NAME }}. This is a third party website and is not affiliated with MyAnimeList
-            </p>
-            <p>
-                Souce code available on <ExternalLink href="https://github.com/Trinovantes/MAL-Cover-CSS">GitHub</ExternalLink>.
-            </p>
-        </div>
-    </footer>
-</template>
-
 <script lang="ts">
 import { APP_NAME } from '@/common/Constants'
 import { defineComponent } from 'vue'
@@ -24,6 +11,19 @@ export default defineComponent({
     },
 })
 </script>
+
+<template>
+    <footer class="layout-footer copyright">
+        <div class="container">
+            <p>
+                &copy; {{ year }} {{ APP_NAME }}. This is a third party website and is not affiliated with MyAnimeList
+            </p>
+            <p>
+                Souce code available on <ExternalLink href="https://github.com/Trinovantes/MAL-Cover-CSS">GitHub</ExternalLink>.
+            </p>
+        </div>
+    </footer>
+</template>
 
 <style lang="scss">
 footer.layout-footer{

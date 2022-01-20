@@ -1,15 +1,3 @@
-<template>
-    <metainfo />
-
-    <router-view v-slot="{ Component }">
-        <template v-if="Component">
-            <suspense>
-                <component :is="Component" />
-            </suspense>
-        </template>
-    </router-view>
-</template>
-
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { useUserStore } from '@/web/store/User'
@@ -27,3 +15,15 @@ export default defineComponent({
     },
 })
 </script>
+
+<template>
+    <metainfo />
+
+    <router-view v-slot="{ Component }">
+        <template v-if="Component">
+            <suspense>
+                <component :is="Component" />
+            </suspense>
+        </template>
+    </router-view>
+</template>

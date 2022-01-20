@@ -1,48 +1,3 @@
-<template>
-    <article class="container text-container">
-        <h1>
-            {{ title }}
-        </h1>
-
-        <ClientOnly>
-            <section v-if="currentUser">
-                <q-input
-                    readonly
-                    outlined
-                    label="MyAnimeList Username"
-                    :model-value="username"
-                />
-
-                <q-input
-                    readonly
-                    outlined
-                    label="Last Checked"
-                    :model-value="lastChecked"
-                    :title="lastCheckedTitle"
-                    :hint="lastCheckedHint"
-                />
-
-                <div class="callout">
-                    <h3>
-                        Unlink Account
-                    </h3>
-                    <p>
-                        This will delete all of your account information from this website and your profile will no longer be checked.
-                        You may continue to use the generated CSS but they may no longer style everything in your lists.
-                    </p>
-                    <q-btn
-                        color="negative"
-                        label="Unlink Account"
-                        unelevated
-                        no-caps
-                        @click="onClickUnlinkAccount"
-                    />
-                </div>
-            </section>
-        </ClientOnly>
-    </article>
-</template>
-
 <script lang="ts">
 import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
 import { useQuasar } from 'quasar'
@@ -130,3 +85,48 @@ export default defineComponent({
     },
 })
 </script>
+
+<template>
+    <article class="container text-container">
+        <h1>
+            {{ title }}
+        </h1>
+
+        <ClientOnly>
+            <section v-if="currentUser">
+                <q-input
+                    readonly
+                    outlined
+                    label="MyAnimeList Username"
+                    :model-value="username"
+                />
+
+                <q-input
+                    readonly
+                    outlined
+                    label="Last Checked"
+                    :model-value="lastChecked"
+                    :title="lastCheckedTitle"
+                    :hint="lastCheckedHint"
+                />
+
+                <div class="callout">
+                    <h3>
+                        Unlink Account
+                    </h3>
+                    <p>
+                        This will delete all of your account information from this website and your profile will no longer be checked.
+                        You may continue to use the generated CSS but they may no longer style everything in your lists.
+                    </p>
+                    <q-btn
+                        color="negative"
+                        label="Unlink Account"
+                        unelevated
+                        no-caps
+                        @click="onClickUnlinkAccount"
+                    />
+                </div>
+            </section>
+        </ClientOnly>
+    </article>
+</template>

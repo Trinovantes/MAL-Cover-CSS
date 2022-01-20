@@ -1,11 +1,3 @@
-<template>
-    <MainLayoutHeader />
-    <main class="page full-height-container">
-        <router-view />
-    </main>
-    <MainLayoutFooter />
-</template>
-
 <script lang="ts">
 import { defineComponent } from 'vue'
 import MainLayoutHeader from './MainLayoutHeader.vue'
@@ -18,6 +10,14 @@ export default defineComponent({
     },
 })
 </script>
+
+<template>
+    <MainLayoutHeader />
+    <main class="page full-height-container">
+        <router-view />
+    </main>
+    <MainLayoutFooter />
+</template>
 
 <style lang="scss">
 main.page{

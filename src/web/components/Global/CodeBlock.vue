@@ -1,8 +1,3 @@
-<template>
-    <!-- eslint-disable-next-line vue/no-v-html -->
-    <pre :class="className"><code v-html="highlightedCode" /></pre>
-</template>
-
 <script lang="ts">
 import { ref, computed, defineComponent, watch } from 'vue'
 import hljs from 'highlight.js'
@@ -91,3 +86,8 @@ function escapeHtml(value: string): string {
         .replace(/'/g, '&#x27;')
 }
 </script>
+
+<template>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <pre :class="className"><code v-html="highlightedCode" /></pre>
+</template>

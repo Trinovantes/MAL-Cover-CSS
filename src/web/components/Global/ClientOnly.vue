@@ -1,9 +1,3 @@
-<template>
-    <template v-if="show">
-        <slot />
-    </template>
-</template>
-
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
 
@@ -20,3 +14,9 @@ export default defineComponent({
     },
 })
 </script>
+
+<template>
+    <template v-if="show">
+        <slot />
+    </template>
+</template>

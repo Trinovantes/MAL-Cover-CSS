@@ -1,3 +1,25 @@
+<script lang="ts">
+import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
+import { computed, defineComponent } from 'vue'
+import { useMeta } from 'vue-meta'
+
+export default defineComponent({
+    setup() {
+        const title = 'Guide'
+
+        useMeta(computed(() => {
+            return createPageHeadOptions({
+                title,
+            })
+        }))
+
+        return {
+            title,
+        }
+    },
+})
+</script>
+
 <template>
     <article class="container text-container full">
         <h1>
@@ -77,25 +99,3 @@
         </section>
     </article>
 </template>
-
-<script lang="ts">
-import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
-import { computed, defineComponent } from 'vue'
-import { useMeta } from 'vue-meta'
-
-export default defineComponent({
-    setup() {
-        const title = 'Guide'
-
-        useMeta(computed(() => {
-            return createPageHeadOptions({
-                title,
-            })
-        }))
-
-        return {
-            title,
-        }
-    },
-})
-</script>

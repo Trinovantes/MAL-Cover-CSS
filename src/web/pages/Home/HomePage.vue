@@ -1,3 +1,37 @@
+<script lang="ts">
+import { APP_DESC, APP_NAME } from '@/common/Constants'
+import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
+import { computed, defineComponent } from 'vue'
+import { useMeta } from 'vue-meta'
+import { login } from '@/web/utils/api'
+import { useUserStore } from '@/web/store/User'
+import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
+
+export default defineComponent({
+    setup() {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const img = require(`@/web/assets/img/example-covers.jpg?size=${DEFINE.SOCIAL_IMAGE_SIZE}`) as ResponsiveImage
+
+        useMeta(computed(() => {
+            return createPageHeadOptions({
+                title: APP_NAME,
+                desc: APP_DESC,
+                image: img.src,
+            })
+        }))
+
+        const userStore = useUserStore()
+        const currentUser = computed(() => userStore.state.currentUser)
+
+        return {
+            APP_DESC,
+            currentUser,
+            login,
+        }
+    },
+})
+</script>
+
 <template>
     <article class="hero-unit">
         <div class="container full-height-container vertical">
@@ -111,40 +145,6 @@
         </div>
     </article>
 </template>
-
-<script lang="ts">
-import { APP_DESC, APP_NAME } from '@/common/Constants'
-import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
-import { computed, defineComponent } from 'vue'
-import { useMeta } from 'vue-meta'
-import { login } from '@/web/utils/api'
-import { useUserStore } from '@/web/store/User'
-import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
-
-export default defineComponent({
-    setup() {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const img = require(`@/web/assets/img/example-covers.jpg?size=${DEFINE.SOCIAL_IMAGE_SIZE}`) as ResponsiveImage
-
-        useMeta(computed(() => {
-            return createPageHeadOptions({
-                title: APP_NAME,
-                desc: APP_DESC,
-                image: img.src,
-            })
-        }))
-
-        const userStore = useUserStore()
-        const currentUser = computed(() => userStore.state.currentUser)
-
-        return {
-            APP_DESC,
-            currentUser,
-            login,
-        }
-    },
-})
-</script>
 
 <style lang="scss">
 article.hero-unit{

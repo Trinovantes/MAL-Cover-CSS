@@ -1,44 +1,3 @@
-<template>
-    <div
-        ref="containerRef"
-        class="simple-image"
-    >
-        <figure
-            v-if="hasScrolledIntoView"
-        >
-            <picture
-                :style="{
-                    backgroundSize: 'cover',
-                    backgroundImage: (!isReady && img.placeholder) ? `url('${img.placeholder}')` : 'none'
-                }"
-            >
-                <source
-                    :srcset="img.srcSet"
-                    :sizes="sizes"
-                >
-                <img
-                    ref="imageRef"
-                    :src="img.src"
-                    :width="(width ?? img.width) || undefined"
-                    :height="(height ?? img.height) || undefined"
-                    :sizes="sizes"
-                    :title="title"
-                    :alt="alt ?? title"
-                    loading="lazy"
-                >
-            </picture>
-
-            <figcaption v-if="$slots.default">
-                <slot />
-            </figcaption>
-
-            <div v-if="!isReady" class="spinner-wrapper">
-                <div class="spinner" />
-            </div>
-        </figure>
-    </div>
-</template>
-
 <script lang="ts">
 import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
 import { defineComponent, onBeforeUnmount, onMounted, PropType, ref, watch } from 'vue'
@@ -128,6 +87,47 @@ export default defineComponent({
     },
 })
 </script>
+
+<template>
+    <div
+        ref="containerRef"
+        class="simple-image"
+    >
+        <figure
+            v-if="hasScrolledIntoView"
+        >
+            <picture
+                :style="{
+                    backgroundSize: 'cover',
+                    backgroundImage: (!isReady && img.placeholder) ? `url('${img.placeholder}')` : 'none'
+                }"
+            >
+                <source
+                    :srcset="img.srcSet"
+                    :sizes="sizes"
+                >
+                <img
+                    ref="imageRef"
+                    :src="img.src"
+                    :width="(width ?? img.width) || undefined"
+                    :height="(height ?? img.height) || undefined"
+                    :sizes="sizes"
+                    :title="title"
+                    :alt="alt ?? title"
+                    loading="lazy"
+                >
+            </picture>
+
+            <figcaption v-if="$slots.default">
+                <slot />
+            </figcaption>
+
+            <div v-if="!isReady" class="spinner-wrapper">
+                <div class="spinner" />
+            </div>
+        </figure>
+    </div>
+</template>
 
 <style lang="scss">
 div.simple-image{

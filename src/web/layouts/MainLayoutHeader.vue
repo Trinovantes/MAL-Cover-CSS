@@ -1,3 +1,32 @@
+<script lang="ts">
+import { APP_NAME } from '@/common/Constants'
+import { computed, defineComponent, ref } from 'vue'
+import { useUserStore } from '@/web/store/User'
+import { login, logout } from '@/web/utils/api'
+
+export default defineComponent({
+    setup() {
+        const isHeaderItemsExpanded = ref(false)
+        const closeHeaderItems = () => {
+            isHeaderItemsExpanded.value = false
+        }
+
+        const userStore = useUserStore()
+        const currentUser = computed(() => userStore.state.currentUser)
+
+        return {
+            APP_NAME,
+            isHeaderItemsExpanded,
+            closeHeaderItems,
+            currentUser,
+
+            login,
+            logout,
+        }
+    },
+})
+</script>
+
 <template>
     <header class="layout-header">
         <div class="container">
@@ -68,35 +97,6 @@
         </div>
     </header>
 </template>
-
-<script lang="ts">
-import { APP_NAME } from '@/common/Constants'
-import { computed, defineComponent, ref } from 'vue'
-import { useUserStore } from '@/web/store/User'
-import { login, logout } from '@/web/utils/api'
-
-export default defineComponent({
-    setup() {
-        const isHeaderItemsExpanded = ref(false)
-        const closeHeaderItems = () => {
-            isHeaderItemsExpanded.value = false
-        }
-
-        const userStore = useUserStore()
-        const currentUser = computed(() => userStore.state.currentUser)
-
-        return {
-            APP_NAME,
-            isHeaderItemsExpanded,
-            closeHeaderItems,
-            currentUser,
-
-            login,
-            logout,
-        }
-    },
-})
-</script>
 
 <style lang="scss">
 header.layout-header {

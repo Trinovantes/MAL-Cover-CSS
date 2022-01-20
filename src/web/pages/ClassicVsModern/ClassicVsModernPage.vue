@@ -1,3 +1,30 @@
+<script lang="ts">
+import { computed, defineComponent } from 'vue'
+import { useMeta } from 'vue-meta'
+import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
+import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
+
+export default defineComponent({
+    setup() {
+        const title = 'Classic vs. Modern Templates'
+
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const img = require(`./img/modern-template.png?size=${DEFINE.SOCIAL_IMAGE_SIZE}`) as ResponsiveImage
+
+        useMeta(computed(() => {
+            return createPageHeadOptions({
+                title,
+                image: img.src,
+            })
+        }))
+
+        return {
+            title,
+        }
+    },
+})
+</script>
+
 <template>
     <article class="container text-container">
         <h1>
@@ -31,30 +58,3 @@
         </section>
     </article>
 </template>
-
-<script lang="ts">
-import { computed, defineComponent } from 'vue'
-import { useMeta } from 'vue-meta'
-import { createPageHeadOptions } from '@/web/utils/PageHeadOptions'
-import { ResponsiveImage } from '@/web/utils/ResponsiveLoader'
-
-export default defineComponent({
-    setup() {
-        const title = 'Classic vs. Modern Templates'
-
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const img = require(`./img/modern-template.png?size=${DEFINE.SOCIAL_IMAGE_SIZE}`) as ResponsiveImage
-
-        useMeta(computed(() => {
-            return createPageHeadOptions({
-                title,
-                image: img.src,
-            })
-        }))
-
-        return {
-            title,
-        }
-    },
-})
-</script>

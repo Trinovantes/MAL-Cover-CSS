@@ -1,3 +1,16 @@
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+    props: {
+        href: {
+            type: String,
+            required: true,
+        },
+    },
+})
+</script>
+
 <template>
     <span class="external-link">
         <a
@@ -11,19 +24,6 @@
         <q-icon name="open_in_new" />
     </span>
 </template>
-
-<script lang="ts">
-import { defineComponent } from 'vue'
-
-export default defineComponent({
-    props: {
-        href: {
-            type: String,
-            required: true,
-        },
-    },
-})
-</script>
 
 <style lang="scss">
 span.external-link{
