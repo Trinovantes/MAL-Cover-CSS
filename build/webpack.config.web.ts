@@ -5,7 +5,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin'
 import { staticDir, srcWebDir, publicPath, manifestFilePath, distWebPublicDir, distWebDir, commonWebConfig } from './webpack.common'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { WebpackManifestPlugin } from 'webpack-manifest-plugin'
-import { createOutputNameFn } from './createOutputNameFn'
+import { createOutputNameFn } from './utils/createOutputNameFn'
 import 'webpack-dev-server'
 
 // ----------------------------------------------------------------------------

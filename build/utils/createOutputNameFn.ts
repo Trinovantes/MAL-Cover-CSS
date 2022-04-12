@@ -1,5 +1,5 @@
 import { Chunk } from 'webpack'
-import { isDev } from './webpack.common'
+import { isDev } from '../webpack.common'
 
 let chunkNameCounter = 0
 const chunkNameMap = new Map<string, number>()
