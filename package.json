@@ -43,7 +43,7 @@
         "redis": "^4.0.4",
         "source-map-support": "^0.5.19",
         "sqlite": "^4.0.23",
-        "sqlite3": "^5.0.2",
+        "sqlite3": "5.0.2",
         "vue": "^3",
         "vue-meta": "^3.0.0-alpha.8",
         "vue-router": "^4",
