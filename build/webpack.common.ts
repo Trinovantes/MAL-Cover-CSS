@@ -15,6 +15,7 @@ const rootDir = path.resolve()
 
 export const isDev = (process.env.NODE_ENV === 'development')
 export const manifestFileName = 'ssr-manifest.json'
+export const entryFileName = 'app.html'
 export const gitHash = getGitHash(rootDir)
 export const publicPath = '/public/'
 
@@ -22,9 +23,10 @@ export const distDir = path.resolve(rootDir, 'dist')
 export const distCronDir = path.resolve(distDir, 'cron')
 export const distApiDir = path.resolve(distDir, 'api')
 export const distWebDir = path.resolve(distDir, 'web')
-export const distWebPublicDir = path.resolve(distDir, 'web', 'public')
+export const distWebPublicDir = path.resolve(distWebDir, 'public')
+export const entryFilePath = path.resolve(distWebDir, entryFileName)
 export const distSsgDir = path.resolve(distDir, 'ssg')
-export const manifestFilePath = path.resolve(distDir, 'ssg', manifestFileName)
+export const manifestFilePath = path.resolve(distSsgDir, manifestFileName)
 
 export const srcDir = path.resolve(rootDir, 'src')
 export const srcCronDir = path.resolve(srcDir, 'cron')

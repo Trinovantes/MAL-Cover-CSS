@@ -8,24 +8,12 @@ import SimpleImage from './components/Global/SimpleImage.vue'
 import { createMetaManager, defaultConfig } from 'vue-meta'
 import { Quasar, Notify } from 'quasar'
 import { createUserStore, userInjectionKey } from './store/User'
-import { Router } from 'vue-router'
-import { SSRContext } from '@vue/server-renderer'
-import express from 'express'
+import { createRouter } from 'vue-router'
+import { AppContext } from './AppContext'
 
 interface CreatedApp {
     app: ReturnType<typeof createSSRApp>
-    router: Router
-    userStore: ReturnType<typeof createUserStore>
-}
-
-export type AppContext = SSRContext & {
-    url: string
-
-    // Required by Quasar
-    req: express.Request
-    res: express.Response
-    _modules: Set<unknown>
-    _meta: Record<string, unknown>
+    router: ReturnType<typeof createRouter>
 }
 
 export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
@@ -65,6 +53,5 @@ export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
     return {
         app,
         router,
-        userStore,
     }
 }

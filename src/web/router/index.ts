@@ -1,5 +1,5 @@
 import { createMemoryHistory, createRouter, createWebHistory, Router } from 'vue-router'
-import { AppContext } from '@/web/app'
+import { AppContext } from '../AppContext'
 import { routes } from './routes'
 
 // ----------------------------------------------------------------------------
