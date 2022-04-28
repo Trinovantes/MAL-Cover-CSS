@@ -2,9 +2,8 @@ import path from 'path'
 import { merge } from 'webpack-merge'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
-import { staticDir, srcWebDir, publicPath, distWebPublicDir, distWebDir, commonWebConfig, entryFileName, manifestFilePath } from './webpack.common'
+import { staticDir, srcWebDir, publicPath, distWebPublicDir, distWebDir, commonWebConfig, entryFileName, manifestFilePath, isDev } from './webpack.common'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import { createOutputNameFn } from './utils/createOutputNameFn'
 import 'webpack-dev-server'
 import { VueSsrAssetsClientPlugin } from 'vue-ssr-assets-plugin'
 
@@ -22,8 +21,9 @@ export default merge(commonWebConfig, {
     output: {
         path: distWebPublicDir,
         publicPath,
-        filename: createOutputNameFn('js', true),
-        chunkFilename: createOutputNameFn('js', false),
+        filename: isDev
+            ? '[name].js'
+            : '[name].[contenthash].js',
     },
 
     devServer: {
@@ -74,8 +74,9 @@ export default merge(commonWebConfig, {
             ],
         }),
         new MiniCssExtractPlugin({
-            filename: createOutputNameFn('css', true),
-            chunkFilename: createOutputNameFn('css', false),
+            filename: isDev
+                ? '[name].css'
+                : '[name].[contenthash].css',
         }),
         new HtmlWebpackPlugin({
             template: path.resolve(srcWebDir, 'index.html'),
