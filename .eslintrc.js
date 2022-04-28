@@ -43,6 +43,8 @@ module.exports = {
         'vue',
     ],
 
+    ignorePatterns: ['**/raw/**/*'],
+
     settings: {
         'import/resolver': {
             'typescript': {
