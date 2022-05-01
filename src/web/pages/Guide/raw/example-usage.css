@@ -10,7 +10,7 @@
 
     Don't forget to include the slash to escape the import
 */
-@\import url('https://malcovercss.link/generated/all-before.css');
+@\import 'https://malcovercss.link/generated/all-before.css';
 
 /*
     2. Style the parent container to make room for the cover image

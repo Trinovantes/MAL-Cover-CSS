@@ -1,5 +1,5 @@
 /* Do NOT use this in your list design */
 @import url('https://malcovercss.link/generated/all-before.css');
 
-/* Add a slash in your list design's @import */
-@\import url('https://malcovercss.link/generated/all-before.css');
+/* Add a slash in your list design's @import and remove the url() */
+@\import 'https://malcovercss.link/generated/all-before.css';
