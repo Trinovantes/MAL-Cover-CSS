@@ -87,7 +87,7 @@ export default defineComponent({
                     Want to make your own customizations?
                 </h3>
                 <p>
-                    Alternatively, you can copy/paste the contents of <ExternalLink href="https://www.malcovercss.link/example-covers.css">example-covers.css</ExternalLink> into the custom CSS textbox and make your own changes to the example list design.
+                    Alternatively, you can copy/paste the contents of <ExternalLink href="https://malcovercss.link/example-covers.css">example-covers.css</ExternalLink> into the custom CSS textbox and make your own changes to the example list design.
                     Don't forget to escape the <code>@import</code> with a slash.
                 </p>
             </div>
