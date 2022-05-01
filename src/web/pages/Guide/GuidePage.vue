@@ -63,7 +63,7 @@ export default defineComponent({
             <div class="callout warning">
                 <h3>Important Note on CSS Imports</h3>
                 <p>
-                    Since MyAnimeList only allows external images in CSS urls, you will need to use an invalid import syntax in order to import the file (web browsers will still be able to parse the import).
+                    Since MyAnimeList only allows external images URLs in CSS, you will need to use an invalid import syntax in order to import the file (web browsers will still be able to parse the import).
                 </p>
 
                 <CodeBlock
