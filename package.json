@@ -23,9 +23,9 @@
         ]
     },
     "dependencies": {
-        "@sentry/browser": "^6.6.0",
         "@sentry/node": "^6.6.0",
         "@sentry/tracing": "^6.6.0",
+        "@sentry/vue": "^6.6.0",
         "@vue/server-renderer": "^3.1.1",
         "ajv": "^8.6.0",
         "axios": "^0.26.1",

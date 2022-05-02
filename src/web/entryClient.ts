@@ -1,26 +1,26 @@
 import './assets/css/main.scss'
-import * as Sentry from '@sentry/browser'
 import { Integrations } from '@sentry/tracing'
+import * as Sentry from '@sentry/vue'
 import { SENTRY_DSN } from '@/common/Constants'
 import '@/common/utils/setupDayjs'
 import { createApp } from './app'
 
-Sentry.init({
-    dsn: SENTRY_DSN,
-    release: DEFINE.GIT_HASH,
-    integrations: [
-        new Integrations.BrowserTracing(),
-    ],
-    tracesSampleRate: 0,
-    enabled: !DEFINE.IS_DEV,
-})
-
 async function main() {
-    const { app } = await createApp()
+    const { app, router } = await createApp()
+
+    Sentry.init({
+        dsn: SENTRY_DSN,
+        release: DEFINE.GIT_HASH,
+        integrations: [
+            new Integrations.BrowserTracing({
+                routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+            }),
+        ],
+        tracesSampleRate: 0,
+        enabled: !DEFINE.IS_DEV,
+    })
+
     app.mount('#app')
 }
 
-main().catch((err) => {
-    console.warn(err)
-    Sentry.captureException(err)
-})
+main().catch(console.warn)
