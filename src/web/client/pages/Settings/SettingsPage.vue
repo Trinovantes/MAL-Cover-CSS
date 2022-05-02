@@ -1,0 +1,92 @@
+<script lang="ts" setup>
+import dayjs from 'dayjs'
+import { computed } from 'vue'
+import { useMeta } from 'vue-meta'
+import { useApi } from '../../services/useApi'
+import { useUserStore } from '../../store/User'
+import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
+import { useAuthGuard } from '../../utils/useAuthGuard'
+
+const title = 'Settings'
+
+useMeta(computed(() => createPageHeadOptions({
+    title,
+})))
+
+const userStore = useUserStore()
+const currentUser = computed(() => userStore.currentUser)
+const username = computed(() => currentUser.value?.malUsername)
+const lastChecked = computed(() => {
+    if (!currentUser.value?.lastChecked) {
+        return 'N/A'
+    }
+
+    return dayjs.utc(currentUser.value.lastChecked).fromNow()
+})
+const lastCheckedTitle = computed(() => {
+    if (!currentUser.value?.lastChecked) {
+        return 'N/A'
+    }
+
+    return dayjs.utc(currentUser.value.lastChecked).tz(dayjs.tz.guess()).format('LLL')
+})
+const lastCheckedHint = computed(() => {
+    if (currentUser.value?.lastChecked) {
+        return 'The generated CSS now includes entries from your anime and manga lists.'
+    } else {
+        return 'Your profile has not been checked yet. The bot runs once every hour. Please check back again in about an hour.'
+    }
+})
+
+const { unlinkAccount } = useApi()
+useAuthGuard()
+</script>
+
+<template>
+    <article class="container text-container">
+        <h1>
+            {{ title }}
+        </h1>
+
+        <section v-if="currentUser">
+            <q-input
+                readonly
+                outlined
+                label="MyAnimeList Username"
+                :model-value="username"
+            />
+
+            <q-input
+                readonly
+                outlined
+                label="Last Checked"
+                :model-value="lastChecked"
+                :title="lastCheckedTitle"
+                :hint="lastCheckedHint"
+                :hide-bottom-space="true"
+            />
+
+            <div class="callout">
+                <h3>
+                    Unlink Account
+                </h3>
+
+                <p>
+                    This will delete all of your account information from this website and your profile will no longer be checked.
+                    You may continue to use the generated CSS but they may no longer style everything in your lists.
+                </p>
+
+                <div class="flex-hgap">
+                    <q-btn
+                        color="negative"
+                        label="Unlink Account"
+                        title="Unlink Account"
+                        unelevated
+                        no-caps
+                        @click="unlinkAccount"
+                    />
+                </div>
+            </div>
+        </section>
+    </article>
+</template>

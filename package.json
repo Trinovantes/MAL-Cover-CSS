@@ -3,18 +3,18 @@
     "scripts": {
         "startGenerator": "node    -r source-map-support/register ./dist/cron/generator.js ./dist/generated",
         "startScraper": "  node    -r source-map-support/register ./dist/cron/scraper.js",
-        "startApi": "      node    -r source-map-support/register ./dist/api/www.js",
-        "watchApi": "      nodemon -r source-map-support/register ./dist/api/www.js",
-        "devCron": "  cross-env NODE_ENV=development webpack --watch --config build/webpack.config.cron.ts",
-        "devApi": "   cross-env NODE_ENV=development webpack --watch --config build/webpack.config.api.ts",
-        "devWeb": "   cross-env NODE_ENV=development webpack serve   --config build/webpack.config.web.ts",
-        "buildCron": "cross-env NODE_ENV=production  webpack         --config build/webpack.config.cron.ts",
-        "buildApi": " cross-env NODE_ENV=production  webpack         --config build/webpack.config.api.ts",
-        "buildWeb": " cross-env NODE_ENV=production  webpack         --config build/webpack.config.web.ts && cross-env NODE_ENV=production  webpack --config build/webpack.config.ssg.ts",
-        "stageWeb": " cross-env NODE_ENV=development webpack         --config build/webpack.config.web.ts && cross-env NODE_ENV=development webpack --config build/webpack.config.ssg.ts",
-        "dev": "  concurrently 'yarn devCron'   'yarn devApi'   'yarn devWeb'",
-        "build": "concurrently 'yarn buildCron' 'yarn buildApi' 'yarn buildWeb'",
-        "lint": "eslint --ext .ts,.js,.vue --ignore-path .gitignore ."
+        "start": "         node    -r source-map-support/register ./dist/web/www.js",
+        "watch": "         nodemon -r source-map-support/register ./dist/web/www.js",
+        "devCron": "  NODE_ENV=development      webpack --watch --config build/webpack.config.cron.ts",
+        "devWeb": "   NODE_ENV=development      webpack --watch --config build/webpack.config.web.client.ts --config build/webpack.config.web.server.ts",
+        "buildCron": "NODE_ENV=production       webpack         --config build/webpack.config.cron.ts",
+        "buildWebClient": "NODE_ENV=production  webpack         --config build/webpack.config.web.client.ts",
+        "buildWebServer": "NODE_ENV=production  webpack         --config build/webpack.config.web.server.ts",
+        "buildWeb": "yarn buildWebClient && yarn buildWebServer",
+        "dev": "  concurrently 'yarn devCron'   'yarn devWeb'",
+        "build": "concurrently 'yarn buildCron' 'yarn buildWeb'",
+        "lint": "vue-tsc --noemit && eslint --ext .ts,.js,.vue --ignore-path .gitignore .",
+        "postinstall": "patch-package"
     },
     "babel": {
         "presets": [
@@ -23,6 +23,7 @@
         ]
     },
     "dependencies": {
+        "@nuxt/devalue": "^2.0.0",
         "@sentry/node": "^6.6.0",
         "@sentry/tracing": "^6.6.0",
         "@sentry/vue": "^6.6.0",
@@ -30,15 +31,16 @@
         "ajv": "^8.6.0",
         "axios": "^0.27.2",
         "connect-redis": "^6.0.0",
-        "cross-env": "^7.0.3",
         "dayjs": "^1.10.1",
         "dotenv": "^16.0.0",
         "express": "^4.17.1",
         "express-session": "^1.17.1",
         "highlight.js": "^11.0.1",
         "http-errors": "^2.0.0",
-        "lodash": "^4.17.21",
+        "lodash-es": "^4.17.21",
         "morgan": "^1.10.0",
+        "patch-package": "^6.4.7",
+        "pinia": "^2.0.14",
         "quasar": "^2.0.0-beta.14",
         "redis": "^4.0.4",
         "source-map-support": "^0.5.19",
@@ -46,8 +48,7 @@
         "sqlite3": "^5.0.2",
         "vue": "^3",
         "vue-meta": "^3.0.0-alpha.8",
-        "vue-router": "^4",
-        "vuex": "^4"
+        "vue-router": "^4"
     },
     "devDependencies": {
         "@babel/core": "^7.12.10",
@@ -58,7 +59,7 @@
         "@types/express": "^4.17.9",
         "@types/express-session": "^1.17.3",
         "@types/http-errors": "^1.8.0",
-        "@types/lodash": "^4.14.170",
+        "@types/lodash-es": "^4.14.170",
         "@types/morgan": "^1.9.2",
         "@types/node": "^14",
         "@types/sqlite3": "^3.1.7",
@@ -82,7 +83,7 @@
         "html-webpack-plugin": "^5.3.1",
         "mini-css-extract-plugin": "^2.0.0",
         "null-loader": "^4.0.1",
-        "puppeteer-prerender-plugin": "^3.0.8",
+        "quasar-unused-plugin": "^0.1.4",
         "responsive-loader": "^2.3.0",
         "sass": "^1.32.8",
         "sass-loader": "^12.0.0",
@@ -90,14 +91,13 @@
         "typescript": "^4.3.2",
         "vue-loader": "^17.0.0",
         "vue-ssr-assets-plugin": "^0.2.0",
+        "vue-tsc": "^0.34.11",
         "webpack": "^5.28.2",
         "webpack-cli": "^4.6.0",
-        "webpack-dev-server": "^4.0.0",
         "webpack-merge": "^5.4.0",
         "webpack-node-externals": "^3.0.0"
     },
     "resolutions": {
-        "@types/express": "^4.17.9",
-        "eslint-import-resolver-node": "0.3.4"
+        "@types/express": "^4.17.9"
     }
 }

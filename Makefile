@@ -1,5 +1,8 @@
 print-%: ; @echo $*=$($*)
 
+include .env
+export
+
 export GIT_HASH                 := $(shell git rev-parse HEAD)
 export DOCKER_BUILDKIT          := 1
 export COMPOSE_DOCKER_CLI_BUILD := 1
@@ -12,9 +15,9 @@ cron-dockerfile = ./docker/cron.Dockerfile
 cron-container = malcovercss-cron
 cron-image = ghcr.io/trinovantes/$(cron-container)
 
-api-dockerfile = ./docker/api.Dockerfile
-api-container = malcovercss-api
-api-image = ghcr.io/trinovantes/$(api-container)
+web-app-dockerfile = ./docker/web-app.Dockerfile
+web-app-container = malcovercss-web-app
+web-app-image = ghcr.io/trinovantes/$(web-app-container)
 
 web-dockerfile = ./docker/web.Dockerfile
 web-container = malcovercss-web
@@ -26,7 +29,6 @@ redis-image = redis
 .PHONY: \
 	build-backup stop-backup run-backup \
 	build-cron stop-cron run-cron \
-	build-api stop-api run-api \
 	build-web stop-web run-web \
 	stop-redis run-redis \
 	pull push clean all
@@ -36,33 +38,28 @@ all: build run
 build: \
 	build-backup \
 	build-cron \
-	build-api \
 	build-web
 
 stop: \
 	stop-backup \
 	stop-cron \
-	stop-api \
 	stop-web \
 	stop-redis
 
 run: \
 	run-backup \
 	run-cron \
-	run-api \
 	run-web \
 	run-redis
 
 pull:
 	docker pull $(backup-image) --quiet
 	docker pull $(cron-image) --quiet
-	docker pull $(api-image) --quiet
 	docker pull $(web-image) --quiet
 
 push:
 	docker push $(backup-image) --quiet
 	docker push $(cron-image) --quiet
-	docker push $(api-image) --quiet
 	docker push $(web-image) --quiet
 
 clean:
@@ -109,6 +106,8 @@ build-cron:
 		--tag $(cron-image) \
 		--progress=plain \
 		--secret id=GIT_HASH \
+		--secret id=APP_URL \
+		--secret id=APP_PORT \
 		.
 
 stop-cron:
@@ -127,37 +126,6 @@ run-cron: stop-cron
 		$(cron-image)
 
 # -----------------------------------------------------------------------------
-# Api
-# -----------------------------------------------------------------------------
-
-api: build-api run-api
-
-build-api:
-	docker build \
-		--file $(api-dockerfile) \
-		--tag $(api-image) \
-		--progress=plain \
-		--secret id=GIT_HASH \
-		.
-
-stop-api:
-	docker stop $(api-container) || true
-	docker rm $(api-container) || true
-
-run-api: stop-api redis
-	docker run \
-		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
-		--env-file .env \
-		--env REDIS_HOST=malcovercss-redis \
-		--env REDIS_PORT=6379 \
-		--network nginx-network \
-		--log-driver local \
-		--restart=always \
-		--detach \
-		--name $(api-container) \
-		$(api-image)
-
-# -----------------------------------------------------------------------------
 # Web
 # -----------------------------------------------------------------------------
 
@@ -165,20 +133,46 @@ web: build-web run-web
 
 build-web:
 	docker build \
+		--file $(web-app-dockerfile) \
+		--tag $(web-app-image) \
+		--progress=plain \
+		--secret id=GIT_HASH \
+		--secret id=APP_URL \
+		--secret id=APP_PORT \
+		.
+
+	docker build \
 		--file $(web-dockerfile) \
 		--tag $(web-image) \
 		--progress=plain \
 		--secret id=GIT_HASH \
+		--secret id=APP_URL \
+		--secret id=APP_PORT \
 		.
 
 stop-web:
+	docker stop $(web-app-container) || true
 	docker stop $(web-container) || true
+	docker rm $(web-app-container) || true
 	docker rm $(web-container) || true
 
-run-web: stop-web run-api
+run-web: stop-web redis
+	docker run \
+		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
+		--publish 9042:$(APP_PORT) \
+		--env-file .env \
+		--env REDIS_HOST=$(redis-container) \
+		--env REDIS_PORT=6379 \
+		--network nginx-network \
+		--log-driver local \
+		--restart=always \
+		--detach \
+		--name $(web-app-container) \
+		$(web-app-image)
+
 	docker run \
 		--mount type=bind,source=/var/www/malcovercss/generated,target=/app/dist/web/generated,readonly \
-		--publish 9040:80 \
+		--publish $(APP_PORT):80 \
 		--network nginx-network \
 		--log-driver local \
 		--restart=always \
@@ -199,7 +193,7 @@ stop-redis:
 run-redis: stop-redis
 	docker run \
 		--mount type=bind,source=/var/www/malcovercss/redis,target=/data \
-		--publish 9041:6379 \
+		--publish $(REDIS_PORT):6379 \
 		--network nginx-network \
 		--log-driver local \
 		--restart=always \

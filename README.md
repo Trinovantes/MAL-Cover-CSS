@@ -17,7 +17,15 @@ Secret | Description
 
 ### `ENV_FILE`
 ```
-HOST_URL            https://www.malcovercss.link
+# Build env
+APP_URL             https://www.malcovercss.link
+APP_PORT            9040
+
+# Runtime env (during dev when running outside of docker)
+REDIS_HOST          localhost
+REDIS_PORT          9041
+
+# Runtime env
 ENCRYPTION_KEY      openssl rand -base64 32
 MAL_CLIENT_ID       From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
 MAL_CLIENT_SECRET   From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1

@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-FROM ghcr.io/trinovantes/puppeteer-prerender-plugin as builder
+FROM node:14 as builder
 # -----------------------------------------------------------------------------
 
 WORKDIR /app
@@ -7,6 +7,7 @@ WORKDIR /app
 # Install dependencies
 COPY tsconfig.json              ./
 COPY yarn.lock package.json     ./
+COPY patches/                   ./patches/
 RUN yarn install
 
 # Build app
@@ -15,7 +16,9 @@ COPY src/@types/                ./src/@types/
 COPY src/common/                ./src/common/
 COPY src/web/                   ./src/web/
 RUN --mount=type=secret,id=GIT_HASH \
-    yarn buildWeb
+    --mount=type=secret,id=APP_URL \
+    --mount=type=secret,id=APP_PORT \
+    yarn buildWebClient
 
 # -----------------------------------------------------------------------------
 FROM nginx:alpine
@@ -25,9 +28,8 @@ LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-C
 WORKDIR /app
 
 # Mount points
-RUN mkdir -p                    ./dist/web/generated
+RUN mkdir -p                    /app/dist/web/generated
 
 # Copy app
 COPY ./docker/web.conf          /etc/nginx/conf.d/default.conf
-COPY ./docker/snippets          /app/docker/snippets
-COPY --from=builder /app/dist   /app/dist
+COPY --from=builder /app/dist   /app/dist/

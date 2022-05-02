@@ -1,0 +1,290 @@
+@import './reset.scss';
+@import 'quasar/dist/quasar.prod.css';
+@import 'highlight.js/styles/monokai.css';
+
+// ----------------------------------------------------------------------------
+// General Elements
+// ----------------------------------------------------------------------------
+
+noscript{
+    background: $warning;
+    display: block;
+    font-weight: bold;
+    text-align: center;
+}
+
+body{
+    color: $dark;
+    font-size: 1.25rem;
+    font-family: 'Roboto', sans-serif;
+    line-height: 2;
+}
+
+a:not(.q-btn){
+    color: $primary;
+    text-decoration: none;
+    transition: 0.25s;
+
+    &:hover{
+        text-decoration: underline;
+    }
+}
+
+h1{
+    font-size: 4.2rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+h2{
+    font-size: 2.4rem;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+h3{
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1.25;
+}
+
+h4{
+    font-size: 1.5rem;
+    font-weight: bold;
+    line-height: 1.25;
+}
+
+h5{
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.25;
+}
+
+h6{
+    font-size: 0.9rem;
+    font-weight: bold;
+    line-height: 1.25;
+}
+
+ul, ol, dl{
+    padding-left: $padding * 2;
+}
+ul{
+    list-style-type: disc;
+}
+ol{
+    list-style-type: decimal;
+}
+dl{
+    dt{
+        font-weight: bold;
+    }
+    dd{
+        margin-left: $padding * 2;
+    }
+}
+li{
+    p,
+    .simple-image{
+        &:not(:first-child) {
+            margin-top: $padding * 2;
+        }
+        &:not(:last-child) {
+            margin-bottom: $padding * 2;
+        }
+    }
+}
+
+pre{
+    overflow: auto;
+    padding: $padding * 2;
+    width: 100%;
+    text-align: left !important;
+
+    *{
+        font-family: 'Courier New', Courier, monospace;
+    }
+}
+
+code{
+    background: $light-on-light;
+    border-radius: math.div($padding, 4);
+    font-family: 'Courier New', Courier, monospace;
+    padding: math.div($padding, 4) math.div($padding, 2);
+}
+
+table{
+    thead{
+        font-weight: bold;
+
+        tr{
+            border-top: 1px solid;
+        }
+    }
+
+    tr{
+        border-bottom: 1px solid;
+    }
+
+    td{
+        padding: math.div($padding, 2) $padding;
+    }
+}
+
+label{
+    align-items: center;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    font-weight: bold;
+
+    > *{
+        font-weight: normal;
+        width: 100%;
+    }
+}
+
+input,
+select{
+    border: 1px solid $light-on-light;
+    padding: math.div($padding, 2);
+}
+
+// ----------------------------------------------------------------------------
+// Helper Classes
+// ----------------------------------------------------------------------------
+
+.flex-hgap{
+    display: flex;
+    flex-direction: row;
+    gap: $padding * 2;
+}
+
+.flex-vgap{
+    display: flex;
+    flex-direction: column;
+    gap: $padding * 2;
+}
+
+.space{
+    flex: 1;
+
+    @media (max-width: $mobile-breakpoint) {
+        display: none;
+    }
+}
+
+.grid{
+    display: grid;
+    gap: $padding * 2;
+
+    @media (max-width: $mobile-breakpoint) {
+        grid-template-columns: auto !important;
+    }
+
+    > *{
+        margin: 0 !important;
+    }
+}
+
+@for $i from 2 through 6{
+    .grid-#{$i}{
+        grid-template-columns: repeat(#{$i}, 1fr);
+    }
+}
+
+.all-cols{
+    grid-column-start: 1;
+    grid-column-end: -1;
+}
+
+.callout{
+    @extend .flex-vgap;
+
+    border-left: 5px solid;
+    background-color: $light-on-light;
+    padding: $padding * 2;
+
+    &.warning{
+        border-left-color: $warning;
+        background-color: lighten($warning, 30%);
+    }
+
+    &.positive{
+        border-left-color: $positive;
+        background-color: lighten($positive, 50%);
+    }
+}
+
+.full-height-container{
+    min-height: calc(100vh - #{$header-height});
+
+    @media (max-width: $mobile-breakpoint) {
+        min-height: 0;
+    }
+}
+
+.container{
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: $padding * 2;
+    padding-right: $padding * 2;
+
+    max-width: $max-page-width;
+    width: $container-width;
+
+    @media (max-width: $large-mobile-breakpoint) {
+        width: 80%;
+    }
+
+    @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+    }
+}
+
+.text-container{
+    padding-top: $vspace;
+    padding-bottom: $vspace;
+
+    display: grid;
+    grid-template-columns: 100%;
+    gap: $column-gap;
+
+    &:not(.full){
+        grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+
+        &.reverse{
+            grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+        }
+
+        @media (max-width: $mobile-breakpoint) {
+            grid-template-columns: 100%;
+        }
+    }
+
+    h1{
+        @extend .all-cols;
+    }
+
+    h2,
+    h3,
+    h4,
+    h5,
+    h6{
+        &:not(:first-child) {
+            margin-top: ($padding * 2);
+        }
+
+        & + h2,
+        & + h3,
+        & + h4,
+        & + h5,
+        & + h6{
+            margin-top: 0;
+        }
+    }
+
+    > section,
+    > aside{
+        @extend .flex-vgap;
+    }
+}

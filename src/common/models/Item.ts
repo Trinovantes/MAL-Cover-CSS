@@ -1,6 +1,6 @@
-import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 import { getDbClient } from '@/common/db/client'
-import { CreationOmit, DefaultColumns } from './attrs'
+import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
+import type { CreationOmit, DefaultColumns } from './attrs'
 
 // ----------------------------------------------------------------------------
 // Item

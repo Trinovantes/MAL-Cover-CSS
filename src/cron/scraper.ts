@@ -1,14 +1,16 @@
-import { Item, MediaType } from '@/common/models/Item'
-import { User } from '@/common/models/User'
-import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
-import { DELAY_BETWEEN_REQUESTS, DELAY_BETWEEN_SCRAPPING, ITEMS_PER_LIST_REQUEST, SENTRY_DSN } from '@/common/Constants'
-import { fetchMalAnimeList, fetchMalMangaList } from '@/common/services/MyAnimeList/data'
-import { sleep } from '@/common/utils/sleep'
-import { AxiosRequestConfig } from 'axios'
-import dayjs from 'dayjs'
+// eslint-disable-next-line import/order
+import '@/common/utils/setupDayjs'
+
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
-import '@/common/utils/setupDayjs'
+import dayjs from 'dayjs'
+import { SENTRY_DSN, DELAY_BETWEEN_SCRAPPING, DELAY_BETWEEN_REQUESTS, ITEMS_PER_LIST_REQUEST } from '@/common/Constants'
+import { MediaType, Item } from '@/common/models/Item'
+import { User } from '@/common/models/User'
+import { fetchMalAnimeList, fetchMalMangaList } from '@/common/services/MyAnimeList/data'
+import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
+import { sleep } from '@/common/utils/sleep'
+import type { AxiosRequestConfig } from 'axios'
 
 // ----------------------------------------------------------------------------
 // Sentry

@@ -1,10 +1,12 @@
-import path from 'path'
+// eslint-disable-next-line import/order
+import '@/common/utils/setupDayjs'
+
 import fs from 'fs'
-import { Item, MediaType } from '@/common/models/Item'
+import path from 'path'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import { SENTRY_DSN } from '@/common/Constants'
-import '@/common/utils/setupDayjs'
+import { Item, MediaType } from '@/common/models/Item'
 
 // ----------------------------------------------------------------------------
 // Sentry
@@ -35,8 +37,7 @@ async function generateCss() {
 
     const outputDir = path.resolve(process.argv[2])
     if (!fs.existsSync(outputDir)) {
-        console.warn(`outputDir ${outputDir} does not exist`)
-        return
+        throw new Error(`outputDir ${outputDir} does not exist`)
     }
 
     console.info(`Starting to generate css into ${outputDir}`)

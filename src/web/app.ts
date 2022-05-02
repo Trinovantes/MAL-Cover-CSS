@@ -1,37 +1,43 @@
+import { createPinia } from 'pinia'
+import { Quasar, Notify } from 'quasar/src/index.all'
 import { createSSRApp } from 'vue'
-import { createAppRouter } from './router'
-import AppLoader from './components/AppLoader.vue'
-import ClientOnly from './components/Global/ClientOnly.vue'
-import ExternalLink from './components/Global/ExternalLink.vue'
-import CodeBlock from './components/Global/CodeBlock.vue'
-import SimpleImage from './components/Global/SimpleImage.vue'
 import { createMetaManager, defaultConfig } from 'vue-meta'
-import { Quasar, Notify } from 'quasar'
-import { createUserStore, userInjectionKey } from './store/User'
-import { createRouter } from 'vue-router'
-import { AppContext } from './AppContext'
+import AppLoader from './client/components/AppLoader.vue'
+import ClientOnly from './client/components/Global/ClientOnly.vue'
+import CodeBlock from './client/components/Global/CodeBlock.vue'
+import ExternalLink from './client/components/Global/ExternalLink.vue'
+import LoadingSpinner from './client/components/Global/LoadingSpinner.vue'
+import SimpleImage from './client/components/Global/SimpleImage.vue'
+import { createAppRouter } from './client/router'
+import type { AppContext } from './AppContext'
+import type { createRouter } from 'vue-router'
 
 interface CreatedApp {
     app: ReturnType<typeof createSSRApp>
     router: ReturnType<typeof createRouter>
 }
 
-export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
+export async function createApp(appContext?: AppContext): Promise<CreatedApp> {
     // Vue
     const app = createSSRApp(AppLoader)
     app.component('ClientOnly', ClientOnly)
     app.component('ExternalLink', ExternalLink)
     app.component('CodeBlock', CodeBlock)
+    app.component('LoadingSpinner', LoadingSpinner)
     app.component('SimpleImage', SimpleImage)
 
+    // Pinia
+    const pinia = createPinia()
+    app.use(pinia)
+
+    if (appContext) {
+        appContext.pinia = pinia
+    }
+
     // Vue Router
-    const router = await createAppRouter(ssrContext)
+    const router = await createAppRouter(appContext)
     app.use(router)
     await router.isReady()
-
-    // Vuex
-    const userStore = createUserStore()
-    app.use(userStore, userInjectionKey)
 
     // Vue Meta
     const metaManager = createMetaManager(DEFINE.IS_SSR, {
@@ -48,7 +54,7 @@ export async function createApp(ssrContext?: AppContext): Promise<CreatedApp> {
         plugins: {
             Notify,
         },
-    }, ssrContext)
+    }, appContext)
 
     return {
         app,

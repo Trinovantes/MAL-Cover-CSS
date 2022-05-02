@@ -13,8 +13,7 @@ on:
 
 env:
   CRON_IMAGE: ghcr.io/trinovantes/malcovercss-cron
-  API_IMAGE: ghcr.io/trinovantes/malcovercss-api
-  WEB_IMAGE: ghcr.io/trinovantes/malcovercss-web
+  WEB_IMAGE: ghcr.io/trinovantes/malcovercss-web-app
 
 jobs:
   lint:
@@ -37,6 +36,9 @@ jobs:
 
       - name: Run linter
         run: yarn lint
+
+      - name: Run tests
+        run: yarn test
 
   build:
     needs: lint
@@ -68,11 +70,6 @@ jobs:
           docker cp $TEMP_CONTAINER:/app/dist/cron/. ./dist/cron
           docker rm $TEMP_CONTAINER
 
-          mkdir -p ./dist/api
-          TEMP_CONTAINER=$(docker create ${{ env.API_IMAGE }})
-          docker cp $TEMP_CONTAINER:/app/dist/api/. ./dist/api
-          docker rm $TEMP_CONTAINER
-
           mkdir -p ./dist/web
           TEMP_CONTAINER=$(docker create ${{ env.WEB_IMAGE }})
           docker cp $TEMP_CONTAINER:/app/dist/web/. ./dist/web
@@ -86,7 +83,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
-          sourcemaps: ./dist/cron ./dist/api ./dist/web
+          sourcemaps: ./dist/cron ./dist/web
           url_prefix: ~/
 
   deploy:
@@ -100,6 +97,9 @@ jobs:
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
+      - name: Create .env file
+        run: echo "${{ secrets.ENV_FILE }}" > .env
+
       - name: Create SSH key to production
         run: |
           mkdir -p ~/.ssh
@@ -112,9 +112,6 @@ jobs:
         run: |
           docker context create remote --docker "host=ssh://${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}"
           docker context use remote
-
-      - name: Create .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Pull images from registry
         run: make pull

@@ -1,9 +1,9 @@
-import { decrypt, encrypt } from '@/common/utils/encryption'
-import { UserResponse } from '@/common/schemas/ApiResponse'
 import assert from 'assert'
-import { CreationOmit, DefaultColumns } from './attrs'
-import { getDbClient } from '@/common/db/client'
-import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
+import { getDbClient } from '../db/client'
+import { decrypt, encrypt } from '../utils/encryption'
+import { getSqlTimestamp } from '../utils/getSqlTimestamp'
+import type { UserResponse } from '@/web/server/schemas/ApiResponse'
+import type { CreationOmit, DefaultColumns } from './attrs'
 
 // ----------------------------------------------------------------------------
 // User
@@ -196,7 +196,7 @@ export class User {
         return `User:${this.malUsername}(${this.malUserId})`
     }
 
-    toSessionData(): UserResponse {
+    toResponseData(): UserResponse {
         return {
             malUserId: this.malUserId,
             malUsername: this.malUsername,

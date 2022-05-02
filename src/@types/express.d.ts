@@ -6,6 +6,7 @@ import { User } from '@/common/models/User'
 declare module 'express' {
     interface Response {
         locals: {
+            redirectUrl?: string
             currentUser?: User
         }
     }

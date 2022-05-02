@@ -1,10 +1,9 @@
 import path from 'path'
-import webpack, { DefinePlugin } from 'webpack'
-import { VueLoaderPlugin } from 'vue-loader'
-import { getGitHash } from './utils/secrets'
-import merge from 'webpack-merge'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import nodeExternals from 'webpack-node-externals'
+import { VueLoaderPlugin } from 'vue-loader'
+import webpack, { DefinePlugin } from 'webpack'
+import merge from 'webpack-merge'
+import { BuildSecret, getBuildSecret, getGitHash } from './utils/BuildSecret'
 
 // ----------------------------------------------------------------------------
 // Constants
@@ -15,24 +14,18 @@ const rootDir = path.resolve()
 
 export const isDev = (process.env.NODE_ENV === 'development')
 export const manifestFileName = 'ssr-manifest.json'
-export const entryFileName = 'app.html'
-export const gitHash = getGitHash(rootDir)
 export const publicPath = '/public/'
 
-export const distDir = path.resolve(rootDir, 'dist')
-export const distCronDir = path.resolve(distDir, 'cron')
-export const distApiDir = path.resolve(distDir, 'api')
-export const distWebDir = path.resolve(distDir, 'web')
-export const distWebPublicDir = path.resolve(distWebDir, 'public')
-export const entryFilePath = path.resolve(distWebDir, entryFileName)
-export const distSsgDir = path.resolve(distDir, 'ssg')
-export const manifestFilePath = path.resolve(distSsgDir, manifestFileName)
+export const distDir = path.join(rootDir, 'dist')
+export const distCronDir = path.join(distDir, 'cron')
+export const distServerDir = path.join(distDir, 'web')
+export const distClientDir = path.join(distServerDir, publicPath)
+export const manifestFile = path.join(distServerDir, manifestFileName)
 
-export const srcDir = path.resolve(rootDir, 'src')
-export const srcCronDir = path.resolve(srcDir, 'cron')
-export const srcApiDir = path.resolve(srcDir, 'api')
-export const srcWebDir = path.resolve(srcDir, 'web')
-export const staticDir = path.resolve(srcDir, 'web', 'static')
+export const srcDir = path.join(rootDir, 'src')
+export const srcCronDir = path.join(srcDir, 'cron')
+export const srcWebDir = path.join(srcDir, 'web')
+export const staticDir = path.join(srcDir, 'web', 'static')
 
 export const rawDirRegexp = /\/raw\//
 
@@ -61,8 +54,10 @@ const commonConfig: webpack.Configuration = {
 
             'DEFINE.IS_DEV': JSON.stringify(isDev),
             'DEFINE.IS_SSR': "(typeof window === 'undefined')",
-            'DEFINE.GIT_HASH': JSON.stringify(gitHash),
-            'DEFINE.SOCIAL_IMAGE_SIZE': JSON.stringify(800),
+            'DEFINE.GIT_HASH': JSON.stringify(getGitHash(rootDir)),
+
+            'DEFINE.APP_URL': JSON.stringify(getBuildSecret(BuildSecret.APP_URL)),
+            'DEFINE.APP_PORT': JSON.stringify(getBuildSecret(BuildSecret.APP_PORT)),
         }),
         new VueLoaderPlugin(),
     ],
@@ -84,10 +79,6 @@ const commonConfig: webpack.Configuration = {
                 test: /\.vue$/,
                 use: [{
                     loader: 'vue-loader',
-                    options: {
-                        transpileOnly: true,
-                        exposeFilename: true,
-                    },
                 }],
             },
             {
@@ -113,8 +104,8 @@ export const commonWebConfig = merge(commonConfig, {
                         options: {
                             additionalData: (content: string, loaderContext: { resourcePath: string }): string => {
                                 return (loaderContext.resourcePath.endsWith('sass'))
-                                    ? '@use "sass:math"\n @import "@/web/assets/css/variables.scss"\n' + content
-                                    : '@use "sass:math";  @import "@/web/assets/css/variables.scss"; ' + content
+                                    ? '@use "sass:math"\n @import "@/web/client/assets/css/variables.scss"\n' + content
+                                    : '@use "sass:math";  @import "@/web/client/assets/css/variables.scss"; ' + content
                             },
                         },
                     },
@@ -194,15 +185,10 @@ export const commonNodeConfig = merge(commonConfig, {
     },
 
     externals: [
-        // Do not externalize dependencies that need to be processed by webpack.
-        // You should also whitelist deps that modify `global` (e.g. polyfills)
-        nodeExternals({
-            allowlist: [
-                /^vue*/,
-                /\.(css|sass|scss)$/,
-                /\.(vue)$/,
-                /\.(html)$/,
-            ],
-        }),
+        '@sentry/vue',
+        '@sentry/node',
+        '@sentry/tracing',
+        'express',
+        'sqlite3',
     ],
 })

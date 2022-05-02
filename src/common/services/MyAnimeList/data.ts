@@ -1,10 +1,10 @@
-import axios, { AxiosRequestConfig } from 'axios'
-import { MAL_API_URL } from '@/common/Constants'
 import assert from 'assert'
-import { User } from '@/common/models/User'
+import axios, { AxiosRequestConfig } from 'axios'
 import dayjs from 'dayjs'
-import { refreshAccessToken } from './oauth'
+import { MAL_API_URL } from '@/common/Constants'
+import type { User } from '@/common/models/User'
 import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
+import { refreshAccessToken } from './oauth'
 
 // ----------------------------------------------------------------------------
 // v2 API Data
@@ -120,7 +120,7 @@ async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: Ax
         // Check if it's a known error
         if (axios.isAxiosError(err) && err.response) {
             if (err.response.status === 401) {
-                console.info(`${user.toString()} has revoked their authorization, going delete the user`)
+                console.info(`${user.toString()} has revoked their authorization, going to delete the user`)
 
                 await user.updateTokens({
                     tokenExpires: null,

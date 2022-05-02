@@ -2,7 +2,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch API Server",
+            "name": "Launch Web Server",
             "type": "node",
             "request": "launch",
 
@@ -14,7 +14,7 @@
             ],
 
             "envFile": "${workspaceRoot}/.env",
-            "program": "${workspaceRoot}/dist/api/www.js",
+            "program": "${workspaceRoot}/dist/web/www.js",
         },
     ],
 }

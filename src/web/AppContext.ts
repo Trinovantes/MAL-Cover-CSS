@@ -1,17 +1,29 @@
 import { useSSRContext } from '@vue/runtime-core'
-import { SSRContext } from '@vue/server-renderer'
-import express from 'express'
+import type { SSRContext } from '@vue/server-renderer'
+import type express from 'express'
+import type { createPinia } from 'pinia'
 
-export type AppContext = SSRContext & {
-    url: string
-    teleports: Record<string, string>
-    _matchedComponents: Set<string>
-
-    // Required by Quasar
+interface QuasarSsrContext {
     req: express.Request
     res: express.Response
     _modules: Set<unknown>
-    _meta: Record<string, unknown>
+    _meta: Partial<{
+        htmlAttrs: string
+        headTags: string
+        endingHeadTags: string
+        bodyClasses: string
+        bodyAttrs: string
+        bodyTags: string
+    }>
+}
+
+export type AppContext = SSRContext & QuasarSsrContext & {
+    url: string
+    pinia?: ReturnType<typeof createPinia>
+    cookieHeaders?: Array<string>
+    teleports: Record<string, string>
+
+    _matchedComponents: Set<string>
 }
 
 export function useAppContext(): AppContext | undefined {
