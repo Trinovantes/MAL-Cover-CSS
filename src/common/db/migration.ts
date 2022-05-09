@@ -5,7 +5,7 @@ import { getDbClient } from './client'
 
 export const MIGRATE_UP_MARKER = '-- migrate:up'
 export const MIGRATE_DOWN_MARKER = '-- migrate:down'
-export const MIGRATION_TABLE_NAME = 'schema_version'
+export const MIGRATION_TABLE_NAME = 'schema_migrations'
 
 export interface MigrationTableAttrs {
     version: string
