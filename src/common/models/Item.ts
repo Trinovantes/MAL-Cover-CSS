@@ -101,6 +101,10 @@ export class Item {
     // Getters
     // ------------------------------------------------------------------------
 
+    get id(): number {
+        return this._attrs.id
+    }
+
     get malId(): number {
         return this._attrs.malId
     }
@@ -111,5 +115,13 @@ export class Item {
 
     get imgUrl(): string | null {
         return this._attrs.imgUrl
+    }
+
+    get createdAt(): string {
+        return this._attrs.createdAt
+    }
+
+    get updatedAt(): string {
+        return this._attrs.updatedAt
     }
 }
