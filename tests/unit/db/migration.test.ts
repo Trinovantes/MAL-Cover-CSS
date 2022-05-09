@@ -189,6 +189,7 @@ describe('migration', () => {
 
     describe('getCurrentSchemaVersion', () => {
         test('when database is empty', async() => {
+            await createMigrationTableIfNotExists()
             const version = await getCurrentSchemaVersion()
             expect(version).toBeUndefined()
         })

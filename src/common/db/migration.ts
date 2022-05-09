@@ -24,6 +24,8 @@ export interface Migration {
 export async function migrateDb(migrateUp = true, migrationsDir = DB_MIGRATIONS_DIR): Promise<void> {
     const migrations = getMigrations(migrationsDir)
 
+    await createMigrationTableIfNotExists()
+
     if (migrateUp) {
         await migrateDbUp(migrations)
     } else {
@@ -97,7 +99,6 @@ export async function migrateDbDown(migrations: Array<Migration>): Promise<void>
 export async function getCurrentSchemaVersion(): Promise<string | undefined> {
     const dbClient = await getDbClient()
 
-    await createMigrationTableIfNotExists()
     const result = await dbClient.get<MigrationTableAttrs>(`
         SELECT *
         FROM ${MIGRATION_TABLE_NAME}
