@@ -5,10 +5,10 @@ import { renderMetaToString } from 'vue-meta/ssr'
 import { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin/dist/utils/VueSsrAssetsRenderer'
 import { createAsyncHandler } from '../utils/createAsyncHandler'
 import type { AppContext } from '@/web/AppContext'
-import { createApp } from '@/web/app'
 import { RouteName } from '@/web/client/router/routes'
 import { useUserStore } from '@/web/client/store/User'
 import { HydrationKey, saveStateToDom } from '@/web/client/store/hydration'
+import { createVueApp } from '@/web/createVueApp'
 
 // -----------------------------------------------------------------------------
 // Router
@@ -16,9 +16,9 @@ import { HydrationKey, saveStateToDom } from '@/web/client/store/hydration'
 
 export const vueRouter = express.Router()
 
-vueRouter.use('*', createVueHandler())
+vueRouter.use('*', createVueAppHandler())
 
-function createVueHandler() {
+function createVueAppHandler() {
     assert(DEFINE.MANIFEST_FILE)
     const assetRenderer = new VueSsrAssetRenderer(DEFINE.MANIFEST_FILE)
 
@@ -35,7 +35,7 @@ function createVueHandler() {
             _meta: {},
         }
 
-        const { app, router } = await createApp(appContext)
+        const { app, router } = await createVueApp(appContext)
 
         // Check if Vue matched to a different route
         if (router.currentRoute.value.fullPath !== targetUrl) {

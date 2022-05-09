@@ -7,10 +7,10 @@ import '@/common/utils/setupDayjs'
 import { Integrations } from '@sentry/tracing'
 import * as Sentry from '@sentry/vue'
 import { SENTRY_DSN } from '@/common/Constants'
-import { createApp } from './app'
+import { createVueApp } from './createVueApp'
 
 async function main() {
-    const { app, router } = await createApp()
+    const { app, router } = await createVueApp()
 
     Sentry.init({
         dsn: SENTRY_DSN,

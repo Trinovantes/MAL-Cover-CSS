@@ -12,12 +12,12 @@ import { createAppRouter } from './client/router'
 import type { AppContext } from './AppContext'
 import type { createRouter } from 'vue-router'
 
-interface CreatedApp {
+interface VueApp {
     app: ReturnType<typeof createSSRApp>
     router: ReturnType<typeof createRouter>
 }
 
-export async function createApp(appContext?: AppContext): Promise<CreatedApp> {
+export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     // Vue
     const app = createSSRApp(AppLoader)
     app.component('ClientOnly', ClientOnly)
