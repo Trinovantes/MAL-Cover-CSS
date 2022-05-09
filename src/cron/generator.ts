@@ -93,7 +93,11 @@ async function generate(outputDir: string, selector: CssSelector, mediaType?: Me
     cssFileStream.end()
 }
 
-function getCssRule(selector: CssSelector, item: Item) {
+function getCssRule(selector: CssSelector, item: Item): string {
+    if (!item.imgUrl) {
+        return ''
+    }
+
     let cssRule = ''
 
     switch (selector) {
@@ -114,6 +118,7 @@ function getCssRule(selector: CssSelector, item: Item) {
     }
 
     cssRule += `{background-image:url(${item.imgUrl});}\n`
+
     return cssRule
 }
 

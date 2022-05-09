@@ -109,7 +109,7 @@ export class Item {
         return this._attrs.mediaType
     }
 
-    get imgUrl(): string {
-        return this._attrs.imgUrl ?? ''
+    get imgUrl(): string | null {
+        return this._attrs.imgUrl
     }
 }
