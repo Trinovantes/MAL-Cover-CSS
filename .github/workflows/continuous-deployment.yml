@@ -11,10 +11,6 @@ on:
       - .editorconfig
       - .gitignore
 
-env:
-  CRON_IMAGE: ghcr.io/trinovantes/malcovercss-cron
-  WEB_IMAGE: ghcr.io/trinovantes/malcovercss-web-app
-
 jobs:
   lint:
     name: Run Linter
@@ -66,12 +62,12 @@ jobs:
       - name: Copy dist from image to disk for sentry upload
         run: |
           mkdir -p ./dist/cron
-          TEMP_CONTAINER=$(docker create ${{ env.CRON_IMAGE }})
+          TEMP_CONTAINER=$(docker create ghcr.io/trinovantes/malcovercss-cron)
           docker cp $TEMP_CONTAINER:/app/dist/cron/. ./dist/cron
           docker rm $TEMP_CONTAINER
 
           mkdir -p ./dist/web
-          TEMP_CONTAINER=$(docker create ${{ env.WEB_IMAGE }})
+          TEMP_CONTAINER=$(docker create ghcr.io/trinovantes/malcovercss-web-app)
           docker cp $TEMP_CONTAINER:/app/dist/web/. ./dist/web
           docker rm $TEMP_CONTAINER
 
