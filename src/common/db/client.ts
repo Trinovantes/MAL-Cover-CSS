@@ -24,10 +24,14 @@ export async function createDbClient(filePath: string): DbClient {
 
     await createSqliteDbIfNotExists(filePath)
 
-    return open({
+    const client = await open({
         filename: filePath,
         driver: sqlite3.Database,
     })
+
+    await client.run('PRAGMA foreign_keys = ON')
+
+    return client
 }
 
 export async function createSqliteDbIfNotExists(filePath: string): Promise<void> {
