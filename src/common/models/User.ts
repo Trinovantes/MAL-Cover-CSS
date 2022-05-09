@@ -91,14 +91,14 @@ export class User {
         return new User(userAttrs)
     }
 
-    static async fetchAllToScrape(staleTime: Date): Promise<Array<User>> {
+    static async fetchAllToScrape(staleTime: string): Promise<Array<User>> {
         const dbClient = await getDbClient()
         const rows = await dbClient.all<Array<UserAttributes>>(`
             SELECT * FROM ${User.TABLE}
             WHERE lastChecked IS NULL
             OR    lastChecked < @staleTime;
         `, {
-            '@staleTime': getSqlTimestamp(staleTime),
+            '@staleTime': staleTime,
         })
 
         return rows.map((row) => new User(row))
@@ -160,6 +160,9 @@ export class User {
 
     async updateTokens(newAttrs: Pick<UserAttributes, 'tokenExpires' | 'accessToken' | 'refreshToken'>): Promise<void> {
         assert(!this._isDeleted)
+        assert(
+            (newAttrs.tokenExpires !== null && newAttrs.accessToken !== null && newAttrs.refreshToken !== null) ||
+            (newAttrs.tokenExpires === null && newAttrs.accessToken === null && newAttrs.refreshToken === null))
 
         this.tokenExpires = newAttrs.tokenExpires
         this.accessToken = newAttrs.accessToken
@@ -254,5 +257,13 @@ export class User {
         }
 
         return decrypt(this._attrs.refreshToken)
+    }
+
+    get createdAt(): string {
+        return this._attrs.createdAt
+    }
+
+    get updatedAt(): string {
+        return this._attrs.updatedAt
     }
 }

@@ -35,9 +35,10 @@ async function scrapeUsers() {
     })
 
     const staleUserTime = dayjs.utc().subtract(DELAY_BETWEEN_SCRAPPING, 'hours')
-    console.info(`Getting users lastChecked before ${getSqlTimestamp(staleUserTime.toDate())}`)
+    const staleUserTimestamp = getSqlTimestamp(staleUserTime.toDate())
+    console.info(`Getting users lastChecked before ${staleUserTimestamp}`)
 
-    const users = await User.fetchAllToScrape(staleUserTime.toDate())
+    const users = await User.fetchAllToScrape(staleUserTimestamp)
     console.info(`Found ${users.length} users to scrape`)
 
     for (const user of users) {
