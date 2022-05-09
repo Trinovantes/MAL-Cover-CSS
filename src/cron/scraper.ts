@@ -5,6 +5,7 @@ import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import dayjs from 'dayjs'
 import { SENTRY_DSN, DELAY_BETWEEN_SCRAPPING, DELAY_BETWEEN_REQUESTS, ITEMS_PER_LIST_REQUEST } from '@/common/Constants'
+import { migrateDb } from '@/common/db/migration'
 import { MediaType, Item } from '@/common/models/Item'
 import { User } from '@/common/models/User'
 import { fetchMalAnimeList, fetchMalMangaList } from '@/common/services/MyAnimeList/data'
@@ -113,6 +114,7 @@ async function deleteUsers() {
 // ----------------------------------------------------------------------------
 
 async function main(): Promise<void> {
+    await migrateDb()
     await scrapeUsers()
     await deleteUsers()
 }

@@ -1,10 +1,13 @@
+// eslint-disable-next-line import/order
 import '@/common/utils/setupDayjs'
 
-// eslint-disable-next-line import/order
 import http from 'http'
+import { migrateDb } from '@/common/db/migration'
 import { createServerApp } from './server/createServerApp'
 
 async function runHttpServer() {
+    await migrateDb()
+
     const app = await createServerApp({
         trustProxy: DEFINE.IS_DEV,
         enableStaticFiles: DEFINE.IS_DEV,

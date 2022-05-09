@@ -6,6 +6,7 @@ import path from 'path'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import { SENTRY_DSN } from '@/common/Constants'
+import { migrateDb } from '@/common/db/migration'
 import { Item, MediaType } from '@/common/models/Item'
 
 // ----------------------------------------------------------------------------
@@ -77,9 +78,9 @@ async function generate(outputDir: string, selector: CssSelector, mediaType?: Me
     console.info(`Starting to write: ${outputFile}`)
 
     const cssFileStream = fs.createWriteStream(outputFile, { flags: 'w' })
-    cssFileStream.on('error', (error) => {
+    cssFileStream.on('error', (err) => {
         console.warn('Failed to write css file', fileName)
-        console.warn(error)
+        console.warn(err)
     })
 
     const items = await Item.fetchAll(mediaType)
@@ -133,6 +134,7 @@ function crossProduct<A, B>(aList: Array<A>, bList: Array<B>): Array<[A, B]> {
 // ----------------------------------------------------------------------------
 
 async function main() {
+    await migrateDb()
     await generateCss()
 }
 
