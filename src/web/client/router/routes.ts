@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router'
 
-export enum RouteName {
+export const enum RouteName {
     Home = 'Home',
     Settings = 'Settings',
     Error404 = 'Error404',
