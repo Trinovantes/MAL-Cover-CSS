@@ -55,11 +55,13 @@ run: \
 pull:
 	docker pull $(backup-image) --quiet
 	docker pull $(cron-image) --quiet
+	docker pull $(web-app-image) --quiet
 	docker pull $(web-image) --quiet
 
 push:
 	docker push $(backup-image) --quiet
 	docker push $(cron-image) --quiet
+	docker push $(web-app-image) --quiet
 	docker push $(web-image) --quiet
 
 clean:
