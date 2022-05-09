@@ -77,7 +77,7 @@ const { login, logout } = useApi()
                         no-caps
                         no-wrap
                         label="Log In"
-                        title="Log In with MyAnimeList"
+                        title="Log in with MyAnimeList"
                         @click="login(); closeHeaderItems()"
                     />
                 </template>
