@@ -14,6 +14,7 @@
         "dev": "  concurrently 'yarn devCron'   'yarn devWeb'",
         "build": "concurrently 'yarn buildCron' 'yarn buildWeb'",
         "lint": "vue-tsc --noemit && eslint --ext .ts,.js,.vue --ignore-path .gitignore .",
+        "test": "sleep 1",
         "postinstall": "patch-package"
     },
     "babel": {
