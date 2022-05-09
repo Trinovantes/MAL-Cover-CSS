@@ -1,7 +1,8 @@
-import { DB_MEMORY, DB_MIGRATIONS_DIR } from '@/common/Constants'
+import { DB_MEMORY, DB_MIGRATIONS_DIR, ENCRYPTION_KEY_LENGTH } from '@/common/Constants'
 import * as dbClientModule from '@/common/db/client'
 import { migrateDb } from '@/common/db/migration'
 import { User } from '@/common/models/User'
+import * as RuntimeSecretModule from '@/common/utils/RuntimeSecret'
 import * as getSqlTimestampModule from '@/common/utils/getSqlTimestamp'
 
 // ----------------------------------------------------------------------------
@@ -15,6 +16,7 @@ const origGetSqlTimestamp = getSqlTimestampModule.getSqlTimestamp
 beforeEach(async() => {
     testDbClient = dbClientModule.createDbClient(DB_MEMORY)
     jest.spyOn(dbClientModule, 'getDbClient').mockImplementation(() => testDbClient)
+    jest.spyOn(RuntimeSecretModule, 'getEncryptionKey').mockImplementation(() => Buffer.alloc(ENCRYPTION_KEY_LENGTH, '0'))
 
     await migrateDb(true, DB_MIGRATIONS_DIR)
 })

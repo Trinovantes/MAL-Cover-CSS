@@ -2,11 +2,12 @@ import crypto from 'crypto'
 import { ENCRYPTION_ALGORITHM, ENCRYPTION_AUTH_TAG_LENGTH, ENCRYPTION_IV_LENGTH } from '@/common/Constants'
 import { getEncryptionKey } from '@/common/utils/RuntimeSecret'
 
-const encryptionKey = getEncryptionKey()
 const textEncoding = 'utf8'
 const databaseEncoding = 'base64'
 
 export function encrypt(plainText: string): string {
+    const encryptionKey = getEncryptionKey()
+
     const iv = crypto.randomBytes(ENCRYPTION_IV_LENGTH)
     const cipher = crypto.createCipheriv(ENCRYPTION_ALGORITHM, encryptionKey, iv)
     const cipherText = Buffer.concat([cipher.update(plainText, textEncoding), cipher.final()])
@@ -16,6 +17,7 @@ export function encrypt(plainText: string): string {
 }
 
 export function decrypt(encodedParts: string): string {
+    const encryptionKey = getEncryptionKey()
     const authLen = ENCRYPTION_AUTH_TAG_LENGTH
     const ivLen = ENCRYPTION_IV_LENGTH
 
