@@ -5,7 +5,7 @@ import http from 'http'
 import { migrateDb } from '@/common/db/migration'
 import { createServerApp } from './server/createServerApp'
 
-async function runHttpServer() {
+async function main() {
     await migrateDb()
 
     const app = await createServerApp({
@@ -29,4 +29,4 @@ async function runHttpServer() {
     })
 }
 
-runHttpServer().catch(console.error)
+main().catch(console.error)
