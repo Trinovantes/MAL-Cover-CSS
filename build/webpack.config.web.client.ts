@@ -2,6 +2,7 @@ import CopyWebpackPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { QuasarUnusedPlugin } from 'quasar-unused-plugin'
 import { VueSsrAssetsClientPlugin } from 'vue-ssr-assets-plugin'
+import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import merge from 'webpack-merge'
 import { distClientDir, publicPath, staticDir, srcWebDir, manifestFile, commonWebConfig, isDev, distServerDir } from './webpack.common'
 import type { Configuration } from 'webpack'
@@ -46,6 +47,10 @@ const clientEntryConfig = ((): Configuration => merge(commonWebConfig, {
         }),
         new VueSsrAssetsClientPlugin({
             fileName: manifestFile,
+        }),
+        new BundleAnalyzerPlugin({
+            analyzerMode: 'disabled',
+            generateStatsFile: false,
         }),
     ],
 }))()
