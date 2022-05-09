@@ -1,5 +1,5 @@
 export const APP_NAME = 'MAL Cover CSS'
-export const APP_DESC = 'Automatically generate CSS to add cover images for your MyAnimeList classic list designs'
+export const APP_DESC = 'Automatically generate CSS to add cover images to your MyAnimeList classic list designs'
 export const APP_THEME_COLOR = '#2e51a2'
 
 export const MAL_AUTHORIZE_URL = 'https://myanimelist.net/v1/oauth2/authorize'
