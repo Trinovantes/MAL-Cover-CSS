@@ -2,7 +2,7 @@ import assert from 'assert'
 import fs from 'fs'
 import path from 'path'
 import * as dbClientModule from '@/common/db/client'
-import { createMigrationTableIfNotExists, getCurrentSchemaVersion, getMigrations, migrateDbDown, migrateDbUp, MIGRATE_DOWN_MARKER, MIGRATE_UP_MARKER, MIGRATION_TABLE_NAME } from '@/common/db/migration'
+import { createMigrationTableIfNotExists, getCurrentSchemaVersion, getMigrations, migrateDb, migrateDbDown, migrateDbUp, MIGRATE_DOWN_MARKER, MIGRATE_UP_MARKER, MIGRATION_TABLE_NAME } from '@/common/db/migration'
 
 // ----------------------------------------------------------------------------
 // Global
@@ -29,6 +29,46 @@ afterEach(async() => {
 describe('migration', () => {
     test('smoke', () => {
         expect(true).toBe(true)
+    })
+
+    describe('migrateDb', () => {
+        test('migration up/down in opposite order', async() => {
+            mockTestFs('fakedir', [
+                {
+                    fileName: '0002_migration.sql',
+                    fileContents: `
+                    ${MIGRATE_UP_MARKER}
+                    ALTER TABLE test_table_0001 RENAME TO test_table_0002;
+                    ${MIGRATE_DOWN_MARKER}
+                    ALTER TABLE test_table_0002 RENAME TO test_table_0001;
+                    `,
+                },
+                {
+                    fileName: '0001_migration.sql',
+                    fileContents: `
+                        ${MIGRATE_UP_MARKER}
+                        ALTER TABLE test_table_0000 RENAME TO test_table_0001;
+                        ${MIGRATE_DOWN_MARKER}
+                        ALTER TABLE test_table_0001 RENAME TO test_table_0000;
+                    `,
+                },
+                {
+                    fileName: '0000_migration.sql',
+                    fileContents: `
+                        ${MIGRATE_UP_MARKER}
+                        CREATE TABLE test_table_0000(id INTEGER PRIMARY KEY);
+                        ${MIGRATE_DOWN_MARKER}
+                        DROP TABLE test_table_0000;
+                    `,
+                },
+            ])
+
+            const migrateUp = async() => await migrateDb(true, 'fakedir')
+            const migrateDown = async() => await migrateDb(false, 'fakedir')
+
+            await expect(migrateUp()).resolves.toBeUndefined()
+            await expect(migrateDown()).resolves.toBeUndefined()
+        })
     })
 
     describe('migrateDbUp', () => {

@@ -29,7 +29,7 @@ export async function migrateDb(migrateUp = true, migrationsDir = DB_MIGRATIONS_
     if (migrateUp) {
         await migrateDbUp(migrations)
     } else {
-        await migrateDbDown(migrations)
+        await migrateDbDown(migrations.reverse())
     }
 }
 
