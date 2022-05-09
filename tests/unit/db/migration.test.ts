@@ -37,10 +37,10 @@ describe('migration', () => {
                 {
                     fileName: '0002_migration.sql',
                     fileContents: `
-                    ${MIGRATE_UP_MARKER}
-                    ALTER TABLE test_table_0001 RENAME TO test_table_0002;
-                    ${MIGRATE_DOWN_MARKER}
-                    ALTER TABLE test_table_0002 RENAME TO test_table_0001;
+                        ${MIGRATE_UP_MARKER}
+                        ALTER TABLE test_table_0001 RENAME TO test_table_0002;
+                        ${MIGRATE_DOWN_MARKER}
+                        ALTER TABLE test_table_0002 RENAME TO test_table_0001;
                     `,
                 },
                 {

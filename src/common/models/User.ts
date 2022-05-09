@@ -19,7 +19,7 @@ type UserAttributes = DefaultColumns & {
 }
 
 export class User {
-    static readonly TABLE = 'Users'
+    static readonly TABLE = 'User'
 
     private _attrs: UserAttributes
     private _isDeleted

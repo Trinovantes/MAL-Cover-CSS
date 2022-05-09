@@ -18,7 +18,7 @@ export type ItemAttributes = DefaultColumns & {
 }
 
 export class Item {
-    static readonly TABLE = 'Items'
+    static readonly TABLE = 'Item'
 
     private _attrs: ItemAttributes
 
