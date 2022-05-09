@@ -161,7 +161,6 @@ stop-web:
 run-web: stop-web redis
 	docker run \
 		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
-		--publish 9042:$(APP_PORT) \
 		--env-file .env \
 		--env REDIS_HOST=$(redis-container) \
 		--env REDIS_PORT=6379 \
