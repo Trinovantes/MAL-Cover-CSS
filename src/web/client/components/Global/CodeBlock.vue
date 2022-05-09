@@ -70,7 +70,7 @@ async function copyToClipboard() {
     <div class="code-block">
         <q-btn
             v-if="hasClipboard"
-            :icon="showCheckmark ? 'check' : 'copy'"
+            :icon="showCheckmark ? 'check' : 'content_copy'"
             outline
             round
             title="Copy code to clipboard"
