@@ -10,7 +10,7 @@ async function main() {
     await migrateDb()
 
     const app = await createServerApp({
-        trustProxy: DEFINE.IS_DEV,
+        trustProxy: !DEFINE.IS_DEV,
         enableStaticFiles: DEFINE.IS_DEV,
         enableLogging: getSecret(RuntimeSecret.ENABLE_LOGGING) === 'true',
         enableSentry: !DEFINE.IS_DEV,

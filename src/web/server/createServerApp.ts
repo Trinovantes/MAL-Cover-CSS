@@ -31,7 +31,7 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
 
     // Express sits behind nginx proxy in production
     const { trustProxy } = options
-    console.info(`Setting trust proxy:${trustProxy}`)
+    console.info(`Setting 'trust proxy':${trustProxy}`)
     app.set('trust proxy', trustProxy)
 
     // Handle non-GET request bodies
