@@ -74,7 +74,6 @@ useMeta(computed(() => createPageHeadOptions({
             <CodeBlock
                 :code="require('./raw/example-list-entry.html')"
                 language="html"
-                highlights="11-13,40"
             />
 
             <h3>Example Usage</h3>
@@ -85,7 +84,6 @@ useMeta(computed(() => createPageHeadOptions({
 
             <CodeBlock
                 :code="require('./raw/example-usage.css')"
-                highlights="1,19"
             />
         </section>
     </article>
