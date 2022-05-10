@@ -7,7 +7,7 @@ import type { RequestHandler, Request, Response, NextFunction } from 'express'
 export const setUserInLocals = createAsyncHandler(async(req, res, next) => {
     const TAG = '[middleware::setUserInLocals]'
 
-    const malUserId = req.session.currentUser?.malUserId
+    const malUserId = req.session?.currentUser?.malUserId
     console.info(TAG, malUserId)
     if (malUserId === undefined) {
         return next()

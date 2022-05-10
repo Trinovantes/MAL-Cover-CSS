@@ -1,10 +1,15 @@
 import type express from 'express'
 
 export async function clearSession(req: express.Request, res: express.Response): Promise<void> {
-    console.info('Clearing session')
+    res.locals = {}
 
     await new Promise<void>((resolve, reject) => {
-        req.session.destroy((err) => {
+        if (!req.session) {
+            resolve()
+        }
+
+        console.info('Clearing session')
+        req.session?.destroy((err) => {
             if (err === undefined || err === null) {
                 resolve()
             } else {
@@ -12,6 +17,4 @@ export async function clearSession(req: express.Request, res: express.Response):
             }
         })
     })
-
-    res.locals = {}
 }

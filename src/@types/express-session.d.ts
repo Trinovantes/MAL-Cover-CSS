@@ -6,8 +6,8 @@ import { OauthState } from '@/web/server/schemas/OauthState'
 
 declare module 'express-session' {
     interface SessionData {
-        oauthState: OauthState | undefined
-        currentUser: UserResponse | undefined
-        pendingError: ErrorResponse | undefined
+        oauthState: OauthState
+        currentUser: UserResponse
+        pendingError: ErrorResponse
     }
 }

@@ -33,6 +33,10 @@ oauthRouter.post('/login', (req, res, next) => {
         return next(new createHttpError.BadRequest())
     }
 
+    if (!req.session) {
+        return next(new createHttpError.NotImplemented())
+    }
+
     req.session.oauthState = {
         secret: crypto.randomBytes(MAL_OAUTH_RANDOM_STATE_LENGTH).toString('hex'),
         restorePath: req.body.restorePath || DEFAULT_REDIRECT_PATH,
@@ -90,8 +94,8 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
 
     // The secret in returned state must match the secret we stored in session when we initiated the oauth flow
     // Otherwise, the state might be forged and we reject it
-    if (returnedState.secret !== req.session.oauthState?.secret) {
-        console.info(`Mismatch oauth secret returnedState:${returnedState.secret} session.oauthState:${req.session.oauthState?.secret}`)
+    if (returnedState.secret !== req.session?.oauthState?.secret) {
+        console.info(`Mismatch oauth secret returnedState:${returnedState.secret} session.oauthState:${req.session?.oauthState?.secret}`)
         await onError()
         return
     }
