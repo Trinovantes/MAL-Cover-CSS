@@ -13,7 +13,14 @@ export async function fetchLogin(restorePath: string): Promise<RedirectResponse 
 
         return res.data
     } catch (err) {
-        return err as ErrorResponse
+        if (!axios.isAxiosError(err)) {
+            throw err
+        }
+        if (!err.response) {
+            throw err
+        }
+
+        return err.response.data as ErrorResponse
     }
 }
 
@@ -25,7 +32,14 @@ export async function fetchLogout(): Promise<SuccessResponse | ErrorResponse> {
 
         return res.data
     } catch (err) {
-        return err as ErrorResponse
+        if (!axios.isAxiosError(err)) {
+            throw err
+        }
+        if (!err.response) {
+            throw err
+        }
+
+        return err.response.data as ErrorResponse
     }
 }
 
@@ -43,9 +57,9 @@ export async function fetchUser(): Promise<UserResponse | null> {
         if (err.response?.status !== 403) {
             throw err
         }
-    }
 
-    return null
+        return null
+    }
 }
 
 export async function fetchDeleteUser(): Promise<SuccessResponse | ErrorResponse> {
@@ -56,6 +70,13 @@ export async function fetchDeleteUser(): Promise<SuccessResponse | ErrorResponse
 
         return res.data
     } catch (err) {
-        return err as ErrorResponse
+        if (!axios.isAxiosError(err)) {
+            throw err
+        }
+        if (!err.response) {
+            throw err
+        }
+
+        return err.response.data as ErrorResponse
     }
 }

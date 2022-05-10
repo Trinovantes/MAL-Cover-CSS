@@ -9,19 +9,37 @@ export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Hand
     const $q = useQuasar()
     const router = useRouter()
 
+    const notifyError = (message: string) => {
+        $q.notify({
+            message: DEFINE.IS_DEV ? `<pre>${message}</pre>` : message,
+            html: DEFINE.IS_DEV,
+            timeout: DEFINE.IS_DEV ? 0 : undefined,
+            type: 'negative',
+            position: 'top',
+            actions: [{
+                icon: 'close',
+                color: 'white',
+            }],
+        })
+    }
+
+    const notifySuccess = (message: string) => {
+        $q.notify({
+            message,
+            type: 'positive',
+            position: 'top',
+            actions: [{
+                icon: 'close',
+                color: 'white',
+            }],
+        })
+    }
+
     const login = async() => {
         const res = await userStore.login(router.currentRoute.value.path)
 
         if ('errorMessage' in res) {
-            $q.notify({
-                message: res.errorMessage,
-                type: 'negative',
-                position: 'top',
-                actions: [{
-                    icon: 'close',
-                    color: 'white',
-                }],
-            })
+            notifyError(res.errorMessage)
         } else {
             window.location.href = res.url
         }
@@ -31,25 +49,9 @@ export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Hand
         const res = await userStore.logout()
 
         if ('errorMessage' in res) {
-            $q.notify({
-                message: res.errorMessage,
-                type: 'negative',
-                position: 'top',
-                actions: [{
-                    icon: 'close',
-                    color: 'white',
-                }],
-            })
+            notifyError(res.errorMessage)
         } else {
-            $q.notify({
-                message: res.message,
-                type: 'positive',
-                position: 'top',
-                actions: [{
-                    icon: 'close',
-                    color: 'white',
-                }],
-            })
+            notifySuccess(res.message)
         }
     }
 
@@ -57,25 +59,9 @@ export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Hand
         const res = await userStore.deleteUser()
 
         if ('errorMessage' in res) {
-            $q.notify({
-                message: res.errorMessage,
-                type: 'negative',
-                position: 'top',
-                actions: [{
-                    icon: 'close',
-                    color: 'white',
-                }],
-            })
+            notifyError(res.errorMessage)
         } else {
-            $q.notify({
-                message: res.message,
-                type: 'positive',
-                position: 'top',
-                actions: [{
-                    icon: 'close',
-                    color: 'white',
-                }],
-            })
+            notifySuccess(res.message)
         }
     }
 

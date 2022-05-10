@@ -4,7 +4,7 @@ import { HttpError } from 'http-errors'
 import type { ErrorResponse } from '@/web/server/schemas/ApiResponse'
 import type express from 'express'
 
-export function setupRouterErrorHandler(router: express.Router, isJsonResponse = false): express.Router {
+export function setupRouterErrorHandler(router: express.Router, isJsonResponse: boolean): express.Router {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const errorHander: express.ErrorRequestHandler = (err, req, res, next) => {
         if (axios.isAxiosError(err)) {
@@ -17,7 +17,7 @@ export function setupRouterErrorHandler(router: express.Router, isJsonResponse =
 
         let errorMessage: string
         if (DEFINE.IS_DEV && (err instanceof HttpError || err instanceof Error || axios.isAxiosError(err))) {
-            errorMessage = err.message + '\n'.repeat(2) + (err.stack ?? 'No Stack Available')
+            errorMessage = err.stack ?? err.message
         } else {
             errorMessage = 'Internal Server Error'
         }

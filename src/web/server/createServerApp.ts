@@ -114,8 +114,8 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
     // Request Handlers
     // -----------------------------------------------------------------------------
 
-    app.use('/api/oauth', debugInfo, setUserInLocals, setupRouterErrorHandler(oauthRouter))
-    app.use('/api/settings', debugInfo, setUserInLocals, setupRouterErrorHandler(settingsRouter))
+    app.use('/api/oauth', debugInfo, setUserInLocals, setupRouterErrorHandler(oauthRouter, true))
+    app.use('/api/settings', debugInfo, setUserInLocals, setupRouterErrorHandler(settingsRouter, true))
     app.use('/api', (req, res, next) => {
         next(new createHttpError.NotFound())
     })
