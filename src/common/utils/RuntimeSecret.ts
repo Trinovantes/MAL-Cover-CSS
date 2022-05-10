@@ -8,9 +8,13 @@ config()
 export enum RuntimeSecret {
     REDIS_HOST = 'REDIS_HOST',
     REDIS_PORT = 'REDIS_PORT',
+
     ENCRYPTION_KEY = 'ENCRYPTION_KEY',
     MAL_CLIENT_ID = 'MAL_CLIENT_ID',
     MAL_CLIENT_SECRET = 'MAL_CLIENT_SECRET',
+
+    ENABLE_LOGGING = 'ENABLE_LOGGING',
+    ENABLE_SESSIONS = 'ENABLE_SESSIONS',
 }
 
 const secretsCache = new Map<RuntimeSecret, string>()
@@ -39,7 +43,7 @@ export function getSecret(key: RuntimeSecret): string {
     }
 
     // Cannot find the secret anywhere
-    throw new Error(`Cannot find ${key}`)
+    throw new Error(`Cannot find RuntimeSecret.${key}`)
 }
 
 export function getEncryptionKey(): Buffer {

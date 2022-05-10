@@ -29,4 +29,7 @@ REDIS_PORT          9041
 ENCRYPTION_KEY      openssl rand -base64 32
 MAL_CLIENT_ID       From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
 MAL_CLIENT_SECRET   From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
+
+ENABLE_LOGGING      true
+ENABLE_SESSIONS     true
 ```
