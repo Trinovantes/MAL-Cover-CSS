@@ -12,33 +12,58 @@ on:
       - .gitignore
 
 jobs:
-  lint:
-    name: Run Linter
+  test:
+    name: Test
+    environment: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
+      - name: Create .env file
+        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Cache node_modules
         uses: actions/cache@v2
         env:
           CACHE_NAME: cache-node-modules
         with:
-          path: '**/node_modules'
+          path: $HOME/.npm
           key: ${{ runner.os }}-build-${{ env.CACHE_NAME }}-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
 
       - name: Install dependencies
         run: yarn install
 
+      - name: Install playwright
+        run: npx playwright install --with-deps
+
       - name: Run linter
         run: yarn lint
+
+      - name: Build server
+        run: yarn buildWeb
+        env:
+          NODE_ENV: development
+
+      - name: Update hosts file
+        run: echo "127.0.0.1 test.malcovercss.link" | sudo tee -a /etc/hosts
 
       - name: Run tests
         run: yarn test
 
+      - name: Upload playwright results
+        uses: actions/upload-artifact@v2
+        with:
+          retention-days: 30
+          name: playwright
+          path: |
+            test-results/
+            playwright-report/
+
   build:
-    needs: lint
+    needs: test
     name: Build
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -84,7 +109,8 @@ jobs:
 
   deploy:
     needs: build
-    name: Deploy to Production
+    name: Deploy
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
