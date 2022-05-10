@@ -15,10 +15,12 @@ COPY build/                     ./build/
 COPY src/@types/                ./src/@types/
 COPY src/common/                ./src/common/
 COPY src/web/                   ./src/web/
-RUN --mount=type=secret,id=GIT_HASH \
+RUN \
+    --mount=type=secret,id=GIT_HASH \
     --mount=type=secret,id=APP_URL \
     --mount=type=secret,id=APP_PORT \
-    yarn buildWebClient && yarn buildWebServer
+    NODE_ENV=production \
+    yarn buildWeb
 
 # -----------------------------------------------------------------------------
 FROM node:14-alpine

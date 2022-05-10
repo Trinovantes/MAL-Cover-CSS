@@ -15,9 +15,11 @@ COPY build/                     ./build/
 COPY src/@types/                ./src/@types/
 COPY src/common/                ./src/common/
 COPY src/cron/                  ./src/cron/
-RUN --mount=type=secret,id=GIT_HASH \
+RUN \
+    --mount=type=secret,id=GIT_HASH \
     --mount=type=secret,id=APP_URL \
     --mount=type=secret,id=APP_PORT \
+    NODE_ENV=production \
     yarn buildCron
 
 # -----------------------------------------------------------------------------
