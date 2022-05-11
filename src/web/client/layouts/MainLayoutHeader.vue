@@ -16,7 +16,7 @@ const { login, logout } = useApi()
 </script>
 
 <template>
-    <header class="layout-header">
+    <header>
         <div class="container">
             <div class="header-logo">
                 <q-btn
