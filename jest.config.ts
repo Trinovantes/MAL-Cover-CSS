@@ -8,7 +8,7 @@ const config: Config.InitialOptions = {
     ],
 
     setupFiles: [
-        './tests/setup.ts',
+        './tests/unit/setup.ts',
     ],
 }
 
