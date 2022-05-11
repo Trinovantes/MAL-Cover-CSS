@@ -179,10 +179,7 @@ describe('User', () => {
             const newDate = origGetSqlTimestamp()
             const user = await upsertUser(1)
             await user.updateLastChecked(newDate)
-
-            const updatedUser = await User.fetch(1)
-            expect(updatedUser).not.toBeNull()
-            expect(updatedUser?.lastChecked).toBe(newDate)
+            expect(user.lastChecked).toBe(newDate)
         })
 
         test('when user is already deleted', async() => {

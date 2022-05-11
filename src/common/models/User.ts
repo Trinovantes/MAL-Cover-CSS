@@ -144,6 +144,8 @@ export class User {
         assert(!this._isDeleted)
         assert(isValidSqlTimestamp(lastChecked))
 
+        this.lastChecked = lastChecked
+
         const dbClient = await getDbClient()
         const result = await dbClient.run(`
             UPDATE ${User.TABLE}
@@ -152,7 +154,7 @@ export class User {
             WHERE
                 id = @id;
         `, {
-            '@lastChecked': lastChecked,
+            '@lastChecked': this.lastChecked,
             '@id': this._attrs.id,
         })
 
@@ -221,6 +223,10 @@ export class User {
 
     get malUsername(): string {
         return this._attrs.malUsername
+    }
+
+    set lastChecked(val: string | null) {
+        this._attrs.lastChecked = val
     }
 
     get lastChecked(): string | null {
