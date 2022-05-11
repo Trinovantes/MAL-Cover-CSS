@@ -38,7 +38,14 @@ export async function migrateDbUp(migrations: Array<Migration>): Promise<void> {
 
     try {
         await dbClient.exec('BEGIN;')
+    } catch (err) {
+        console.warn('Migration Up Error')
+        console.warn(err)
 
+        throw err
+    }
+
+    try {
         const currentVersion = await getCurrentSchemaVersion()
         const migrationsToRun = currentVersion
             ? migrations.filter((migration) => migration.version > currentVersion)
@@ -56,8 +63,9 @@ export async function migrateDbUp(migrations: Array<Migration>): Promise<void> {
 
         await dbClient.exec('COMMIT;')
     } catch (err) {
-        console.warn('Transaction Error')
+        console.warn('Migration Up Error')
         console.warn(err)
+
         await dbClient.exec('ROLLBACK;')
         throw err
     }
@@ -68,7 +76,14 @@ export async function migrateDbDown(migrations: Array<Migration>): Promise<void>
 
     try {
         await dbClient.exec('BEGIN;')
+    } catch (err) {
+        console.warn('Migration Down Error')
+        console.warn(err)
 
+        throw err
+    }
+
+    try {
         const currentVersion = await getCurrentSchemaVersion()
         const migrationsToRun = currentVersion
             ? migrations.filter((migration) => migration.version <= currentVersion)
@@ -85,8 +100,9 @@ export async function migrateDbDown(migrations: Array<Migration>): Promise<void>
 
         await dbClient.exec('COMMIT;')
     } catch (err) {
-        console.warn('Transaction Error')
+        console.warn('Migration Down Error')
         console.warn(err)
+
         await dbClient.exec('ROLLBACK;')
         throw err
     }
