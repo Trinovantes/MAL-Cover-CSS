@@ -317,25 +317,43 @@ describe('migration', () => {
                 expect(migrations[i].downSql).toContain(`${version} down`)
             }
         })
+
+        test('when directory has migration files but target dir is misspelled', () => {
+            mockTestFs('fakedir', [
+                {
+                    fileName: '0001_migration.sql',
+                    fileContents: `
+                        ${MIGRATE_UP_MARKER}
+                        0001 up
+                        ${MIGRATE_DOWN_MARKER}
+                        0001 down
+                    `,
+                },
+            ])
+
+            const migrations = getMigrations('fakedir2')
+            expect(migrations.length).toBe(0)
+        })
     })
 })
 
 function mockTestFs(mockDir: string, mockFiles: Array<{ fileName: string; fileContents: string }>): void {
-    const mockDirPath = path.resolve(mockDir)
+    const mockFileDir = path.resolve(mockDir)
     const mockFileNames = mockFiles.map((file) => file.fileName)
-    const mockFileFullPaths = mockFileNames.map((fileName) => path.resolve(mockDirPath, fileName))
+    const mockFileFullPaths = mockFileNames.map((fileName) => path.join(mockFileDir, fileName))
 
     jest.spyOn(fs, 'readdirSync').mockImplementation((dirPath) => {
-        if (mockDirPath === dirPath) {
-            return []
+        const targetDir = path.resolve(dirPath.toString())
+        if (mockFileDir === targetDir) {
+            return mockFileNames as unknown as ReturnType<typeof fs['readdirSync']>
         }
 
-        return mockFileNames as unknown as ReturnType<typeof fs['readdirSync']>
+        return []
     })
 
     const statSync = (fullPath: string) => {
         const fileDir = path.dirname(fullPath)
-        if (fileDir !== mockDirPath) {
+        if (fileDir !== mockFileDir) {
             return undefined
         }
 
