@@ -27,10 +27,6 @@ afterEach(async() => {
 // ----------------------------------------------------------------------------
 
 describe('migration', () => {
-    test('smoke', () => {
-        expect(true).toBe(true)
-    })
-
     describe('migrateDb', () => {
         test('migration up/down in opposite order', async() => {
             mockTestFs('fakedir', [
