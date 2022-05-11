@@ -163,16 +163,16 @@ export class User {
         }
     }
 
-    async updateTokens(newAttrs: Pick<UserAttributes, 'tokenExpires' | 'accessToken' | 'refreshToken'>): Promise<void> {
+    async updateTokens({ tokenExpires, accessToken, refreshToken }: Pick<UserAttributes, 'tokenExpires' | 'accessToken' | 'refreshToken'>): Promise<void> {
         assert(!this._isDeleted)
-        assert(newAttrs.tokenExpires === null || isValidSqlTimestamp(newAttrs.tokenExpires))
+        assert(tokenExpires === null || isValidSqlTimestamp(tokenExpires))
         assert(
-            (newAttrs.tokenExpires !== null && newAttrs.accessToken !== null && newAttrs.refreshToken !== null) ||
-            (newAttrs.tokenExpires === null && newAttrs.accessToken === null && newAttrs.refreshToken === null))
+            (tokenExpires !== null && accessToken !== null && refreshToken !== null) ||
+            (tokenExpires === null && accessToken === null && refreshToken === null))
 
-        this.tokenExpires = newAttrs.tokenExpires
-        this.accessToken = newAttrs.accessToken
-        this.refreshToken = newAttrs.refreshToken
+        this.tokenExpires = tokenExpires
+        this.accessToken = accessToken
+        this.refreshToken = refreshToken
 
         const dbClient = await getDbClient()
         const result = await dbClient.run(`
