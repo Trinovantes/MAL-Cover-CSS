@@ -1,7 +1,7 @@
 import assert from 'assert'
 import { getDbClient } from '../db/client'
 import { decrypt, encrypt } from '../utils/encryption'
-import { getSqlTimestamp } from '../utils/getSqlTimestamp'
+import { getSqlTimestamp, isValidSqlTimestamp } from '../utils/getSqlTimestamp'
 import type { UserResponse } from '@/web/server/schemas/ApiResponse'
 import type { CreationOmit, DefaultColumns } from './attrs'
 
@@ -34,7 +34,7 @@ export class User {
     }
 
     static async upsert(attrs: Omit<UserAttributes, CreationOmit | 'lastChecked'>): Promise<User> {
-        assert(attrs.tokenExpires)
+        assert(attrs.tokenExpires && isValidSqlTimestamp(attrs.tokenExpires))
         assert(attrs.accessToken)
         assert(attrs.refreshToken)
 
@@ -92,6 +92,8 @@ export class User {
     }
 
     static async fetchAllToScrape(staleTime: string): Promise<Array<User>> {
+        assert(isValidSqlTimestamp(staleTime))
+
         const dbClient = await getDbClient()
         const rows = await dbClient.all<Array<UserAttributes>>(`
             SELECT * FROM ${User.TABLE}
@@ -140,6 +142,7 @@ export class User {
 
     async updateLastChecked(lastChecked: string): Promise<void> {
         assert(!this._isDeleted)
+        assert(isValidSqlTimestamp(lastChecked))
 
         const dbClient = await getDbClient()
         const result = await dbClient.run(`
@@ -160,6 +163,7 @@ export class User {
 
     async updateTokens(newAttrs: Pick<UserAttributes, 'tokenExpires' | 'accessToken' | 'refreshToken'>): Promise<void> {
         assert(!this._isDeleted)
+        assert(newAttrs.tokenExpires === null || isValidSqlTimestamp(newAttrs.tokenExpires))
         assert(
             (newAttrs.tokenExpires !== null && newAttrs.accessToken !== null && newAttrs.refreshToken !== null) ||
             (newAttrs.tokenExpires === null && newAttrs.accessToken === null && newAttrs.refreshToken === null))

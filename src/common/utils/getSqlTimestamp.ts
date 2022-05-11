@@ -13,3 +13,7 @@ export function getSqlTimestamp(now: Date = new Date()): string {
 
     return `${YYYY}-${f(MM)}-${f(DD)} ${f(hh)}:${f(mm)}:${f(ss)}`
 }
+
+export function isValidSqlTimestamp(timestamp: string): boolean {
+    return /\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/.test(timestamp)
+}

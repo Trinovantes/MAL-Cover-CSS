@@ -66,15 +66,21 @@ describe('User', () => {
         })
 
         test('when user exists', async() => {
-            const initDate = 'fake date'
+            const initDate = origGetSqlTimestamp(new Date('1970-01-01 00:00:00'))
+            const newDate = origGetSqlTimestamp(new Date('1970-01-01 00:00:01'))
+            expect(newDate).not.toBe(initDate)
+
             jest.spyOn(getSqlTimestampModule, 'getSqlTimestamp').mockImplementation(() => initDate)
+            const oldToken = 'token 1'
+            const oldUser = await User.upsert({
+                malUserId: 42,
+                malUsername: 'trinovantes',
+                tokenExpires: newDate,
+                accessToken: oldToken,
+                refreshToken: oldToken,
+            })
 
-            const oldUser = await upsertUser(42)
-            expect(oldUser.updatedAt).toBe(initDate)
-
-            const newDate = 'fake date 2'
             jest.spyOn(getSqlTimestampModule, 'getSqlTimestamp').mockImplementation(() => newDate)
-
             const newToken = 'token 2'
             const newUser = await User.upsert({
                 malUserId: 42,
@@ -84,13 +90,17 @@ describe('User', () => {
                 refreshToken: newToken,
             })
 
+            expect(oldUser.createdAt).toBe(initDate)
+            expect(oldUser.updatedAt).toBe(initDate)
+
+            expect(newUser.createdAt).toBe(initDate)
+            expect(newUser.updatedAt).toBe(newDate)
+
             expect(newUser.malUserId).toBe(42)
             expect(newUser.malUsername).toBe('trinovantes')
             expect(newUser.lastChecked).toBeNull()
             expect(newUser.accessToken).toBe(newToken)
             expect(newUser.refreshToken).toBe(newToken)
-            expect(newUser.createdAt).toBe(initDate)
-            expect(newUser.updatedAt).toBe(newDate)
 
             const dbClient = await dbClientModule.getDbClient()
             const res = await dbClient.get<{ 'COUNT(*)': number }>(`SELECT COUNT(*) FROM ${User.TABLE};`)
@@ -143,54 +153,75 @@ describe('User', () => {
     describe('destroy', () => {
         test('when user exists', async() => {
             const user = await upsertUser(1)
-            const destroyUser = async() => await user.destroy()
+            const destroy = () => user.destroy()
+            await expect(destroy()).resolves.toBeUndefined()
 
-            await expect(destroyUser()).resolves.toBeUndefined()
+            const searchedUser = await User.fetch(1)
+            expect(searchedUser).toBeNull()
         })
 
-        test('when user is already deleted', async() => {
+        test('when user is deleted twice', async() => {
             const user = await upsertUser(1)
-            const destroyUser = async() => await user.destroy()
-
-            await expect(destroyUser()).resolves.toBeUndefined()
-            await expect(destroyUser()).rejects.toThrowError()
+            const destroy = () => user.destroy()
+            await expect(destroy()).resolves.toBeUndefined()
+            await expect(destroy()).rejects.toThrowError()
         })
     })
 
     describe('updateLastChecked', () => {
-        test('lastChecked is updated', async() => {
-            const newVal = 'Hello World'
+        test('invalid date throws', async() => {
             const user = await upsertUser(1)
-            await user.updateLastChecked(newVal)
+            const updateLastChecked = () => user.updateLastChecked('fake date')
+            await expect(updateLastChecked()).rejects.toThrowError()
+        })
+
+        test('lastChecked is updated', async() => {
+            const newDate = origGetSqlTimestamp()
+            const user = await upsertUser(1)
+            await user.updateLastChecked(newDate)
 
             const updatedUser = await User.fetch(1)
             expect(updatedUser).not.toBeNull()
-            expect(updatedUser?.lastChecked).toBe(newVal)
+            expect(updatedUser?.lastChecked).toBe(newDate)
         })
 
         test('when user is already deleted', async() => {
             const user = await upsertUser(1)
             await user.destroy()
 
-            await expect(() => user.updateLastChecked('test')).rejects.toThrowError()
+            const updateLastChecked = () => user.updateLastChecked(origGetSqlTimestamp())
+            await expect(updateLastChecked()).rejects.toThrowError()
         })
     })
 
     describe('updateTokens', () => {
         test('when new tokens are all non-empty string', async() => {
-            const newVal = 'Hello World'
+            const newDate = origGetSqlTimestamp()
+            const newToken = 'Hello World'
             const user = await upsertUser(1)
             await user.updateTokens({
-                tokenExpires: newVal,
-                accessToken: newVal,
-                refreshToken: newVal,
+                tokenExpires: newDate,
+                accessToken: newToken,
+                refreshToken: newToken,
             })
 
             const updatedUser = await User.fetch(1)
             expect(updatedUser).not.toBeNull()
-            expect(updatedUser?.tokenExpires).toBe(newVal)
-            expect(updatedUser?.accessToken).toBe(newVal)
-            expect(updatedUser?.refreshToken).toBe(newVal)
+            expect(updatedUser?.tokenExpires).toBe(newDate)
+            expect(updatedUser?.accessToken).toBe(newToken)
+            expect(updatedUser?.refreshToken).toBe(newToken)
+        })
+
+        test('when new tokens are all non-empty string but tokenExpires is invalid', async() => {
+            const newToken = 'Hello World'
+            const user = await upsertUser(1)
+            const updateTokens = () => user.updateTokens({
+                tokenExpires: 'fake date',
+                accessToken: newToken,
+                refreshToken: newToken,
+            })
+
+            await expect(updateTokens()).rejects.toThrowError()
         })
 
         test('when new tokens are all null', async() => {
@@ -210,36 +241,28 @@ describe('User', () => {
 
         test('when new tokens are mixed null and non-empty string', async() => {
             const user = await upsertUser(1)
-            const update = async(newAttrs: Parameters<User['updateTokens']>[0]) => await user.updateTokens(newAttrs)
+            const updateTokens = (field: keyof Parameters<User['updateTokens']>[0]) => user.updateTokens({
+                tokenExpires: origGetSqlTimestamp(),
+                accessToken: 'Hello World',
+                refreshToken: 'Hello World',
+                [field]: null,
+            })
 
-            await expect(update({
-                tokenExpires: 'test',
-                accessToken: null,
-                refreshToken: null,
-            })).rejects.toThrowError()
-
-            await expect(update({
-                tokenExpires: null,
-                accessToken: 'test',
-                refreshToken: null,
-            })).rejects.toThrowError()
-
-            await expect(update({
-                tokenExpires: null,
-                accessToken: null,
-                refreshToken: 'test',
-            })).rejects.toThrowError()
+            await expect(updateTokens('tokenExpires')).rejects.toThrowError()
+            await expect(updateTokens('accessToken')).rejects.toThrowError()
+            await expect(updateTokens('refreshToken')).rejects.toThrowError()
         })
 
         test('when user is already deleted', async() => {
             const user = await upsertUser(1)
             await user.destroy()
-
-            await expect(() => user.updateTokens({
+            const updateTokens = () => user.updateTokens({
                 tokenExpires: null,
                 accessToken: null,
                 refreshToken: null,
-            })).rejects.toThrowError()
+            })
+
+            await expect(updateTokens()).rejects.toThrowError()
         })
     })
 })
@@ -248,12 +271,12 @@ describe('User', () => {
 // Helpers
 // ----------------------------------------------------------------------------
 
-async function upsertUser(malUserId: number, malUsername = 'test_username'): Promise<User> {
+async function upsertUser(malUserId: number, malUsername = 'trinovantes'): Promise<User> {
     return await User.upsert({
         malUserId,
         malUsername,
-        tokenExpires: 'test',
-        accessToken: 'test',
-        refreshToken: 'test',
+        tokenExpires: origGetSqlTimestamp(),
+        accessToken: 'Hello World',
+        refreshToken: 'Hello World',
     })
 }
