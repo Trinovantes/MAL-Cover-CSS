@@ -58,7 +58,7 @@ const { login } = useApi()
                         unelevated
                         no-caps
                         label="Log in with MAL to track your lists"
-                        @click="login($route.path)"
+                        @click="login"
                     />
 
                     <q-btn
