@@ -9,7 +9,7 @@ import createHttpError from 'http-errors'
 import morgan from 'morgan'
 import { createClient } from 'redis'
 import { COOKIE_DURATION, SENTRY_DSN } from '@/common/Constants'
-import { getSecret, RuntimeSecret } from '@/common/utils/RuntimeSecret'
+import { getRuntimeSecret, RuntimeSecret } from '@/common/utils/RuntimeSecret'
 import { debugInfo } from './middleware/dev'
 import { setUserInLocals } from './middleware/user'
 import { oauthRouter } from './routers/oauthRouter'
@@ -80,13 +80,13 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
 
     if (options.enableSessions) {
         const sslEnabled = DEFINE.APP_URL.startsWith('https')
-        console.info(`Starting express-session secure:${sslEnabled} REDIS_HOST:${getSecret(RuntimeSecret.REDIS_HOST)} REDIS_PORT:${getSecret(RuntimeSecret.REDIS_PORT)}`)
+        console.info(`Starting express-session secure:${sslEnabled} REDIS_HOST:${getRuntimeSecret(RuntimeSecret.REDIS_HOST)} REDIS_PORT:${getRuntimeSecret(RuntimeSecret.REDIS_PORT)}`)
 
         const redisClient = createClient({
             legacyMode: true,
             socket: {
-                host: getSecret(RuntimeSecret.REDIS_HOST),
-                port: parseInt(getSecret(RuntimeSecret.REDIS_PORT)),
+                host: getRuntimeSecret(RuntimeSecret.REDIS_HOST),
+                port: parseInt(getRuntimeSecret(RuntimeSecret.REDIS_PORT)),
             },
         })
 
@@ -97,7 +97,7 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
         const redisStore = new RedisStore({ client: redisClient })
 
         app.use(session({
-            secret: getSecret(RuntimeSecret.ENCRYPTION_KEY),
+            secret: getRuntimeSecret(RuntimeSecret.ENCRYPTION_KEY),
             resave: false,
             saveUninitialized: false,
             proxy: trustProxy,

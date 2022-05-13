@@ -1,7 +1,7 @@
 import querystring from 'querystring'
 import axios from 'axios'
 import { MAL_AUTHORIZE_URL, MAL_TOKEN_URL } from '@/common/Constants'
-import { getSecret, RuntimeSecret } from '@/common/utils/RuntimeSecret'
+import { getRuntimeSecret, RuntimeSecret } from '@/common/utils/RuntimeSecret'
 import type { OauthState } from '@/web/server/schemas/OauthState'
 import { isOauthFailure } from './schemas/OauthFailure'
 import { isOauthTokenSuccess, OauthTokenSuccess } from './schemas/OauthTokenSuccess'
@@ -14,7 +14,7 @@ import { isOauthTokenSuccess, OauthTokenSuccess } from './schemas/OauthTokenSucc
 
 export function getOauthEndpoint(oauthState: OauthState): string {
     const query = {
-        client_id: getSecret(RuntimeSecret.MAL_CLIENT_ID),
+        client_id: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_ID),
         redirect_uri: `${DEFINE.APP_URL}/api/oauth`,
         response_type: 'code',
         state: encodeURIComponent(JSON.stringify(oauthState)),
@@ -28,8 +28,8 @@ export function getOauthEndpoint(oauthState: OauthState): string {
 
 export async function fetchAccessToken(authCode: string, codeChallenge: string, redirectUrl: string): Promise<OauthTokenSuccess> {
     const query = {
-        client_id: getSecret(RuntimeSecret.MAL_CLIENT_ID),
-        client_secret: getSecret(RuntimeSecret.MAL_CLIENT_SECRET),
+        client_id: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_ID),
+        client_secret: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_SECRET),
         grant_type: 'authorization_code',
         code: authCode,
         code_verifier: codeChallenge,
@@ -53,8 +53,8 @@ export async function fetchAccessToken(authCode: string, codeChallenge: string, 
 
 export async function refreshAccessToken(refreshToken: string): Promise<OauthTokenSuccess> {
     const query = {
-        client_id: getSecret(RuntimeSecret.MAL_CLIENT_ID),
-        client_secret: getSecret(RuntimeSecret.MAL_CLIENT_SECRET),
+        client_id: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_ID),
+        client_secret: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_SECRET),
         grant_type: 'refresh_token',
         refresh_token: refreshToken,
     }

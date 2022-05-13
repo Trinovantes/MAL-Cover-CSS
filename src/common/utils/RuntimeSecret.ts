@@ -19,7 +19,7 @@ export enum RuntimeSecret {
 
 const secretsCache = new Map<RuntimeSecret, string>()
 
-export function getSecret(key: RuntimeSecret): string {
+export function getRuntimeSecret(key: RuntimeSecret): string {
     // Check if it's already defined in process.env
     const envValue = process.env[key]
     if (envValue) {
@@ -47,7 +47,7 @@ export function getSecret(key: RuntimeSecret): string {
 }
 
 export function getEncryptionKey(): Buffer {
-    const key64 = getSecret(RuntimeSecret.ENCRYPTION_KEY)
+    const key64 = getRuntimeSecret(RuntimeSecret.ENCRYPTION_KEY)
     const key = Buffer.from(key64, 'base64')
 
     if (key.length !== ENCRYPTION_KEY_LENGTH) {
