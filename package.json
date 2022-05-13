@@ -44,9 +44,9 @@
         "source-map-support": "^0.5.19",
         "sqlite": "^4.0.23",
         "sqlite3": "^5.0.2",
-        "vue": "^3",
+        "vue": "^3.2.33",
         "vue-meta": "^3.0.0-alpha.8",
-        "vue-router": "^4"
+        "vue-router": "^4.0.15"
     },
     "devDependencies": {
         "@babel/core": "^7.12.10",
