@@ -96,13 +96,22 @@ li{
 }
 
 pre{
+    background: $light-on-light;
     overflow: auto;
     padding: $padding * 2;
     width: 100%;
+
+    line-height: 1.25;
     text-align: left !important;
 
     *{
         font-family: 'Courier New', Courier, monospace;
+    }
+
+    code{
+        background: unset;
+        border-radius: unset;
+        padding: 0;
     }
 }
 

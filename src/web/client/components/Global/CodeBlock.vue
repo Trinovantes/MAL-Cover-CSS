@@ -119,15 +119,5 @@ async function copyToClipboard() {
             opacity: 1;
         }
     }
-
-    pre.hljs{
-        line-height: 1.25;
-
-        code{
-            background: unset;
-            border-radius: unset;
-            padding: 0;
-        }
-    }
 }
 </style>
