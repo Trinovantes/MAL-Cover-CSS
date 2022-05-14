@@ -98,28 +98,16 @@ describe('runTransaction', () => {
     })
 
     test('only 1 of conflicting concurrent transaction runs', async() => {
-        await new Promise<void>((resolve) => {
-            let numFinished = 0
-
+        await Promise.allSettled([
             runTransaction([
                 'CREATE TABLE test_table_0000(id INTEGER PRIMARY KEY);',
                 'CREATE TABLE test_table_0001(id INTEGER PRIMARY KEY);',
-            ]).then(() => numFinished++).catch(() => numFinished++)
-
+            ]),
             runTransaction([
                 'CREATE TABLE test_table_0000(id INTEGER PRIMARY KEY);',
                 'CREATE TABLE test_table_0002(id INTEGER PRIMARY KEY);',
-            ]).then(() => numFinished++).catch(() => numFinished++)
-
-            const timeoutId = setInterval(() => {
-                expect(numFinished).toBeLessThanOrEqual(2)
-
-                if (numFinished === 2) {
-                    clearInterval(timeoutId)
-                    resolve()
-                }
-            }, 100)
-        })
+            ]),
+        ])
 
         const tables = await getDbTables()
         expect(tables.find((table) => table.name === 'test_table_0000')).not.toBeUndefined()
