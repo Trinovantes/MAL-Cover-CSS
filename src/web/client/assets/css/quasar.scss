@@ -1,0 +1,30 @@
+// Patch Quasar default styles with modern flexbox
+@import 'quasar/dist/quasar.prod.css';
+
+body.mobile{
+    .q-focus-helper{
+        display: none;
+    }
+}
+
+.q-btn__content{
+    display: flex;
+    gap: math.div($padding, 2) $padding;
+    align-content: center;
+
+    i.q-icon{
+        margin: 0;
+    }
+}
+
+.q-field__before{
+    display: flex;
+    gap: math.div($padding, 2);
+    padding-right: $padding;
+}
+
+.q-field__after{
+    display: flex;
+    gap: math.div($padding, 2);
+    padding-left: $padding;
+}
