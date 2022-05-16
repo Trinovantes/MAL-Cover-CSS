@@ -32,4 +32,8 @@ MAL_CLIENT_SECRET   From https://myanimelist.net/login.php?from=%2Fapiconfig&acc
 
 ENABLE_LOGGING      true
 ENABLE_SESSIONS     true
+
+AWS_ENDPOINT_URL
+AWS_ACCESS_KEY_ID
+AWS_SECRET_ACCESS_KEY
 ```

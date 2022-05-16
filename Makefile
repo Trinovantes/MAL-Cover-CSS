@@ -88,6 +88,9 @@ stop-backup:
 
 run-backup: stop-backup
 	docker run \
+		--env AWS_ENDPOINT_URL=$(AWS_ENDPOINT_URL) \
+		--env AWS_ACCESS_KEY_ID=$(AWS_ACCESS_KEY_ID) \
+		--env AWS_SECRET_ACCESS_KEY=$(AWS_SECRET_ACCESS_KEY) \
 		--mount type=bind,source=/var/www/malcovercss/backups,target=/app/db/backups \
 		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
 		--log-driver local \
