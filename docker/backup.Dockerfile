@@ -42,5 +42,5 @@ RUN mkdir -p            ./db/backups
 # Copy app
 COPY ./db/backup.sh     ./db/
 
-RUN echo '11 1 * * * cd /app && sh ./db/backup.sh' >> /etc/crontabs/root
+RUN echo '11 1 * * 1 cd /app && sh ./db/backup.sh' >> /etc/crontabs/root
 CMD crond -f
