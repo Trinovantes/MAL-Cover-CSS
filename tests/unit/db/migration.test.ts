@@ -65,6 +65,17 @@ describe('migration', () => {
             await expect(migrateUp()).resolves.toBeUndefined()
             await expect(migrateDown()).resolves.toBeUndefined()
         })
+
+        test('concurrent migrations do not throw errors', async() => {
+            const migrate = async() => {
+                await Promise.all([
+                    migrateDb(),
+                    migrateDb(),
+                ])
+            }
+
+            await expect(migrate()).resolves.toBeUndefined()
+        })
     })
 
     describe('migrateDbUp', () => {

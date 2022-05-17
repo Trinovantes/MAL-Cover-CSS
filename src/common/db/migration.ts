@@ -26,10 +26,18 @@ export async function migrateDb(migrateUp = true, migrationsDir = DB_MIGRATIONS_
 
     await createMigrationTableIfNotExists()
 
-    if (migrateUp) {
-        await migrateDbUp(migrations)
-    } else {
-        await migrateDbDown(migrations.reverse())
+    let success = false
+    while (!success) {
+        try {
+            if (migrateUp) {
+                await migrateDbUp(migrations)
+            } else {
+                await migrateDbDown(migrations.reverse())
+            }
+            success = true
+        } catch (err) {
+            success = false
+        }
     }
 }
 
