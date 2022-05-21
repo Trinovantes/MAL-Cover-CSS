@@ -73,6 +73,7 @@ async function copyToClipboard() {
             :icon="showCheckmark ? 'check' : 'content_copy'"
             outline
             round
+            color="white"
             title="Copy code to clipboard"
             @click="copyToClipboard"
         />
