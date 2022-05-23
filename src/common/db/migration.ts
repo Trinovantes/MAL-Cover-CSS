@@ -1,5 +1,6 @@
 import { readdirSync, readFileSync, statSync } from 'fs'
 import path from 'path'
+import { sleep } from '../utils/sleep'
 import { DB_MIGRATIONS_DIR } from '@/common/Constants'
 import { getDbClient } from './client'
 
@@ -27,7 +28,7 @@ export async function migrateDb(migrateUp = true, migrationsDir = DB_MIGRATIONS_
     await createMigrationTableIfNotExists()
 
     let success = false
-    while (!success) {
+    for (let i = 0; !success; i++) {
         try {
             if (migrateUp) {
                 await migrateDbUp(migrations)
@@ -37,6 +38,11 @@ export async function migrateDb(migrateUp = true, migrationsDir = DB_MIGRATIONS_
             success = true
         } catch (err) {
             success = false
+
+            const duration = Math.floor(Math.random() * 1000) + (Math.exp(i) * 1000)
+            console.warn(`Failed migration, going to sleep for ${duration}ms`)
+            console.warn(err)
+            await sleep(duration)
         }
     }
 }
@@ -44,14 +50,7 @@ export async function migrateDb(migrateUp = true, migrationsDir = DB_MIGRATIONS_
 export async function migrateDbUp(migrations: Array<Migration>): Promise<void> {
     const dbClient = await getDbClient()
 
-    try {
-        await dbClient.exec('BEGIN;')
-    } catch (err) {
-        console.warn('Migration Up Error')
-        console.warn(err)
-
-        throw err
-    }
+    await dbClient.exec('BEGIN;')
 
     try {
         const currentVersion = await getCurrentSchemaVersion()
@@ -71,9 +70,6 @@ export async function migrateDbUp(migrations: Array<Migration>): Promise<void> {
 
         await dbClient.exec('COMMIT;')
     } catch (err) {
-        console.warn('Migration Up Error')
-        console.warn(err)
-
         await dbClient.exec('ROLLBACK;')
         throw err
     }
@@ -82,14 +78,7 @@ export async function migrateDbUp(migrations: Array<Migration>): Promise<void> {
 export async function migrateDbDown(migrations: Array<Migration>): Promise<void> {
     const dbClient = await getDbClient()
 
-    try {
-        await dbClient.exec('BEGIN;')
-    } catch (err) {
-        console.warn('Migration Down Error')
-        console.warn(err)
-
-        throw err
-    }
+    await dbClient.exec('BEGIN;')
 
     try {
         const currentVersion = await getCurrentSchemaVersion()
@@ -108,9 +97,6 @@ export async function migrateDbDown(migrations: Array<Migration>): Promise<void>
 
         await dbClient.exec('COMMIT;')
     } catch (err) {
-        console.warn('Migration Down Error')
-        console.warn(err)
-
         await dbClient.exec('ROLLBACK;')
         throw err
     }

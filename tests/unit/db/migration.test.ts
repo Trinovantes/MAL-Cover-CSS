@@ -71,10 +71,14 @@ describe('migration', () => {
                 await Promise.all([
                     migrateDb(),
                     migrateDb(),
+                    migrateDb(),
+                    migrateDb(),
+                    migrateDb(),
                 ])
             }
 
             await expect(migrate()).resolves.toBeUndefined()
+            await expect(getCurrentSchemaVersion()).resolves.toBe('0002')
         })
     })
 
