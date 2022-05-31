@@ -7,10 +7,17 @@
 // ----------------------------------------------------------------------------
 
 noscript{
-    background: $warning;
-    display: block;
     font-weight: bold;
     text-align: center;
+
+    background: $warning;
+    display: block;
+    padding: math.div($padding, 2);
+
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 9999;
 }
 
 body{
