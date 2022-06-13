@@ -60,8 +60,8 @@ function createVueAppHandler() {
         res.setHeader('Content-Type', 'text/html')
         res.status(status)
         res.send(`
-            <!DOCTYPE html ${appContext._meta.htmlAttrs ?? ''}>
-            <html lang="en">
+            <!DOCTYPE html>
+            <html ${appContext._meta.htmlAttrs ?? ''}>
             <head>
                 <meta charset="utf-8">
                 <meta name="viewport" content="width=device-width, initial-scale=1">
