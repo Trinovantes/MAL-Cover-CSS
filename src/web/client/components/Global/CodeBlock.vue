@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { escapeHtml } from '@vue/shared'
 import hljs from 'highlight.js/lib/core'
 import { onMounted, ref, watch } from 'vue'
+import { escapeHtml } from '../../utils/escapeHtml'
 import { sleep } from '@/common/utils/sleep'
 import type { LanguageFn } from 'highlight.js'
 
