@@ -1,4 +1,4 @@
-import { useSSRContext } from '@vue/runtime-core'
+import { useSSRContext } from 'vue'
 import type { SSRContext } from '@vue/server-renderer'
 import type express from 'express'
 import type { createPinia } from 'pinia'
