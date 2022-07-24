@@ -4,6 +4,7 @@ import express from 'express'
 import { renderMetaToString } from 'vue-meta/ssr'
 import { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin/dist/utils/VueSsrAssetsRenderer'
 import { createAsyncHandler } from '../utils/createAsyncHandler'
+import { renderCsp } from '../utils/renderCsp'
 import type { AppContext } from '@/web/AppContext'
 import { RouteName } from '@/web/client/router/routes'
 import { useUserStore } from '@/web/client/store/User'
@@ -46,7 +47,7 @@ function createVueAppHandler() {
         // Render the app on the server
         const appHtml = await renderToString(app, appContext)
         await renderMetaToString(app, appContext)
-        const { header, footer } = assetRenderer.renderAssets(appContext._matchedComponents)
+        const { header, footer } = assetRenderer.renderAssets(appContext._matchedComponents, false)
 
         // Proxy any cookies from internal fetch calls back to client
         if (appContext.cookieHeaders) {
@@ -57,9 +58,7 @@ function createVueAppHandler() {
             ? 404
             : 200
 
-        res.setHeader('Content-Type', 'text/html')
-        res.status(status)
-        res.send(`
+        const rawHtml = `
             <!DOCTYPE html>
             <html ${appContext._meta.htmlAttrs ?? ''}>
             <head>
@@ -79,6 +78,13 @@ function createVueAppHandler() {
                 ${footer}
             </body>
             </html>
-        `)
+        `
+
+        const { html, csp } = renderCsp(rawHtml)
+
+        res.setHeader('Content-Type', 'text/html')
+        res.setHeader('Content-Security-Policy', csp)
+        res.status(status)
+        res.send(html)
     })
 }
