@@ -6,10 +6,11 @@ export async function clearSession(req: express.Request, res: express.Response):
     await new Promise<void>((resolve, reject) => {
         if (!req.session) {
             resolve()
+            return
         }
 
         console.info('Clearing session')
-        req.session?.destroy((err) => {
+        req.session.destroy((err) => {
             if (err === undefined || err === null) {
                 resolve()
             } else {
