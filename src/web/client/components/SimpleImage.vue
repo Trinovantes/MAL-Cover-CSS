@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { onMounted, PropType, ref, StyleValue, watch } from 'vue'
-import type { ResponsiveImage } from '../../utils/ResponsiveImage'
+import type { ResponsiveImage } from '../utils/ResponsiveImage'
 
 defineProps({
     img: {
