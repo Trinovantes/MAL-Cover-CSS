@@ -14,16 +14,16 @@ export async function createAppRouter(appContext?: AppContext): Promise<Router> 
 
         routes,
 
-        scrollBehavior(to) {
+        scrollBehavior(to, from, savedPosition) {
             if (to.hash) {
-                return {
-                    el: to.hash,
-                }
+                return { el: to.hash }
             }
 
-            return {
-                top: 0,
+            if (savedPosition) {
+                return savedPosition
             }
+
+            return { top: 0 }
         },
     })
 
