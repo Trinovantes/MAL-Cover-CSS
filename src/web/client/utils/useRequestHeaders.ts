@@ -1,13 +1,13 @@
-import { useAppContext } from '@/web/AppContext'
+import type { AppContext } from '@/web/AppContext'
 
 type Headers = Record<string, string>
 
-export function useRequestHeaders(headersToProxy: Array<string> = []): Readonly<Headers> {
+export function useRequestHeaders(appContext: AppContext | undefined, headersToProxy: Array<string> = []): Readonly<Headers> {
     if (!DEFINE.IS_SSR) {
         return {}
     }
 
-    const headers = useAppContext()?.req.headers ?? {}
+    const headers = appContext?.req.headers ?? {}
     if (headersToProxy.length === 0) {
         return headers as Headers
     }

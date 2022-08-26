@@ -5,7 +5,6 @@ import { useMeta } from 'vue-meta'
 import { useApi } from '../../services/useApi'
 import { useUserStore } from '../../store/User'
 import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
-import { useAuthGuard } from '../../utils/useAuthGuard'
 
 const title = 'Settings'
 
@@ -39,7 +38,6 @@ const lastCheckedHint = computed(() => {
 })
 
 const { unlinkAccount } = useApi()
-useAuthGuard()
 </script>
 
 <template>

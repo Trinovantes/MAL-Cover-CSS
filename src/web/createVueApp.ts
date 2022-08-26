@@ -9,6 +9,7 @@ import ExternalLink from './client/components/ExternalLink.vue'
 import LoadingSpinner from './client/components/LoadingSpinner.vue'
 import SimpleImage from './client/components/SimpleImage.vue'
 import { createAppRouter } from './client/router'
+import { useUserStore } from './client/store/User'
 import type { AppContext } from './AppContext'
 import type { createRouter } from 'vue-router'
 
@@ -34,8 +35,11 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
         appContext.pinia = pinia
     }
 
+    const userStore = useUserStore(pinia)
+    await userStore.init(appContext)
+
     // Vue Router
-    const router = await createAppRouter(appContext)
+    const router = await createAppRouter(pinia, appContext?.url)
     app.use(router)
     await router.isReady()
 

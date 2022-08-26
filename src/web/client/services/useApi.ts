@@ -1,14 +1,12 @@
 import { useQuasar } from 'quasar/src/index.all'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../store/User'
+import { useAppContext } from '@/web/AppContext'
 
 type Handler = () => Promise<void>
 
 export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Handler } {
-    const userStore = useUserStore()
     const $q = useQuasar()
-    const router = useRouter()
-
     const notifyError = (message: string) => {
         $q.notify({
             message: DEFINE.IS_DEV ? `<pre>${message}</pre>` : message,
@@ -22,7 +20,6 @@ export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Hand
             }],
         })
     }
-
     const notifySuccess = (message: string) => {
         $q.notify({
             message,
@@ -35,8 +32,11 @@ export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Hand
         })
     }
 
+    const userStore = useUserStore()
+    const router = useRouter()
+    const appContext = useAppContext()
     const login = async() => {
-        const res = await userStore.login(router.currentRoute.value.path)
+        const res = await userStore.login(appContext, router.currentRoute.value.path)
 
         if ('errorMessage' in res) {
             notifyError(res.errorMessage)
@@ -44,9 +44,8 @@ export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Hand
             window.location.href = res.url
         }
     }
-
     const logout = async() => {
-        const res = await userStore.logout()
+        const res = await userStore.logout(appContext)
 
         if ('errorMessage' in res) {
             notifyError(res.errorMessage)
@@ -54,9 +53,8 @@ export function useApi(): { login: Handler; logout: Handler; unlinkAccount: Hand
             notifySuccess(res.message)
         }
     }
-
     const unlinkAccount = async() => {
-        const res = await userStore.deleteUser()
+        const res = await userStore.deleteUser(appContext)
 
         if ('errorMessage' in res) {
             notifyError(res.errorMessage)

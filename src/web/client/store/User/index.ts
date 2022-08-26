@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { fetchDeleteUser, fetchLogin, fetchLogout, fetchUser } from '../../services/api'
 import { HydrationKey, loadStateFromDom } from '../Hydration'
+import type { AppContext } from '@/web/AppContext'
 import type { ErrorResponse, RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/schemas/ApiResponse'
 
 // ----------------------------------------------------------------------------
@@ -27,35 +28,35 @@ export const useUserStore = defineStore('User', {
     state: createDefaultUserState,
 
     actions: {
-        async init() {
-            if (!DEFINE.IS_SSR) {
-                const savedState = loadStateFromDom(HydrationKey.USER)
-                if (!savedState) {
-                    throw new Error(`Missing ${HydrationKey.USER}`)
-                }
-
-                this.$patch(savedState)
+        async init(appContext: AppContext | undefined) {
+            if (this.currentUser) {
                 return
             }
 
-            const user = await fetchUser()
+            const initState = loadStateFromDom(HydrationKey.USER)
+            if (initState) {
+                this.$patch(initState)
+                return
+            }
+
+            const user = await fetchUser(appContext)
             this.currentUser = user
         },
 
-        async login(restorePath: string): Promise<RedirectResponse | ErrorResponse> {
+        async login(appContext: AppContext | undefined, restorePath: string): Promise<RedirectResponse | ErrorResponse> {
             this.currentUser = null
-            const res = await fetchLogin(restorePath)
+            const res = await fetchLogin(appContext, restorePath)
             return res
         },
 
-        async logout(): Promise<SuccessResponse | ErrorResponse> {
-            const res = await fetchLogout()
+        async logout(appContext: AppContext | undefined): Promise<SuccessResponse | ErrorResponse> {
+            const res = await fetchLogout(appContext)
             this.currentUser = null
             return res
         },
 
-        async deleteUser(): Promise<SuccessResponse | ErrorResponse> {
-            const res = await fetchDeleteUser()
+        async deleteUser(appContext: AppContext | undefined): Promise<SuccessResponse | ErrorResponse> {
+            const res = await fetchDeleteUser(appContext)
             this.currentUser = null
             return res
         },

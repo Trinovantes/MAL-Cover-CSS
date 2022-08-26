@@ -6,6 +6,11 @@ export const enum RouteName {
     Error404 = 'Error404',
 }
 
+export enum RouteMetaKey {
+    RequireUnauth = 'RequireUnauth',
+    RequireAuth = 'RequireAuth',
+}
+
 export const routes: Array<RouteRecordRaw> = [
     {
         path: '/',
@@ -32,6 +37,9 @@ export const routes: Array<RouteRecordRaw> = [
                 path: 'settings',
                 name: RouteName.Settings,
                 component: () => import('../pages/Settings/SettingsPage.vue'),
+                meta: {
+                    [RouteMetaKey.RequireAuth]: true,
+                },
             },
         ],
     },

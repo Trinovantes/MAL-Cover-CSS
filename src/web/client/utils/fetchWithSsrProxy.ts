@@ -1,12 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { useAppContext } from '@/web/AppContext'
+import type { AppContext } from '@/web/AppContext'
 import { useRequestHeaders } from './useRequestHeaders'
 
-export async function fetchWithSsrProxy<T>(url: string, config: AxiosRequestConfig = { method: 'get' }): Promise<AxiosResponse<T>> {
-    const appContext = useAppContext()
+export async function fetchWithSsrProxy<T>(appContext: AppContext | undefined, url: string, config: AxiosRequestConfig = { method: 'get' }): Promise<AxiosResponse<T>> {
     const res = await axios(url, {
         ...config,
-        headers: useRequestHeaders(),
+        headers: useRequestHeaders(appContext),
     })
 
     if (DEFINE.IS_SSR) {

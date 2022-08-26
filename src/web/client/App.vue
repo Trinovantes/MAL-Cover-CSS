@@ -1,10 +1,3 @@
-<script lang="ts" setup>
-import { useUserStore } from './store/User'
-
-const userStore = useUserStore()
-await userStore.init()
-</script>
-
 <template>
     <metainfo />
 

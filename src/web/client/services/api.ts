@@ -1,12 +1,13 @@
 import axios from 'axios'
 import { fetchWithSsrProxy } from '../utils/fetchWithSsrProxy'
+import type { AppContext } from '@/web/AppContext'
 import type { ErrorResponse, RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/schemas/ApiResponse'
 import type { LoginRequest } from '@/web/server/schemas/LoginRequest'
 
-export async function fetchLogin(restorePath: string): Promise<RedirectResponse | ErrorResponse> {
+export async function fetchLogin(appContext: AppContext | undefined, restorePath: string): Promise<RedirectResponse | ErrorResponse> {
     try {
         const loginRequest: LoginRequest = { restorePath }
-        const res = await fetchWithSsrProxy<RedirectResponse>(`${DEFINE.APP_URL}/api/oauth/login`, {
+        const res = await fetchWithSsrProxy<RedirectResponse>(appContext, `${DEFINE.APP_URL}/api/oauth/login`, {
             method: 'post',
             data: loginRequest,
         })
@@ -24,9 +25,9 @@ export async function fetchLogin(restorePath: string): Promise<RedirectResponse 
     }
 }
 
-export async function fetchLogout(): Promise<SuccessResponse | ErrorResponse> {
+export async function fetchLogout(appContext: AppContext | undefined): Promise<SuccessResponse | ErrorResponse> {
     try {
-        const res = await fetchWithSsrProxy<SuccessResponse>(`${DEFINE.APP_URL}/api/oauth/logout`, {
+        const res = await fetchWithSsrProxy<SuccessResponse>(appContext, `${DEFINE.APP_URL}/api/oauth/logout`, {
             method: 'post',
         })
 
@@ -43,9 +44,9 @@ export async function fetchLogout(): Promise<SuccessResponse | ErrorResponse> {
     }
 }
 
-export async function fetchUser(): Promise<UserResponse | null> {
+export async function fetchUser(appContext: AppContext | undefined): Promise<UserResponse | null> {
     try {
-        const res = await fetchWithSsrProxy<UserResponse>(`${DEFINE.APP_URL}/api/settings/user`, {
+        const res = await fetchWithSsrProxy<UserResponse>(appContext, `${DEFINE.APP_URL}/api/settings/user`, {
             method: 'get',
         })
 
@@ -62,9 +63,9 @@ export async function fetchUser(): Promise<UserResponse | null> {
     }
 }
 
-export async function fetchDeleteUser(): Promise<SuccessResponse | ErrorResponse> {
+export async function fetchDeleteUser(appContext: AppContext | undefined): Promise<SuccessResponse | ErrorResponse> {
     try {
-        const res = await fetchWithSsrProxy<SuccessResponse>(`${DEFINE.APP_URL}/api/settings/user`, {
+        const res = await fetchWithSsrProxy<SuccessResponse>(appContext, `${DEFINE.APP_URL}/api/settings/user`, {
             method: 'delete',
         })
 
