@@ -28,35 +28,30 @@ export const useUserStore = defineStore('User', {
     state: createDefaultUserState,
 
     actions: {
-        async init(appContext: AppContext | undefined) {
-            if (this.currentUser) {
-                return
+        async init(appContext?: AppContext) {
+            if (appContext) {
+                const user = await fetchUser(appContext)
+                this.currentUser = user
+            } else {
+                const initState = loadStateFromDom(HydrationKey.USER)
+                this.$patch(initState ?? {})
             }
-
-            const initState = loadStateFromDom(HydrationKey.USER)
-            if (initState) {
-                this.$patch(initState)
-                return
-            }
-
-            const user = await fetchUser(appContext)
-            this.currentUser = user
         },
 
-        async login(appContext: AppContext | undefined, restorePath: string): Promise<RedirectResponse | ErrorResponse> {
-            this.currentUser = null
-            const res = await fetchLogin(appContext, restorePath)
-            return res
-        },
-
-        async logout(appContext: AppContext | undefined): Promise<SuccessResponse | ErrorResponse> {
-            const res = await fetchLogout(appContext)
+        async login(restorePath: string): Promise<RedirectResponse | ErrorResponse> {
+            const res = await fetchLogin(restorePath)
             this.currentUser = null
             return res
         },
 
-        async deleteUser(appContext: AppContext | undefined): Promise<SuccessResponse | ErrorResponse> {
-            const res = await fetchDeleteUser(appContext)
+        async logout(): Promise<SuccessResponse | ErrorResponse> {
+            const res = await fetchLogout()
+            this.currentUser = null
+            return res
+        },
+
+        async deleteUser(): Promise<SuccessResponse | ErrorResponse> {
+            const res = await fetchDeleteUser()
             this.currentUser = null
             return res
         },

@@ -37,7 +37,7 @@ const lastCheckedHint = computed(() => {
     }
 })
 
-const { unlinkAccount } = useApi()
+const { deleteUser } = useApi()
 </script>
 
 <template>
@@ -81,7 +81,7 @@ const { unlinkAccount } = useApi()
                         title="Unlink Account"
                         unelevated
                         no-caps
-                        @click="unlinkAccount"
+                        @click="deleteUser"
                     />
                 </div>
             </div>
