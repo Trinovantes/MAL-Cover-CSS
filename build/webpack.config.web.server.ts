@@ -21,6 +21,7 @@ const serverEntryConfig = ((): Configuration => merge(commonNodeConfig, {
         new DefinePlugin({
             'DEFINE.PUBLIC_PATH': JSON.stringify(publicPath),
             'DEFINE.CLIENT_DIST_DIR': JSON.stringify(distClientDir),
+            'DEFINE.SERVER_DIST_DIR': JSON.stringify(distServerDir),
             'DEFINE.MANIFEST_FILE': JSON.stringify(manifestFile),
         }),
         new QuasarUnusedPlugin({

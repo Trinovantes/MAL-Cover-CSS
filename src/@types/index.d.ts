@@ -11,6 +11,7 @@ declare global {
 
         // server specific
         PUBLIC_PATH?: string
+        SERVER_DIST_DIR?: string
         CLIENT_DIST_DIR?: string
         MANIFEST_FILE?: string
     }

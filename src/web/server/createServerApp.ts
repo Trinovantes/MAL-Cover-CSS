@@ -1,5 +1,4 @@
 import assert from 'assert'
-import path from 'path'
 import * as Sentry from '@sentry/node'
 import { Integrations } from '@sentry/tracing'
 import connectRedis from 'connect-redis'
@@ -45,9 +44,13 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
     if (options.enableStaticFiles) {
         assert(DEFINE.PUBLIC_PATH)
         assert(DEFINE.CLIENT_DIST_DIR)
+        assert(DEFINE.SERVER_DIST_DIR)
 
-        app.use('/favicon.png', express.static(path.join(DEFINE.CLIENT_DIST_DIR, 'favicon.png')))
+        console.info(`Serving static files from ${DEFINE.CLIENT_DIST_DIR} to ${DEFINE.PUBLIC_PATH}`)
         app.use(DEFINE.PUBLIC_PATH, express.static(DEFINE.CLIENT_DIST_DIR))
+
+        console.info(`Serving static files from ${DEFINE.SERVER_DIST_DIR} to /`)
+        app.use('/', express.static(DEFINE.SERVER_DIST_DIR))
     }
 
     if (options.enableSentry) {
