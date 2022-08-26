@@ -7,8 +7,8 @@ import { createAsyncHandler } from '../utils/createAsyncHandler'
 import { renderCsp } from '../utils/renderCsp'
 import type { AppContext } from '@/web/AppContext'
 import { RouteName } from '@/web/client/router/routes'
+import { HydrationKey, saveStateToDom } from '@/web/client/store/Hydration'
 import { useUserStore } from '@/web/client/store/User'
-import { HydrationKey, saveStateToDom } from '@/web/client/store/hydration'
 import { createVueApp } from '@/web/createVueApp'
 
 // -----------------------------------------------------------------------------

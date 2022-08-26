@@ -1,4 +1,4 @@
-import { HydrationMap } from '@/web/client/store/hydration'
+import { HydrationMap } from '@/web/client/store/Hydration'
 
 declare global {
     const DEFINE: {

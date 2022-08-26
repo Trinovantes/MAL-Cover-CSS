@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { fetchDeleteUser, fetchLogin, fetchLogout, fetchUser } from '../../services/api'
-import { HydrationKey, loadStateFromDom } from '../hydration'
+import { HydrationKey, loadStateFromDom } from '../Hydration'
 import type { ErrorResponse, RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/schemas/ApiResponse'
 
 // ----------------------------------------------------------------------------
