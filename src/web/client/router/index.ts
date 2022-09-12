@@ -1,5 +1,5 @@
 import { computed } from 'vue'
-import { createMemoryHistory, createRouter, createWebHistory, RouteLocationNormalized, RouteLocationRaw, Router } from 'vue-router'
+import { createMemoryHistory, createRouter, createWebHistory, RouteLocationNormalized, Router } from 'vue-router'
 import { useUserStore } from '../store/User'
 import { RouteMetaKey, RouteName, routes } from './routes'
 import type { Pinia } from 'pinia'
@@ -8,7 +8,7 @@ import type { Pinia } from 'pinia'
 // Router
 // ----------------------------------------------------------------------------
 
-export async function createAppRouter(pinia: Pinia, initialRoute?: RouteLocationRaw): Promise<Router> {
+export function createAppRouter(pinia: Pinia): Router {
     const router = createRouter({
         history: DEFINE.IS_SSR
             ? createMemoryHistory()
@@ -50,10 +50,6 @@ export async function createAppRouter(pinia: Pinia, initialRoute?: RouteLocation
             next({ name: RouteName.Home })
         }
     })
-
-    if (initialRoute !== undefined) {
-        await router.push(initialRoute)
-    }
 
     return router
 }
