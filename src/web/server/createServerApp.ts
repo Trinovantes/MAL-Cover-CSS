@@ -17,7 +17,7 @@ import { vueRouter } from './routers/vueRouter'
 import { setupRouterErrorHandler } from './utils/setupRouterErrorHandler'
 import type { Express } from 'express'
 
-interface ServerAppOptions {
+type ServerAppOptions = {
     trustProxy: boolean
     enableStaticFiles: boolean
     enableSentry: boolean

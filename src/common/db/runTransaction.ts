@@ -1,6 +1,6 @@
 import { getDbClient } from './client'
 
-export interface Command {
+export type Command = {
     sql: string
     params?: Record<string, string>
 }

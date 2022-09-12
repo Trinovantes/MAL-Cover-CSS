@@ -4,7 +4,7 @@ import Ajv from 'ajv'
 // OauthFailure
 // ----------------------------------------------------------------------------
 
-export interface OauthFailure {
+export type OauthFailure = {
     'state': string // encoded JSON object
     'error': string
     'message': string

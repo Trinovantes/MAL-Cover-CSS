@@ -13,7 +13,7 @@ import { useUserStore } from './client/store/User'
 import type { AppContext } from './AppContext'
 import type { createRouter } from 'vue-router'
 
-interface VueApp {
+type VueApp = {
     app: ReturnType<typeof createSSRApp>
     router: ReturnType<typeof createRouter>
 }

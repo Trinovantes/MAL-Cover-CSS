@@ -4,7 +4,7 @@ import Ajv from 'ajv'
 // OauthTokenSuccess
 // ----------------------------------------------------------------------------
 
-export interface OauthTokenSuccess {
+export type OauthTokenSuccess = {
     'token_type': string
     'expires_in': number
     'access_token': string

@@ -5,6 +5,7 @@ import type LoadingSpinner from '@/web/client/components/LoadingSpinner.vue'
 import type SimpleImage from '@/web/client/components/SimpleImage.vue'
 
 declare module '@vue/runtime-core' {
+    // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     export interface GlobalComponents {
         ClientOnly: typeof ClientOnly
         CodeBlock: typeof CodeBlock

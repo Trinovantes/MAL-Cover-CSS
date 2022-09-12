@@ -8,7 +8,7 @@ import type { ErrorResponse, RedirectResponse, SuccessResponse, UserResponse } f
 // State
 // ----------------------------------------------------------------------------
 
-export interface UserState {
+export type UserState = {
     currentUser: UserResponse | null
 }
 

@@ -5,7 +5,7 @@ export enum HydrationKey {
     USER = '__INITIAL_USER_STATE__',
 }
 
-export interface HydrationMap {
+export type HydrationMap = {
     [HydrationKey.USER]: UserState
 }
 

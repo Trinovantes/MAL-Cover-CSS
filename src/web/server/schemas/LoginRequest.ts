@@ -1,6 +1,6 @@
 import Ajv from 'ajv'
 
-export interface LoginRequest {
+export type LoginRequest = {
     restorePath: string
 }
 

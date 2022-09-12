@@ -10,12 +10,12 @@ import { refreshAccessToken } from './oauth'
 // v2 API Data
 // ----------------------------------------------------------------------------
 
-export interface MalError {
+export type MalError = {
     'error': string
     'message': string
 }
 
-export interface MalUser {
+export type MalUser = {
     'id': number
     'name': string
     'gender': string
@@ -24,7 +24,7 @@ export interface MalUser {
     'picture': string
 }
 
-export interface MalAnimeListItem {
+export type MalAnimeListItem = {
     'node': {
         'id': number
         'title': string
@@ -42,7 +42,7 @@ export interface MalAnimeListItem {
     }
 }
 
-export interface MalMangaListItem {
+export type MalMangaListItem = {
     'node': {
         'id': number
         'title': string
@@ -61,7 +61,7 @@ export interface MalMangaListItem {
     }
 }
 
-interface MalList<T> {
+type MalList<T> = {
     'data': Array<T>
     'paging': {
         'next'?: string

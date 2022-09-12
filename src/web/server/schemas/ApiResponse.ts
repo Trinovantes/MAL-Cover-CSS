@@ -1,16 +1,16 @@
-export interface ErrorResponse {
+export type ErrorResponse = {
     errorMessage: string
 }
 
-export interface RedirectResponse {
+export type RedirectResponse = {
     url: string
 }
 
-export interface SuccessResponse {
+export type SuccessResponse = {
     message: string
 }
 
-export interface UserResponse {
+export type UserResponse = {
     malUserId: number
     malUsername: string
     lastChecked: string | null

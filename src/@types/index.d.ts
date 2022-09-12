@@ -16,7 +16,7 @@ declare global {
         MANIFEST_FILE?: string
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
     interface Window extends HydrationMap {}
 }
 

@@ -1,6 +1,6 @@
 import Ajv from 'ajv'
 
-export interface OauthState {
+export type OauthState = {
     restorePath: string
     secret: string
 }

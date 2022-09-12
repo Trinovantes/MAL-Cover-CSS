@@ -4,7 +4,7 @@ import Ajv from 'ajv'
 // OauthAuthSuccess
 // ----------------------------------------------------------------------------
 
-export interface OauthAuthSuccess {
+export type OauthAuthSuccess = {
     'state': string // encoded JSON object
     'code': string
 }

@@ -2,7 +2,7 @@ import { merge } from 'lodash-es'
 import { APP_NAME, APP_THEME_COLOR } from '@/common/Constants'
 import type { MetaSource } from 'vue-meta'
 
-interface PageHeadOptions {
+type PageHeadOptions = {
     title: string
     desc?: string
     image?: string
