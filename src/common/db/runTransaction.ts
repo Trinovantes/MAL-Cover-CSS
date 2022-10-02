@@ -22,12 +22,13 @@ export async function runTransaction(commands: Array<Command | string>): Promise
             ? {}
             : command.params ?? {}
 
-        db.all(sql, params, function(this, err, rows) {
+        db.all(sql, params, (err, rows) => {
             if (err) {
                 reject(err)
-            } else {
-                resolve(rows)
+                return
             }
+
+            resolve(rows)
         })
     })
 
