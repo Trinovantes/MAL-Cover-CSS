@@ -36,17 +36,14 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     }
 
     // Vue Router
-    const router = createAppRouter(pinia)
-    app.use(router)
+    const router = await createAppRouter(pinia, appContext?.url)
 
     // Must init UserStore before router executes so nav guard sees init state
     const userStore = useUserStore(pinia)
     await userStore.init(appContext)
 
-    if (appContext) {
-        await router.push(appContext.url)
-        await router.isReady()
-    }
+    app.use(router)
+    await router.isReady()
 
     // Vue Meta
     const metaManager = createMetaManager(DEFINE.IS_SSR, {
