@@ -5,7 +5,7 @@ export type Command = {
     params?: Record<string, string>
 }
 
-export type CommandResults = Array<Array<unknown>> | undefined
+export type CommandResults = Array<unknown> | undefined
 
 /**
  * Each command must be 1 statement i.e. only 1 semicolon per string
