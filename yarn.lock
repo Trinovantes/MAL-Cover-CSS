@@ -1970,7 +1970,7 @@
     "@vue/compiler-core" "3.2.39"
     "@vue/shared" "3.2.39"
 
-"@vue/compiler-sfc@3.2.39", "@vue/compiler-sfc@^3.0.11", "@vue/compiler-sfc@^3.2.38":
+"@vue/compiler-sfc@3.2.39", "@vue/compiler-sfc@^3.2.38":
   version "3.2.39"
   resolved "https://registry.yarnpkg.com/@vue/compiler-sfc/-/compiler-sfc-3.2.39.tgz#8fe29990f672805b7c5a2ecfa5b05e681c862ea2"
   integrity sha512-fqAQgFs1/BxTUZkd0Vakn3teKUt//J3c420BgnYgEOoVdTwYpBTSXCMJ88GOBCylmUBbtquGPli9tVs7LzsWIA==
@@ -2041,7 +2041,7 @@
     "@vue/shared" "3.2.39"
     csstype "^2.6.8"
 
-"@vue/server-renderer@3.2.39", "@vue/server-renderer@^3.1.1":
+"@vue/server-renderer@3.2.39":
   version "3.2.39"
   resolved "https://registry.yarnpkg.com/@vue/server-renderer/-/server-renderer-3.2.39.tgz#4358292d925233b0d8b54cf0513eaece8b2351c5"
   integrity sha512-1yn9u2YBQWIgytFMjz4f/t0j43awKytTGVptfd3FtBk76t1pd8mxbek0G/DrnjJhd2V7mSTb5qgnxMYt8Z5iSQ==
