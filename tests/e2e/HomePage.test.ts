@@ -2,6 +2,18 @@ import { test, expect } from '@playwright/test'
 
 test.describe('HomePage', () => {
     test.beforeEach(async({ page }) => {
+        page.on('pageerror', (error) => {
+            throw new Error(`[pageerror] ${error.name}: ${error.message}`)
+        })
+
+        page.on('console', (msg) => {
+            if (msg.type() !== 'error') {
+                return
+            }
+
+            throw new Error(`[pageerror] ${msg.text()}`)
+        })
+
         await page.goto('/')
     })
 
