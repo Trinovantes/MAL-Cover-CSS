@@ -8,7 +8,7 @@ import CodeBlock from './client/components/CodeBlock.vue'
 import ExternalLink from './client/components/ExternalLink.vue'
 import LoadingSpinner from './client/components/LoadingSpinner.vue'
 import SimpleImage from './client/components/SimpleImage.vue'
-import { createAppRouter } from './client/router'
+import { createAppRouter } from './client/router/createAppRouter'
 import { useUserStore } from './client/store/User'
 import type { AppContext } from './AppContext'
 import type { createRouter } from 'vue-router'
@@ -36,7 +36,7 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     }
 
     // Vue Router
-    const router = await createAppRouter(pinia, appContext?.url)
+    const router = await createAppRouter(appContext)
 
     // Must init UserStore before router executes so nav guard sees init state
     const userStore = useUserStore(pinia)

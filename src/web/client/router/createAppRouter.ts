@@ -1,14 +1,14 @@
 import { computed } from 'vue'
-import { createMemoryHistory, createRouter, createWebHistory, RouteLocationNormalized, RouteLocationRaw, Router } from 'vue-router'
+import { createMemoryHistory, createRouter, createWebHistory, RouteLocationNormalized, Router } from 'vue-router'
 import { useUserStore } from '../store/User'
+import type { AppContext } from '@/web/AppContext'
 import { RouteMetaKey, RouteName, routes } from './routes'
-import type { Pinia } from 'pinia'
 
 // ----------------------------------------------------------------------------
 // Router
 // ----------------------------------------------------------------------------
 
-export async function createAppRouter(pinia: Pinia, initRoute?: RouteLocationRaw): Promise<Router> {
+export async function createAppRouter(appContext?: AppContext): Promise<Router> {
     const router = createRouter({
         history: DEFINE.IS_SSR
             ? createMemoryHistory()
@@ -29,7 +29,7 @@ export async function createAppRouter(pinia: Pinia, initRoute?: RouteLocationRaw
         },
     })
 
-    const userStore = useUserStore(pinia)
+    const userStore = useUserStore(appContext?.pinia)
     const isLoggedIn = computed(() => userStore.currentUser !== null)
     const canVisitRoute = (to: RouteLocationNormalized) => {
         if (!isLoggedIn.value && to.meta[RouteMetaKey.RequireAuth]) {
@@ -51,8 +51,8 @@ export async function createAppRouter(pinia: Pinia, initRoute?: RouteLocationRaw
         }
     })
 
-    if (initRoute !== undefined) {
-        await router.push(initRoute)
+    if (appContext?.url) {
+        await router.push(appContext?.url)
     }
 
     return router
