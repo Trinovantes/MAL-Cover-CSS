@@ -9,7 +9,7 @@ import ExternalLink from './client/components/ExternalLink.vue'
 import LoadingSpinner from './client/components/LoadingSpinner.vue'
 import SimpleImage from './client/components/SimpleImage.vue'
 import { createAppRouter } from './client/router/createAppRouter'
-import { useUserStore } from './client/store/User'
+import { useUserStore } from './client/store/User/useUserStore'
 import type { AppContext } from './AppContext'
 import type { createRouter } from 'vue-router'
 

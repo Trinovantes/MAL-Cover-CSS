@@ -1,6 +1,6 @@
 import { computed } from 'vue'
 import { createMemoryHistory, createRouter, createWebHistory, RouteLocationNormalized, Router } from 'vue-router'
-import { useUserStore } from '../store/User'
+import { useUserStore } from '../store/User/useUserStore'
 import type { AppContext } from '@/web/AppContext'
 import { RouteMetaKey, RouteName, routes } from './routes'
 

@@ -1,6 +1,6 @@
 import { useQuasar } from 'quasar/src/index.all'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../store/User'
+import { useUserStore } from '../store/User/useUserStore'
 
 type Handler = () => Promise<void>
 

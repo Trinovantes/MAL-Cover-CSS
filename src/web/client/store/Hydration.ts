@@ -1,5 +1,5 @@
 import devalue from '@nuxt/devalue'
-import type { UserState } from './User'
+import type { UserState } from './User/useUserStore'
 
 export enum HydrationKey {
     USER = '__INITIAL_USER_STATE__',

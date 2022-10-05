@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 import { useApi } from '../services/useApi'
-import { useUserStore } from '../store/User'
+import { useUserStore } from '../store/User/useUserStore'
 import { APP_NAME } from '@/common/Constants'
 
 const isHeaderItemsExpanded = ref(false)

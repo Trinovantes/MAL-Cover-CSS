@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useMeta } from 'vue-meta'
 import { useApi } from '../../services/useApi'
-import { useUserStore } from '../../store/User'
+import { useUserStore } from '../../store/User/useUserStore'
 import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
 import { APP_NAME, APP_DESC } from '@/common/Constants'
 import type { ResponsiveImage } from '../../utils/ResponsiveImage'
