@@ -35,13 +35,12 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
         appContext.pinia = pinia
     }
 
-    // Vue Router
-    const router = await createAppRouter(appContext)
-
     // Must init UserStore before router executes so nav guard sees init state
     const userStore = useUserStore(pinia)
     await userStore.init(appContext)
 
+    // Vue Router
+    const router = await createAppRouter(appContext)
     app.use(router)
     await router.isReady()
 
