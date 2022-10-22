@@ -131,7 +131,6 @@ export const commonWebConfig = merge(commonConfig, {
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             adapter: require('responsive-loader/sharp'),
                             format: 'webp',
-                            placeholder: true,
                             publicPath,
                         },
                     },
@@ -171,7 +170,6 @@ export const commonNodeConfig = merge(commonConfig, {
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             adapter: require('responsive-loader/sharp'),
                             format: 'webp',
-                            placeholder: true,
                             publicPath,
 
                             // Do not emit images in the server bundle
