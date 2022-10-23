@@ -1,20 +1,19 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useMeta } from 'vue-meta'
 import { useApi } from '../../services/useApi'
 import { useUserStore } from '../../store/User/useUserStore'
-import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
+import { useLiveMeta } from '../../utils/useLiveMeta'
 import { APP_NAME, APP_DESC } from '@/common/Constants'
 import type { ResponsiveLoaderAsset } from '../../utils/ResponsiveLoader'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveLoaderAsset
 
-useMeta(computed(() => createPageHeadOptions({
+useLiveMeta({
     title: APP_NAME,
     desc: APP_DESC,
     image: img.src,
-})))
+})
 
 const userStore = useUserStore()
 const currentUser = computed(() => userStore.currentUser)
