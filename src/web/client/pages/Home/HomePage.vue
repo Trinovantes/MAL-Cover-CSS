@@ -20,6 +20,14 @@ const userStore = useUserStore()
 const currentUser = computed(() => userStore.currentUser)
 
 const { login } = useApi()
+
+const onIntersect = (entry: IntersectionObserverEntry) => {
+    if (!entry.isIntersecting) {
+        return
+    }
+
+    entry.target.classList.add('visible')
+}
 </script>
 
 <template>
@@ -73,7 +81,15 @@ const { login } = useApi()
         </div>
     </article>
 
-    <article class="hero-unit">
+    <article
+        v-intersection.once="{
+            handler: onIntersect,
+            cfg: {
+                threshold: [0.25],
+            },
+        }"
+        class="hero-unit"
+    >
         <div class="container full-height-container">
             <section>
                 <LazyImage
@@ -108,7 +124,15 @@ const { login } = useApi()
         </div>
     </article>
 
-    <article class="hero-unit">
+    <article
+        v-intersection.once="{
+            handler: onIntersect,
+            cfg: {
+                threshold: [0.25],
+            },
+        }"
+        class="hero-unit"
+    >
         <div class="container full-height-container">
             <section>
                 <LazyImage
@@ -189,6 +213,30 @@ article.hero-unit{
     @media (max-width: $large-mobile-breakpoint) {
         &:not(:last-of-type){
             border-bottom: 1px solid $light-on-light;
+        }
+    }
+
+    &:not(:first-child){
+        .container{
+            animation-duration: 1s;
+            animation-fill-mode: both;
+            transform: translate3d(-100%, 0, 0);
+        }
+        &.visible{
+            .container{
+                @keyframes fadeInLeft {
+                    0% {
+                        opacity: 0;
+                        transform: translate3d(-100%, 0, 0);
+                    }
+                    100% {
+                        opacity: 1;
+                        transform: translateZ(0);
+                    }
+                }
+
+                animation-name: fadeInLeft;
+            }
         }
     }
 
