@@ -30,7 +30,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.YARN_CACHE }}
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
 
       - name: Cache playwright
         uses: actions/cache@v2
