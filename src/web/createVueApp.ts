@@ -6,8 +6,7 @@ import AppLoader from './client/AppLoader.vue'
 import ClientOnly from './client/components/ClientOnly.vue'
 import CodeBlock from './client/components/CodeBlock.vue'
 import ExternalLink from './client/components/ExternalLink.vue'
-import LoadingSpinner from './client/components/LoadingSpinner.vue'
-import SimpleImage from './client/components/SimpleImage.vue'
+import LazyImage from './client/components/LazyImage.vue'
 import { createAppRouter } from './client/router/createAppRouter'
 import { useUserStore } from './client/store/User/useUserStore'
 import type { AppContext } from './AppContext'
@@ -24,8 +23,7 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     app.component('ClientOnly', ClientOnly)
     app.component('ExternalLink', ExternalLink)
     app.component('CodeBlock', CodeBlock)
-    app.component('LoadingSpinner', LoadingSpinner)
-    app.component('SimpleImage', SimpleImage)
+    app.component('LazyImage', LazyImage)
 
     // Pinia
     const pinia = createPinia()

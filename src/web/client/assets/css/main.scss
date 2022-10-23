@@ -97,7 +97,7 @@ dl{
 }
 li{
     p,
-    .simple-image{
+    figure{
         &:not(:first-child) {
             margin-top: $padding * 2;
         }
@@ -169,6 +169,12 @@ input,
 select{
     border: 1px solid $light-on-light;
     padding: math.div($padding, 2);
+}
+
+figure{
+    img {
+        border: math.div($padding, 2) solid $light-on-light;
+    }
 }
 
 // ----------------------------------------------------------------------------

@@ -2,12 +2,12 @@
 import { computed } from 'vue'
 import { useMeta } from 'vue-meta'
 import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
-import type { ResponsiveImage } from '../../utils/ResponsiveImage'
+import type { ResponsiveLoaderAsset } from '../../utils/ResponsiveLoader'
 
 const title = 'Example List Design'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveImage
+const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveLoaderAsset
 
 useMeta(computed(() => {
     return createPageHeadOptions({
@@ -33,8 +33,8 @@ useMeta(computed(() => {
                     This example list design can only style your score. If wish to include additional information (e.g. tags) in your lists, then you need to make additional changes to the CSS yourself.
                 </p>
 
-                <SimpleImage
-                    :img="require('./img/only-show-score.png?size=800')"
+                <LazyImage
+                    :src="require('./img/only-show-score.png?size=800').src"
                 />
             </div>
 
@@ -46,8 +46,8 @@ useMeta(computed(() => {
                 First, go into <ExternalLink href="https://myanimelist.net/ownlist/style">List Style Design</ExternalLink> and click on Classic template.
             </p>
 
-            <SimpleImage
-                :img="require('./img/enable-classic-template.png?size=800')"
+            <LazyImage
+                :src="require('./img/enable-classic-template.png?size=800').src"
             />
 
             <h2>
@@ -58,8 +58,8 @@ useMeta(computed(() => {
                 After enabling Classic template, you can then go into Advanced CSS List Design and create a new Advanced CSS List Design.
             </p>
 
-            <SimpleImage
-                :img="require('./img/create-advanced-css.png?size=800')"
+            <LazyImage
+                :src="require('./img/create-advanced-css.png?size=800').src"
             />
 
             <p>
@@ -70,8 +70,8 @@ useMeta(computed(() => {
                 :code="require('../Home/raw/how-to-use-example-covers.css')"
             />
 
-            <SimpleImage
-                :img="require('./img/save-advanced-css.png?size=800')"
+            <LazyImage
+                :src="require('./img/save-advanced-css.png?size=800').src"
             />
 
             <div class="callout">
@@ -92,8 +92,8 @@ useMeta(computed(() => {
                 Finally, follow the link in the notice MyAnimeList showed you in the previous step to go into your List Style settings and set your anime/manga lists to use your new design.
             </p>
 
-            <SimpleImage
-                :img="require('./img/set-list-style.png?size=800')"
+            <LazyImage
+                :src="require('./img/set-list-style.png?size=800').src"
             />
         </section>
 
@@ -102,11 +102,11 @@ useMeta(computed(() => {
                 You can see this example list design in action on my <ExternalLink href="https://myanimelist.net/animelist/Trinovantes">profile page</ExternalLink>.
             </p>
 
-            <SimpleImage
-                :img="require('../../assets/img/example-covers.jpg?size=400')"
+            <LazyImage
+                :src="require('../../assets/img/example-covers.jpg?size=400').src"
             >
                 Example List Design
-            </SimpleImage>
+            </LazyImage>
         </aside>
     </article>
 </template>

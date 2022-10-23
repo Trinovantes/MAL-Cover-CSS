@@ -5,10 +5,10 @@ import { useApi } from '../../services/useApi'
 import { useUserStore } from '../../store/User/useUserStore'
 import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
 import { APP_NAME, APP_DESC } from '@/common/Constants'
-import type { ResponsiveImage } from '../../utils/ResponsiveImage'
+import type { ResponsiveLoaderAsset } from '../../utils/ResponsiveLoader'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveImage
+const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveLoaderAsset
 
 useMeta(computed(() => createPageHeadOptions({
     title: APP_NAME,
@@ -26,12 +26,11 @@ const { login } = useApi()
     <article class="hero-unit">
         <div class="container full-height-container vertical">
             <section>
-                <SimpleImage
-                    :img="require('../../assets/img/example-covers.jpg')"
-                    :enable-background="false"
-                    :img-style="{
-                        maxHeight: '40vh',
-                    }"
+                <LazyImage
+                    :src="require('../../assets/img/example-covers.jpg').src"
+                    :height="435"
+                    object-fit="cover"
+                    object-position="top"
                 />
             </section>
             <section class="flex-vgap">
@@ -77,11 +76,10 @@ const { login } = useApi()
     <article class="hero-unit">
         <div class="container full-height-container">
             <section>
-                <SimpleImage
-                    :img="require('../../assets/img/example-covers.jpg')"
-                    :img-style="{
-                        maxHeight: '40vh',
-                    }"
+                <LazyImage
+                    :src="require('../../assets/img/example-covers.jpg').src"
+                    :height="600"
+                    object-fit="cover"
                 />
             </section>
             <section class="flex-vgap">
@@ -113,8 +111,8 @@ const { login } = useApi()
     <article class="hero-unit">
         <div class="container full-height-container">
             <section>
-                <SimpleImage
-                    :img="require('./img/modern-image-settings.png')"
+                <LazyImage
+                    :src="require('./img/modern-image-settings.png').src"
                 />
             </section>
             <section class="flex-vgap">
@@ -156,7 +154,12 @@ article.hero-unit{
         font-weight: normal;
     }
 
-    .simple-image{
+    .q-btn{
+        font-weight: bold;
+        padding: $padding ($padding * 2.5);
+    }
+
+    figure :deep(img){
         border-radius: math.div($padding, 4);
         overflow: hidden;
 
@@ -170,17 +173,16 @@ article.hero-unit{
         ;
     }
 
-    .q-btn{
-        font-weight: bold;
-        padding: $padding ($padding * 2.5);
-    }
-
     &:first-child{
         background: $primary;
         color: white;
 
         h2{
             color: $light-on-primary;
+        }
+
+        figure :deep(img){
+            border: none;
         }
     }
 
@@ -194,26 +196,14 @@ article.hero-unit{
         padding-top: $vspace;
         padding-bottom: $vspace;
 
-        display: flex;
-        flex-wrap: wrap;
-        flex-direction: row;
+        display: grid;
+        grid-template-columns: calc(50% - #{math.div($column-gap, 2)}) calc(50% - #{math.div($column-gap, 2)});
         align-items: center;
         gap: $column-gap;
 
-        > section{
-            flex: 1;
-            max-width: calc(50% - math.div($column-gap, 2));
-        }
-
         @mixin vertical-container{
-            flex-wrap: nowrap;
-            flex-direction: column;
+            grid-template-columns: 100%;
             text-align: center;
-
-            > section{
-                flex: 0;
-                max-width: 100%;
-            }
 
             .flex-hgap{
                 justify-content: center;
@@ -230,11 +220,10 @@ article.hero-unit{
     }
 
     &:nth-child(2) .container{
-        flex-direction: row-reverse;
+        direction: rtl;
 
-        @media (max-width: $large-mobile-breakpoint) {
-            // Intentionally not reversed so text/image alternate on mobile
-            flex-direction: column;
+        > section{
+            direction: ltr;
         }
     }
 }
