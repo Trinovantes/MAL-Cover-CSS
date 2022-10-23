@@ -1,4 +1,4 @@
-import { useQuasar } from 'quasar/src/index.all'
+import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../store/User/useUserStore'
 
