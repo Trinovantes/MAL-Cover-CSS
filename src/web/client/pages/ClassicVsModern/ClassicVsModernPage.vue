@@ -2,12 +2,12 @@
 import { computed } from 'vue'
 import { useMeta } from 'vue-meta'
 import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
-import type { ResponsiveImage } from '../../utils/ResponsiveImage'
+import type { ResponsiveLoaderAsset } from '../../utils/ResponsiveLoader'
 
 const title = 'Classic vs. Modern Templates'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const img = require('./img/modern-template.png?size=800') as ResponsiveImage
+const img = require('./img/modern-template.png?size=800') as ResponsiveLoaderAsset
 
 useMeta(computed(() => {
     return createPageHeadOptions({
@@ -28,11 +28,11 @@ useMeta(computed(() => {
                 This website was originally created before MyAnimeList launched their new "Modern" templates in 2016.
             </p>
 
-            <SimpleImage
-                :img="require('./img/modern-template.png?size=800')"
+            <LazyImage
+                :src="require('./img/modern-template.png?size=800').src"
             >
                 Default "Modern" template
-            </SimpleImage>
+            </LazyImage>
 
             <p>
                 Back then, "Classic" templates did not include cover images. As a result, everybody relied on third-party tools to generate the CSS needed to insert cover images into each entry's HTML background.
@@ -42,11 +42,11 @@ useMeta(computed(() => {
                 Nowadays, this website is simply a relic of the past for users who do not want to switch and want to continue to use Classic templates.
             </p>
 
-            <SimpleImage
-                :img="require('./img/enable-modern-cover-image.png?size=800')"
+            <LazyImage
+                :src="require('./img/enable-modern-cover-image.png?size=800').src"
             >
                 Modern templates can include cover images without third-party tools
-            </SimpleImage>
+            </LazyImage>
         </section>
     </article>
 </template>

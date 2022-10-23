@@ -1,8 +1,7 @@
 import type ClientOnly from '@/web/client/components/ClientOnly.vue'
 import type CodeBlock from '@/web/client/components/CodeBlock.vue'
 import type ExternalLink from '@/web/client/components/ExternalLink.vue'
-import type LoadingSpinner from '@/web/client/components/LoadingSpinner.vue'
-import type SimpleImage from '@/web/client/components/SimpleImage.vue'
+import type LazyImage from '@/web/client/components/LazyImage.vue'
 
 declare module '@vue/runtime-core' {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -10,7 +9,6 @@ declare module '@vue/runtime-core' {
         ClientOnly: typeof ClientOnly
         CodeBlock: typeof CodeBlock
         ExternalLink: typeof ExternalLink
-        LoadingSpinner: typeof LoadingSpinner
-        SimpleImage: typeof SimpleImage
+        LazyImage: typeof LazyImage
     }
 }

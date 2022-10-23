@@ -5,14 +5,20 @@
 </template>
 
 <style lang="scss" scoped>
-.spinner{
-    border-radius: 50%;
-    border: 1em solid $light-on-light;
-    border-left: 1em solid $dark;
-    width: 120px; height: 120px;
+.spinner-wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    transform: translateZ(0);
-    animation: spinner 1s linear infinite;
+    .spinner{
+        border-radius: 50%;
+        border: 1em solid $light-on-light;
+        border-left: 1em solid $dark;
+        width: 120px; height: 120px;
+
+        transform: translateZ(0);
+        animation: spinner 1s linear infinite;
+    }
 }
 
 @keyframes spinner {
