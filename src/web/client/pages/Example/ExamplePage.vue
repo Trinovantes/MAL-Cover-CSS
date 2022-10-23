@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useMeta } from 'vue-meta'
-import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
+import { useLiveMeta } from '../../utils/useLiveMeta'
 import type { ResponsiveLoaderAsset } from '../../utils/ResponsiveLoader'
 
 const title = 'Example List Design'
@@ -9,12 +7,10 @@ const title = 'Example List Design'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveLoaderAsset
 
-useMeta(computed(() => {
-    return createPageHeadOptions({
-        title,
-        image: img.src,
-    })
-}))
+useLiveMeta({
+    title,
+    image: img.src,
+})
 </script>
 
 <template>

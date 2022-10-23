@@ -1,13 +1,11 @@
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useMeta } from 'vue-meta'
-import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
+import { useLiveMeta } from '../../utils/useLiveMeta'
 
 const title = 'Guide'
 
-useMeta(computed(() => createPageHeadOptions({
+useLiveMeta({
     title,
-})))
+})
 </script>
 
 <template>

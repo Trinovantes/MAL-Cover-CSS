@@ -1,16 +1,15 @@
 <script lang="ts" setup>
 import dayjs from 'dayjs'
 import { computed } from 'vue'
-import { useMeta } from 'vue-meta'
 import { useApi } from '../../services/useApi'
 import { useUserStore } from '../../store/User/useUserStore'
-import { createPageHeadOptions } from '../../utils/createPageHeadOptions'
+import { useLiveMeta } from '../../utils/useLiveMeta'
 
 const title = 'Settings'
 
-useMeta(computed(() => createPageHeadOptions({
+useLiveMeta({
     title,
-})))
+})
 
 const userStore = useUserStore()
 const currentUser = computed(() => userStore.currentUser)
