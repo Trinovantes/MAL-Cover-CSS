@@ -1,5 +1,5 @@
 import { createPinia } from 'pinia'
-import { Quasar, Notify } from 'quasar/src/index.all'
+import { Quasar, Notify } from 'quasar'
 import { createSSRApp } from 'vue'
 import { createMetaManager, defaultConfig } from 'vue-meta'
 import AppLoader from './client/AppLoader.vue'
