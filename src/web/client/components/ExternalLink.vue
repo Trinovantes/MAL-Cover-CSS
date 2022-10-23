@@ -12,19 +12,16 @@ defineProps({
 </script>
 
 <template>
-    <span class="external-link">
+    <span>
         <a
             :href="href"
             :title="href"
             target="_blank"
             rel="noopener"
-            :style="{
-                color: color,
-            }"
+            :style="{ color }"
         >
             <slot />
         </a>
-
         <q-icon
             name="open_in_new"
             :color="color"
@@ -33,7 +30,7 @@ defineProps({
 </template>
 
 <style lang="scss" scoped>
-span.external-link{
+span{
     align-items: center;
     display: inline-flex !important;
 
