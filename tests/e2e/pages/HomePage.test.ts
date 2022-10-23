@@ -18,8 +18,7 @@ test.describe('HomePage', () => {
     })
 
     test('page title', async({ page }) => {
-        const title = page.locator('title')
-        await expect(title).toHaveText('MAL Cover CSS')
+        await expect(page).toHaveTitle('MAL Cover CSS')
     })
 
     test('user is logged out', async({ page }) => {
