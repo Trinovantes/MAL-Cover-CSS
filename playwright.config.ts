@@ -24,7 +24,6 @@ const config: PlaywrightTestConfig = {
         timeout: 120 * 1000, // ms
         reuseExistingServer: !isContinousIntegration,
         env: {
-            [RuntimeSecret.ENABLE_LOGGING]: 'false',
             [RuntimeSecret.IS_TEST]: 'true',
         },
     },
@@ -32,6 +31,10 @@ const config: PlaywrightTestConfig = {
     use: {
         baseURL: url,
         trace: 'on-first-retry',
+        viewport: {
+            width: 1440,
+            height: 800,
+        },
     },
 }
 

@@ -1,31 +1,53 @@
-import { test, expect } from '@playwright/test'
+import { expect } from '@playwright/test'
+import { HomePageTester } from '../fixtures/HomePageTester'
+import { PageHeaderTester } from '../fixtures/PageHeaderTester'
+import { malTest } from '../fixtures/malTest'
 
-test.describe('HomePage', () => {
-    test.beforeEach(async({ page }) => {
-        page.on('pageerror', (error) => {
-            throw new Error(`[pageerror] ${error.name}: ${error.message}`)
-        })
+malTest.describe('HomePage', () => {
+    let pageHeader: PageHeaderTester
+    let homePage: HomePageTester
 
-        page.on('console', (msg) => {
-            if (msg.type() !== 'error') {
-                return
-            }
-
-            throw new Error(`[pageerror] ${msg.text()}`)
-        })
-
-        await page.goto('/')
+    malTest.beforeEach(async({ page }) => {
+        pageHeader = new PageHeaderTester(page)
+        homePage = new HomePageTester(page)
+        await homePage.goto()
     })
 
-    test('page title', async({ page }) => {
+    malTest('page has title', async({ page }) => {
         await expect(page).toHaveTitle('MAL Cover CSS')
     })
 
-    test('user is logged out', async({ page }) => {
-        const headerLogInBtn = page.locator('#app > header .header-items .q-btn')
-        await expect(headerLogInBtn).toHaveText(/log in/i)
+    malTest('user is logged out', async() => {
+        await homePage.assertIsLoggedIn(false)
+        await pageHeader.assertIsLoggedIn(false)
+    })
 
-        const heroUnitBtn = page.locator('#app > main .hero-unit:first-child .q-btn:first-child')
-        await expect(heroUnitBtn).toHaveText(/log in/i)
+    malTest.describe('Mobile MainLayoutHeader', () => {
+        malTest.beforeEach(async({ page }) => {
+            await page.setViewportSize({
+                width: 960,
+                height: 800,
+            })
+        })
+
+        malTest('expand btn is initially visible', async() => {
+            await pageHeader.assertIsMobileMode(false)
+        })
+
+        malTest('expand btn opens header items', async() => {
+            await pageHeader.expandMobileMenu()
+            await pageHeader.assertIsMobileMode(true)
+        })
+
+        malTest('clicking anything in header closes header items', async() => {
+            const numLinks = await pageHeader.getNumMenuLinks()
+            for (let i = 1; i < numLinks; i++) {
+                await pageHeader.expandMobileMenu()
+                await pageHeader.assertIsMobileMode(true)
+
+                await pageHeader.clickNthMenuLink(i + 1)
+                await pageHeader.assertIsMobileMode(false)
+            }
+        })
     })
 })

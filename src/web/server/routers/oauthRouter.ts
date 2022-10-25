@@ -34,7 +34,7 @@ oauthRouter.post('/login', (req, res, next) => {
     }
 
     if (!req.session) {
-        return next(new createHttpError.NotImplemented())
+        return next(new createHttpError.NotImplemented('Invalid session'))
     }
 
     req.session.oauthState = {
@@ -42,7 +42,7 @@ oauthRouter.post('/login', (req, res, next) => {
         restorePath: req.body.restorePath || DEFAULT_REDIRECT_PATH,
     }
 
-    const url = getOauthEndpoint(req.session.oauthState)
+    const url = getOauthEndpoint(req.session.oauthState, req.session.oauthState.secret)
     const redirect: RedirectResponse = { url }
     res.status(200)
     res.json(redirect)
@@ -69,7 +69,7 @@ oauthRouter.post('/logout', enforceUserIsLoggedIn, createAsyncHandler(async(req,
 // ----------------------------------------------------------------------------
 
 oauthRouter.get('/', createAsyncHandler(async(req, res) => {
-    const onError = async(redirect: string = DEFAULT_REDIRECT_PATH) => {
+    const onError = async(redirect = DEFAULT_REDIRECT_PATH) => {
         await clearSession(req, res)
         res.redirect(redirect)
     }
@@ -114,8 +114,7 @@ oauthRouter.get('/', createAsyncHandler(async(req, res) => {
         return
     }
 
-    const redirectUrl = `${DEFINE.APP_URL}/api/oauth`
-    const malOauth = await fetchAccessToken(urlQuery.code, returnedState.secret, redirectUrl)
+    const malOauth = await fetchAccessToken(urlQuery.code, returnedState.secret)
     const malUser = await fetchMalUser(malOauth.access_token)
     const tokenExpires = getSqlTimestamp(dayjs.utc().add(malOauth.expires_in, 'seconds').toDate())
 
