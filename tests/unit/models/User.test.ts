@@ -9,9 +9,9 @@ import * as getSqlTimestampModule from '@/common/utils/getSqlTimestamp'
 // Global
 // ----------------------------------------------------------------------------
 
-let testDbClient: dbClientModule.DbClient
-
 const origGetSqlTimestamp = getSqlTimestampModule.getSqlTimestamp
+
+let testDbClient: dbClientModule.DbClient
 
 beforeEach(async() => {
     testDbClient = dbClientModule.createDbClient(DB_MEMORY)
