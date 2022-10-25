@@ -13,13 +13,14 @@ export enum RuntimeSecret {
     MAL_CLIENT_ID = 'MAL_CLIENT_ID',
     MAL_CLIENT_SECRET = 'MAL_CLIENT_SECRET',
 
+    IS_TEST = 'IS_TEST',
     ENABLE_LOGGING = 'ENABLE_LOGGING',
     ENABLE_SESSIONS = 'ENABLE_SESSIONS',
 }
 
 const secretsCache = new Map<RuntimeSecret, string>()
 
-export function getRuntimeSecret(key: RuntimeSecret): string {
+export function getRuntimeSecret(key: RuntimeSecret, defaultValue?: string): string {
     // Check if it's already defined in process.env
     const envValue = process.env[key]
     if (envValue) {
@@ -40,6 +41,10 @@ export function getRuntimeSecret(key: RuntimeSecret): string {
         const secret = fs.readFileSync(secretsFile).toString('utf-8')
         secretsCache.set(key, secret)
         return secret
+    }
+
+    if (defaultValue) {
+        return defaultValue
     }
 
     // Cannot find the secret anywhere
