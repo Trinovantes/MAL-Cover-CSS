@@ -12,13 +12,13 @@ import { isOauthTokenSuccess, OauthTokenSuccess } from './schemas/OauthTokenSucc
 // before being parsed (to avoid hijacking attempts)
 // ----------------------------------------------------------------------------
 
-export function getOauthEndpoint(oauthState: OauthState): string {
+export function getOauthEndpoint(oauthState: OauthState, codeChallenge: string): string {
     const query = {
-        client_id: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_ID),
         redirect_uri: `${DEFINE.APP_URL}/api/oauth`,
+        client_id: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_ID),
         response_type: 'code',
         state: encodeURIComponent(JSON.stringify(oauthState)),
-        code_challenge: oauthState.secret,
+        code_challenge: codeChallenge,
         code_challenge_method: 'plain',
     }
 
@@ -26,14 +26,14 @@ export function getOauthEndpoint(oauthState: OauthState): string {
     return url
 }
 
-export async function fetchAccessToken(authCode: string, codeChallenge: string, redirectUrl: string): Promise<OauthTokenSuccess> {
+export async function fetchAccessToken(authCode: string, codeChallenge: string): Promise<OauthTokenSuccess> {
     const query = {
+        redirect_uri: `${DEFINE.APP_URL}/api/oauth`,
         client_id: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_ID),
         client_secret: getRuntimeSecret(RuntimeSecret.MAL_CLIENT_SECRET),
         grant_type: 'authorization_code',
         code: authCode,
         code_verifier: codeChallenge,
-        redirect_uri: redirectUrl,
     }
 
     console.info('Fetching (fetchAccessToken)', MAL_TOKEN_URL)

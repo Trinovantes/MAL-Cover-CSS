@@ -5,16 +5,25 @@ import http from 'http'
 import { migrateDb } from '@/common/db/migration'
 import { getRuntimeSecret, RuntimeSecret } from '@/common/utils/RuntimeSecret'
 import { createServerApp } from './server/createServerApp'
+import { setupTestInterceptors } from './server/setupTestInterceptors'
 
 async function main() {
     await migrateDb()
 
+    const isDev = DEFINE.IS_DEV
+    const isProd = !DEFINE.IS_DEV
+    const isTest = getRuntimeSecret(RuntimeSecret.IS_TEST, 'false') === 'true'
+
+    if (isTest) {
+        setupTestInterceptors()
+    }
+
     const app = await createServerApp({
-        trustProxy: !DEFINE.IS_DEV,
-        useMemoryStorage: getRuntimeSecret(RuntimeSecret.IS_TEST, 'false') === 'true',
-        enableStaticFiles: DEFINE.IS_DEV,
+        trustProxy: isProd,
+        useMemoryStorage: isTest,
+        enableStaticFiles: isDev,
+        enableSentry: isProd,
         enableLogging: getRuntimeSecret(RuntimeSecret.ENABLE_LOGGING) === 'true',
-        enableSentry: !DEFINE.IS_DEV,
         enableSessions: getRuntimeSecret(RuntimeSecret.ENABLE_SESSIONS) === 'true',
     })
 
