@@ -1,6 +1,7 @@
 import assert from 'assert'
 import fs from 'fs'
 import path from 'path'
+import { DB_MEMORY } from '@/common/Constants'
 import * as dbClientModule from '@/common/db/client'
 import { createMigrationTableIfNotExists, getCurrentSchemaVersion, getMigrations, migrateDb, migrateDbDown, migrateDbUp, MIGRATE_DOWN_MARKER, MIGRATE_UP_MARKER, MIGRATION_TABLE_NAME } from '@/common/db/migration'
 
@@ -11,7 +12,7 @@ import { createMigrationTableIfNotExists, getCurrentSchemaVersion, getMigrations
 let testDbClient: dbClientModule.DbClient
 
 beforeEach(() => {
-    testDbClient = dbClientModule.createDbClient(':memory:')
+    testDbClient = dbClientModule.createDbClient(DB_MEMORY)
     jest.spyOn(dbClientModule, 'getDbClient').mockImplementation(() => testDbClient)
 })
 
@@ -353,16 +354,7 @@ function mockTestFs(mockDir: string, mockFiles: Array<{ fileName: string; fileCo
     const mockFileNames = mockFiles.map((file) => file.fileName)
     const mockFileFullPaths = mockFileNames.map((fileName) => path.join(mockFileDir, fileName))
 
-    jest.spyOn(fs, 'readdirSync').mockImplementation((dirPath) => {
-        const targetDir = path.resolve(dirPath.toString())
-        if (mockFileDir === targetDir) {
-            return mockFileNames as unknown as ReturnType<typeof fs['readdirSync']>
-        }
-
-        return []
-    })
-
-    const statSync = (fullPath: string) => {
+    const mockStatSync = (fullPath: string) => {
         const fileDir = path.dirname(fullPath)
         if (fileDir !== mockFileDir) {
             return undefined
@@ -373,19 +365,30 @@ function mockTestFs(mockDir: string, mockFiles: Array<{ fileName: string; fileCo
         }
     }
 
-    jest.spyOn(fs, 'statSync').mockImplementation(statSync as unknown as typeof fs['statSync'])
+    const mockReadDirSync = (dirPath: string) => {
+        const targetDir = path.resolve(dirPath.toString())
+        if (mockFileDir === targetDir) {
+            return mockFileNames as unknown as ReturnType<typeof fs['readdirSync']>
+        }
 
-    jest.spyOn(fs, 'readFileSync').mockImplementation((fileFullPath) => {
+        return []
+    }
+
+    const mockReadFileSync = (fileFullPath: fs.PathOrFileDescriptor) => {
         if (typeof fileFullPath !== 'string') {
             throw new Error(`Mock file "${fileFullPath.toString()}" does not exist`)
         }
 
-        if (!statSync(fileFullPath)?.isFile()) {
+        if (!mockStatSync(fileFullPath)?.isFile()) {
             throw new Error(`Mock file "${fileFullPath.toString()}" does not exist`)
         }
 
         const mockFile = mockFiles.find((file) => fileFullPath.includes(file.fileName))
         assert(mockFile)
         return mockFile.fileContents
-    })
+    }
+
+    jest.spyOn(fs, 'statSync').mockImplementation(mockStatSync as unknown as typeof fs['statSync'])
+    jest.spyOn(fs, 'readdirSync').mockImplementation(mockReadDirSync as unknown as typeof fs['readdirSync'])
+    jest.spyOn(fs, 'readFileSync').mockImplementation(mockReadFileSync as unknown as typeof fs['readFileSync'])
 }
