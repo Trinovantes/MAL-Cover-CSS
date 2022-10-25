@@ -1,6 +1,7 @@
 import path from 'path'
 import { open } from 'sqlite'
 import sqlite3 from 'sqlite3'
+import { getRuntimeSecret, RuntimeSecret } from '../utils/RuntimeSecret'
 import { isPathExists } from '../utils/isPathExists'
 import { DB_FILE, DB_MEMORY } from '@/common/Constants'
 import { asyncExec } from '@/common/utils/asyncExec'
@@ -11,7 +12,11 @@ let globalDbClient: DbClient | null = null
 
 export function getDbClient(): DbClient {
     if (!globalDbClient) {
-        globalDbClient = createDbClient(DB_FILE)
+        if (getRuntimeSecret(RuntimeSecret.IS_TEST, 'false') === 'true') {
+            globalDbClient = createDbClient(DB_MEMORY)
+        } else {
+            globalDbClient = createDbClient(DB_FILE)
+        }
     }
 
     return globalDbClient

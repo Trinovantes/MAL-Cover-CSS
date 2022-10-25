@@ -5,6 +5,7 @@ import connectRedis from 'connect-redis'
 import express from 'express'
 import session from 'express-session'
 import createHttpError from 'http-errors'
+import memoryStore from 'memorystore'
 import morgan from 'morgan'
 import { createClient } from 'redis'
 import { COOKIE_DURATION, SENTRY_DSN } from '@/common/Constants'
@@ -19,6 +20,7 @@ import type { Express } from 'express'
 
 type ServerAppOptions = {
     trustProxy: boolean
+    useMemoryStorage: boolean
     enableStaticFiles: boolean
     enableSentry: boolean
     enableLogging: boolean
@@ -83,21 +85,30 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
 
     if (options.enableSessions) {
         const sslEnabled = DEFINE.APP_URL.startsWith('https')
-        console.info(`Starting express-session secure:${sslEnabled} REDIS_HOST:${getRuntimeSecret(RuntimeSecret.REDIS_HOST)} REDIS_PORT:${getRuntimeSecret(RuntimeSecret.REDIS_PORT)}`)
+        const redisHost = getRuntimeSecret(RuntimeSecret.REDIS_HOST)
+        const redisPort = parseInt(getRuntimeSecret(RuntimeSecret.REDIS_PORT))
+        console.info(`Starting express-session secure:${sslEnabled} useMemoryStorage:${options.useMemoryStorage} REDIS_HOST:${redisHost} REDIS_PORT:${redisPort}`)
 
-        const redisClient = createClient({
-            legacyMode: true,
-            socket: {
-                host: getRuntimeSecret(RuntimeSecret.REDIS_HOST),
-                port: parseInt(getRuntimeSecret(RuntimeSecret.REDIS_PORT)),
-            },
-        })
+        let sessionStore: session.Store
+        if (options.useMemoryStorage) {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const MemoryStore = memoryStore(session)
+            sessionStore = new MemoryStore({})
+        } else {
+            const redisClient = createClient({
+                legacyMode: true,
+                socket: {
+                    host: redisHost,
+                    port: redisPort,
+                },
+            })
 
-        await redisClient.connect()
+            await redisClient.connect()
 
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const RedisStore = connectRedis(session)
-        const redisStore = new RedisStore({ client: redisClient })
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            const RedisStore = connectRedis(session)
+            sessionStore = new RedisStore({ client: redisClient })
+        }
 
         app.use(session({
             secret: getRuntimeSecret(RuntimeSecret.ENCRYPTION_KEY),
@@ -109,7 +120,7 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
                 httpOnly: true, // Cookies will not be available to Document.cookie api
                 secure: sslEnabled, // Cookies only sent over https
             },
-            store: redisStore,
+            store: sessionStore,
         }))
     }
 

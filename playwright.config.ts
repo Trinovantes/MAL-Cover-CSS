@@ -25,7 +25,7 @@ const config: PlaywrightTestConfig = {
         reuseExistingServer: !isContinousIntegration,
         env: {
             [RuntimeSecret.ENABLE_LOGGING]: 'false',
-            [RuntimeSecret.ENABLE_SESSIONS]: 'false',
+            [RuntimeSecret.IS_TEST]: 'true',
         },
     },
 

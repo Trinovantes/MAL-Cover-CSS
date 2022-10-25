@@ -11,6 +11,7 @@ async function main() {
 
     const app = await createServerApp({
         trustProxy: !DEFINE.IS_DEV,
+        useMemoryStorage: getRuntimeSecret(RuntimeSecret.IS_TEST, 'false') === 'true',
         enableStaticFiles: DEFINE.IS_DEV,
         enableLogging: getRuntimeSecret(RuntimeSecret.ENABLE_LOGGING) === 'true',
         enableSentry: !DEFINE.IS_DEV,
