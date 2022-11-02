@@ -13,7 +13,7 @@ echo 'Finished backup validation'
 
 echo
 echo 'Starting to upload backup'
-find -name "*.sqlite3" -type f -print | sed 's/\.\///' | sort | tail -n 1 | xargs -t -I '%' aws --endpoint-url $AWS_ENDPOINT_URL s3 cp % s3://malcovercss-backup/%
+find -name "*.sqlite3" -type f -print | sed 's/\.\///' | sort | tail -n 1 | xargs -t -I '%' aws --endpoint-url $AWS_ENDPOINT_URL s3 cp % s3://malcovercss/%
 echo 'Finished backup upload'
 
 echo
