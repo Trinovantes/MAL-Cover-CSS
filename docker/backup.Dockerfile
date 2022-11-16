@@ -3,9 +3,11 @@ FROM alpine:3.15
 LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 
-ENV GLIBC_VER=2.31-r0
+# Install sqlite3
+RUN apk update && apk add sqlite
 
 # Install aws-cli
+ENV GLIBC_VER=2.31-r0
 RUN apk --no-cache add \
         binutils \
         curl \
@@ -17,7 +19,7 @@ RUN apk --no-cache add \
         "glibc-bin-${GLIBC_VER}.apk" \
     && curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip \
     && unzip awscliv2.zip \
-    && aws/install \
+    && ./aws/install \
     && rm -rf \
         awscliv2.zip \
         aws \
@@ -29,10 +31,8 @@ RUN apk --no-cache add \
         curl \
     && rm glibc-${GLIBC_VER}.apk \
     && rm glibc-bin-${GLIBC_VER}.apk \
-    && rm -rf /var/cache/apk/*
-
-# Install sqlite3
-RUN apk update && apk add sqlite
+    && rm -rf /var/cache/apk/* \
+    && aws --version
 
 WORKDIR /app
 
