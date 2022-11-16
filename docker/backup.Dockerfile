@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-FROM alpine
+FROM alpine:3.15
 LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 
