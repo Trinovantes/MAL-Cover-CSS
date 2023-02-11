@@ -81,7 +81,7 @@ export class Item {
         const dbClient = await getDbClient()
         let rows: Array<ItemAttributes>
 
-        if (mediaType) {
+        if (mediaType !== undefined) {
             rows = await dbClient.all<Array<ItemAttributes>>(`
                 SELECT * FROM ${Item.TABLE}
                 WHERE mediaType = @mediaType;
