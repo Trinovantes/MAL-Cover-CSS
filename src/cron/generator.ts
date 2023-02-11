@@ -73,7 +73,7 @@ async function generate(outputDir: string, selector: CssSelector, mediaType?: Me
         return
     }
 
-    const fileName = `${!mediaType ? 'all' : mediaType}-${selector}.css`
+    const fileName = `${mediaType === undefined ? 'all' : mediaType}-${selector}.css`
     const outputFile = path.resolve(outputDir, fileName)
     console.info(`Starting to write: ${outputFile}`)
 

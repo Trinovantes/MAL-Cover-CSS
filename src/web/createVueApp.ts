@@ -1,5 +1,5 @@
 import { createPinia } from 'pinia'
-import { Quasar, Notify } from 'quasar'
+import { Quasar, Notify, QuasarPluginOptions } from 'quasar'
 import { createSSRApp } from 'vue'
 import { createMetaManager, defaultConfig } from 'vue-meta'
 import AppLoader from './client/AppLoader.vue'
@@ -10,6 +10,7 @@ import LazyImage from './client/components/LazyImage.vue'
 import { createAppRouter } from './client/router/createAppRouter'
 import { useUserStore } from './client/store/User/useUserStore'
 import type { AppContext } from './AppContext'
+import type { SSRContext } from '@vue/server-renderer'
 import type { createRouter } from 'vue-router'
 
 type VueApp = {
@@ -53,7 +54,7 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     app.use(metaManager)
 
     // Quasar
-    app.use(Quasar, {
+    app.use<[Partial<QuasarPluginOptions>, SSRContext?]>(Quasar, {
         plugins: {
             Notify,
         },
