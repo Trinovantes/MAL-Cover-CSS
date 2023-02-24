@@ -46,7 +46,7 @@ export async function createAppRouter(appContext?: AppContext): Promise<Router> 
         if (canVisitRoute(to)) {
             next()
         } else {
-            console.warn(`Cannot navigate to ${to.fullPath} because isLoggedIn:${isLoggedIn.value}`)
+            console.info(`Cannot navigate to ${to.fullPath} because isLoggedIn:${isLoggedIn.value}`)
             next({ name: RouteName.Home })
         }
     })
