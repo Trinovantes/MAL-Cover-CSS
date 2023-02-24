@@ -1,11 +1,17 @@
 import { BatchInterceptor } from '@mswjs/interceptors'
-import nodeInterceptors from '@mswjs/interceptors/lib/presets/node'
+import { ClientRequestInterceptor } from '@mswjs/interceptors/ClientRequest'
+import { XMLHttpRequestInterceptor } from '@mswjs/interceptors/XMLHttpRequest'
+import { FetchInterceptor } from '@mswjs/interceptors/fetch'
 import { MAL_API_URL, MAL_TOKEN_URL } from '@/common/Constants'
 
 export function setupTestInterceptors() {
     const interceptor = new BatchInterceptor({
         name: 'Test Interceptors',
-        interceptors: nodeInterceptors,
+        interceptors: [
+            new ClientRequestInterceptor(),
+            new XMLHttpRequestInterceptor(),
+            new FetchInterceptor(),
+        ],
     })
 
     const externalOrigins = [
@@ -14,28 +20,30 @@ export function setupTestInterceptors() {
     ]
 
     interceptor.on('request', (req) => {
-        const isExternalRequest = externalOrigins.includes(req.url.origin)
+        const url = new URL(req.url)
+        const isExternalRequest = externalOrigins.includes(url.origin)
         if (!isExternalRequest) {
             return
         }
 
-        if (req.url.toString() === MAL_TOKEN_URL) {
-            req.respondWith({
-                status: 200,
-                body: JSON.stringify({
+        if (url.toString() === MAL_TOKEN_URL) {
+            req.respondWith(new Response(
+                JSON.stringify({
                     access_token: 'test_mal_token',
                     refresh_token: 'test_mal_token',
                     expires_in: 15 * 60,
                     token_type: 'Bearer',
                 }),
-            })
+                {
+                    status: 200,
+                },
+            ))
             return
         }
 
-        if (req.url.toString() === `${MAL_API_URL}/users/@me`) {
-            req.respondWith({
-                status: 200,
-                body: JSON.stringify({
+        if (url.toString() === `${MAL_API_URL}/users/@me`) {
+            req.respondWith(new Response(
+                JSON.stringify({
                     id: 0,
                     name: 'test_mal_user',
                     gender: '',
@@ -43,7 +51,10 @@ export function setupTestInterceptors() {
                     joined_at: '',
                     picture: '',
                 }),
-            })
+                {
+                    status: 200,
+                },
+            ))
             return
         }
 
