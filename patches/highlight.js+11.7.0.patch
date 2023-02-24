@@ -1,8 +1,16 @@
 diff --git a/node_modules/highlight.js/package.json b/node_modules/highlight.js/package.json
-index 76df543..7be7d5e 100644
+index 0f94d12..50e4068 100644
 --- a/node_modules/highlight.js/package.json
 +++ b/node_modules/highlight.js/package.json
-@@ -103,9 +103,9 @@
+@@ -91,6 +91,7 @@
+   },
+   "exports": {
+     ".": {
++      "types": "./types/index.d.ts",
+       "require": "./lib/index.js",
+       "import": "./es/index.js"
+     },
+@@ -103,9 +104,9 @@
        "require": "./lib/core.js",
        "import": "./es/core.js"
      },
