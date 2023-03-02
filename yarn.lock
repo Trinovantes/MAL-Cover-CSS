@@ -1429,10 +1429,10 @@
     semver "^7.3.5"
     tar "^6.1.11"
 
-"@mswjs/interceptors@^0.21.1":
-  version "0.21.1"
-  resolved "https://registry.yarnpkg.com/@mswjs/interceptors/-/interceptors-0.21.1.tgz#eb3b1f000dbd485a821e7bc07c6df074e1ce2892"
-  integrity sha512-oxSaJe0tyY79A9JymOR9pLDZ6cdjBFnjGFCqJ/TdV5FxrcDp+gyNHc3awqHbiwFywq6dvivjiODEFyKgx4FtFQ==
+"@mswjs/interceptors@^0.22.3":
+  version "0.22.3"
+  resolved "https://registry.yarnpkg.com/@mswjs/interceptors/-/interceptors-0.22.3.tgz#92773946f5b5eff1d964b906cd52f1d5c5e4bd74"
+  integrity sha512-7ESSaGE1sjP4gNw0kXigLQnj7KeIC4loeO+oMBaU4kAf500jDA9+UyUbtctFGGbsoXolyTqJ21oUuujFvywE4g==
   dependencies:
     "@open-draft/deferred-promise" "^2.1.0"
     "@open-draft/until" "^1.0.3"
