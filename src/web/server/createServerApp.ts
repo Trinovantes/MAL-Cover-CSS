@@ -1,7 +1,7 @@
 import assert from 'assert'
 import * as Sentry from '@sentry/node'
 import { Integrations } from '@sentry/tracing'
-import connectRedis from 'connect-redis'
+import RedisStore from 'connect-redis'
 import express from 'express'
 import session from 'express-session'
 import createHttpError from 'http-errors'
@@ -105,8 +105,6 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
 
             await redisClient.connect()
 
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const RedisStore = connectRedis(session)
             sessionStore = new RedisStore({ client: redisClient })
         }
 
