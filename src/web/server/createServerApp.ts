@@ -96,7 +96,6 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
             sessionStore = new MemoryStore({})
         } else {
             const redisClient = createClient({
-                legacyMode: true,
                 socket: {
                     host: redisHost,
                     port: redisPort,
