@@ -1,16 +1,19 @@
 import { QuasarUnusedPlugin } from 'quasar-unused-plugin'
 import { VueSsrAssetsServerPlugin } from 'vue-ssr-assets-plugin'
-import { Configuration, DefinePlugin } from 'webpack'
+import { Configuration } from 'webpack'
 import merge from 'webpack-merge'
-import { distClientDir, distServerDir, publicPath, srcWebDir, manifestFile, commonNodeConfig } from './webpack.common'
+import { commonNodeConfig } from './webpack.common'
+import { distServerDir, distServerTemplate, srcWebDir, srcWebTemplate } from './BuildConstants'
+import path from 'node:path'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 
 // ----------------------------------------------------------------------------
 // Server
 // ----------------------------------------------------------------------------
 
-const serverEntryConfig = ((): Configuration => merge(commonNodeConfig, {
+export default ((): Configuration => merge(commonNodeConfig, {
     entry: {
-        www: `${srcWebDir}/entryServer.ts`,
+        www: path.join(srcWebDir, 'entryServer.ts'),
     },
 
     output: {
@@ -18,11 +21,13 @@ const serverEntryConfig = ((): Configuration => merge(commonNodeConfig, {
     },
 
     plugins: [
-        new DefinePlugin({
-            'DEFINE.PUBLIC_PATH': JSON.stringify(publicPath),
-            'DEFINE.CLIENT_DIST_DIR': JSON.stringify(distClientDir),
-            'DEFINE.SERVER_DIST_DIR': JSON.stringify(distServerDir),
-            'DEFINE.MANIFEST_FILE': JSON.stringify(manifestFile),
+        new CopyWebpackPlugin({
+            patterns: [
+                {
+                    from: srcWebTemplate,
+                    to: distServerTemplate,
+                },
+            ],
         }),
         new QuasarUnusedPlugin({
             enableSsr: true,
@@ -30,9 +35,3 @@ const serverEntryConfig = ((): Configuration => merge(commonNodeConfig, {
         new VueSsrAssetsServerPlugin(),
     ],
 }))()
-
-// ----------------------------------------------------------------------------
-// Exports
-// ----------------------------------------------------------------------------
-
-export default serverEntryConfig

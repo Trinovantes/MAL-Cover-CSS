@@ -1,20 +1,53 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import type { AppContext } from '@/web/AppContext'
-import { getRequestHeaders } from './getRequestHeaders'
+import { AppContext } from '@/web/AppContext'
+import { ErrorResponse } from '@/web/server/interfaces/ApiResponse'
 
-export async function fetchWithSsrProxy<T>(appContext: AppContext | undefined, url: string, config: AxiosRequestConfig = { method: 'get' }): Promise<AxiosResponse<T>> {
-    const res = await axios(url, {
+type FetchResult<T> = {
+    error: ErrorResponse
+    data: null
+} | {
+    error: null
+    data: T
+}
+
+/**
+ * Can be called on both the client and server
+ *  - If called on client, then this simply makes a normal fetch call
+ *  - If called on server (initial ssr req), then this proxies the client's cookie to the ssr server to the API server and back
+ *
+ * https://nuxt.com/docs/getting-started/data-fetching#passing-headers-and-cookies
+ */
+export async function fetchWithSsrProxy<T>(url: string, config: RequestInit = { method: 'GET' }, appContext?: AppContext): Promise<FetchResult<T>> {
+    const clientCookie = appContext?.req.headers.cookie
+    const res = await fetch(DEFINE.API_URL + url, {
         ...config,
-        headers: getRequestHeaders(appContext),
+        credentials: 'include',
+        headers: {
+            ...config?.headers,
+            ...((clientCookie !== undefined)
+                ? { Cookie: clientCookie }
+                : {}
+            ),
+        },
     })
 
-    if (DEFINE.IS_SSR) {
-        if (!appContext) {
-            throw new Error('Invalid appContext')
-        }
-
-        appContext.cookieHeaders = res.headers['set-cookie']
+    if (appContext) {
+        appContext.ssrProxyCookies = res.headers.get('set-cookie')
     }
 
-    return res as AxiosResponse<T>
+    const text = await res.text()
+    const json = text.length > 0
+        ? JSON.parse(text) as unknown
+        : {}
+
+    if (res.status === 200) {
+        return {
+            error: null,
+            data: json as T,
+        }
+    } else {
+        return {
+            error: json as ErrorResponse,
+            data: null,
+        }
+    }
 }

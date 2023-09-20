@@ -1,35 +1,35 @@
+// This file will be renamed to main.js after being compiled by webpack
+// It is kept as entryClient for historical value to match Vue's SSR guides
+
 // eslint-disable-next-line import/order
 import './client/assets/css/main.scss'
 
-// eslint-disable-next-line import/order
-import '@/common/utils/setupDayjs'
-
-import { Integrations } from '@sentry/tracing'
+import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/vue'
 import { SENTRY_DSN } from '@/common/Constants'
 import { createVueApp } from './createVueApp'
 
 async function main() {
+    console.info('Release', DEFINE.GIT_HASH)
     const { app, router } = await createVueApp()
 
     if (!DEFINE.IS_DEV) {
         Sentry.init({
             app,
-            release: DEFINE.GIT_HASH,
             dsn: SENTRY_DSN,
+            release: DEFINE.GIT_HASH,
+            tracesSampleRate: 0.1,
             integrations: [
-                new Integrations.BrowserTracing({
+                new BrowserTracing({
                     routingInstrumentation: Sentry.vueRouterInstrumentation(router),
                 }),
             ],
-            tracesSampleRate: 0,
-            enabled: !DEFINE.IS_DEV,
         })
     }
 
     app.mount('#app')
 }
 
-window.addEventListener('error', console.warn)
-window.addEventListener('unhandledrejection', console.warn)
-void main()
+main().catch((err) => {
+    console.error(err)
+})

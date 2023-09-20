@@ -1,38 +1,36 @@
 <script lang="ts" setup>
-defineProps({
-    href: {
-        type: String,
-        required: true,
-    },
-    color: {
-        type: String,
-        default: 'inherit',
-    },
-})
+defineProps<{
+    href: string
+    dark?: boolean
+}>()
 </script>
 
 <template>
-    <span>
-        <a
-            :href="href"
-            :title="href"
-            target="_blank"
-            rel="noopener"
-            :style="{ color }"
-        >
-            <slot />
-        </a>
+    <a
+        :href="href"
+        :title="href"
+        target="_blank"
+        rel="noopener"
+        class="external-link"
+        :class="{
+            dark
+        }"
+    >
+        <slot />
+
         <q-icon
             name="open_in_new"
-            :color="color"
+            :class="{
+                dark
+            }"
         />
-    </span>
+    </a>
 </template>
 
 <style lang="scss" scoped>
-span{
+a.external-link{
+    display: inline-flex;
     align-items: center;
-    display: inline-flex !important;
 
     .q-icon{
         margin-left: math.div($padding, 4);

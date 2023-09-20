@@ -6,12 +6,11 @@ import AppLoader from './client/AppLoader.vue'
 import ClientOnly from './client/components/ClientOnly.vue'
 import CodeBlock from './client/components/CodeBlock.vue'
 import ExternalLink from './client/components/ExternalLink.vue'
-import LazyImage from './client/components/LazyImage.vue'
-import { createAppRouter } from './client/router/createAppRouter'
+import { createVueRouter } from './client/router/createVueRouter'
 import { useUserStore } from './client/store/User/useUserStore'
-import type { AppContext } from './AppContext'
-import type { SSRContext } from '@vue/server-renderer'
-import type { createRouter } from 'vue-router'
+import { AppContext } from './AppContext'
+import { SSRContext } from '@vue/server-renderer'
+import { createRouter } from 'vue-router'
 
 type VueApp = {
     app: ReturnType<typeof createSSRApp>
@@ -24,7 +23,6 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     app.component('ClientOnly', ClientOnly)
     app.component('ExternalLink', ExternalLink)
     app.component('CodeBlock', CodeBlock)
-    app.component('LazyImage', LazyImage)
 
     // Pinia
     const pinia = createPinia()
@@ -34,12 +32,12 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
         appContext.pinia = pinia
     }
 
-    // Must init UserStore before router executes so nav guard sees init state
+    // Pinia Stores
     const userStore = useUserStore(pinia)
     await userStore.init(appContext)
 
     // Vue Router
-    const router = await createAppRouter(appContext)
+    const router = await createVueRouter(appContext)
     app.use(router)
     await router.isReady()
 

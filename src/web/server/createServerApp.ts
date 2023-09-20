@@ -1,75 +1,71 @@
-import assert from 'assert'
 import * as Sentry from '@sentry/node'
-import { Integrations } from '@sentry/tracing'
-import RedisStore from 'connect-redis'
+import cors from 'cors'
 import express from 'express'
 import session from 'express-session'
-import createHttpError from 'http-errors'
-import memoryStore from 'memorystore'
-import morgan from 'morgan'
-import { createClient } from 'redis'
 import { COOKIE_DURATION, SENTRY_DSN } from '@/common/Constants'
-import { getRuntimeSecret, RuntimeSecret } from '@/common/utils/RuntimeSecret'
-import { debugInfo } from './middleware/dev'
-import { setUserInLocals } from './middleware/user'
-import { oauthRouter } from './routers/oauthRouter'
-import { settingsRouter } from './routers/settingsRouter'
-import { vueRouter } from './routers/vueRouter'
-import { setupRouterErrorHandler } from './utils/setupRouterErrorHandler'
-import type { Express } from 'express'
+import { getRuntimeSecret, RuntimeSecret } from '@/common/node/RuntimeSecret'
+import { routeApi } from './routers/routeApi'
+import { routeVue } from './routers/routeVue'
+import { createErrorHandler } from './utils/createErrorHandler'
+import { generate404 } from './middlewares/generate404'
+import { ServerAppContext } from '@/web/server/ServerAppContext'
 
-type ServerAppOptions = {
-    trustProxy: boolean
-    useMemoryStorage: boolean
-    enableStaticFiles: boolean
-    enableSentry: boolean
-    enableLogging: boolean
-    enableSessions: boolean
-}
-
-export async function createServerApp(options: ServerAppOptions): Promise<Express> {
+export function createServerApp(ctx: ServerAppContext) {
     const app = express()
 
-    // Express sits behind nginx proxy in production
-    const { trustProxy } = options
-    console.info(`Setting 'trust proxy':${trustProxy}`)
-    app.set('trust proxy', trustProxy)
+    // Express sits behind proxy in production
+    app.set('trust proxy', ctx.trustProxy)
 
     // Handle non-GET request bodies
     app.use(express.json())
     app.use(express.urlencoded({ extended: false }))
 
+    // Pino
+    app.use(ctx.httpLogger)
+
+    // Cookies session
+    app.use(session({
+        secret: getRuntimeSecret(RuntimeSecret.ENCRYPTION_KEY),
+        resave: false,
+        saveUninitialized: false,
+        proxy: ctx.trustProxy,
+        cookie: {
+            maxAge: COOKIE_DURATION,
+            httpOnly: true, // Cookies will not be available to Document.cookie api
+            secure: DEFINE.WEB_URL.startsWith('https'), // Cookies only sent over https
+        },
+        store: ctx.sessionStore,
+    }))
+
     // -----------------------------------------------------------------------------
     // Optional Middlewares
     // -----------------------------------------------------------------------------
 
-    if (options.enableStaticFiles) {
-        assert(DEFINE.PUBLIC_PATH)
-        assert(DEFINE.CLIENT_DIST_DIR)
-        assert(DEFINE.SERVER_DIST_DIR)
-
-        console.info(`Serving static files from ${DEFINE.CLIENT_DIST_DIR} to ${DEFINE.PUBLIC_PATH}`)
-        app.use(DEFINE.PUBLIC_PATH, express.static(DEFINE.CLIENT_DIST_DIR))
-
-        console.info(`Serving static files from ${DEFINE.SERVER_DIST_DIR} to /`)
-        app.use('/', express.static(DEFINE.SERVER_DIST_DIR))
+    if (ctx.enableCors) {
+        ctx.httpLogger.logger.info(`Setting CORS origin to ${DEFINE.WEB_URL}`)
+        app.use(cors({
+            credentials: true,
+            origin: DEFINE.WEB_URL,
+        }))
     }
 
-    if (options.enableSentry) {
+    if (ctx.enableStaticFiles) {
+        ctx.httpLogger.logger.info(`Serving static files from "${DEFINE.SSR_PUBLIC_DIR}" to "${DEFINE.SSR_PUBLIC_PATH}"`)
+        app.use(DEFINE.SSR_PUBLIC_PATH, express.static(DEFINE.SSR_PUBLIC_DIR))
+    }
+
+    if (ctx.enableSentry) {
         Sentry.init({
             dsn: SENTRY_DSN,
             release: DEFINE.GIT_HASH,
+            tracesSampleRate: 0.1,
             integrations: [
                 // Enable HTTP calls tracing
                 new Sentry.Integrations.Http({ tracing: true }),
 
                 // Enable Express.js middleware tracing
-                new Integrations.Express({ app }),
+                new Sentry.Integrations.Express({ app }),
             ],
-
-            // We recommend adjusting this value in production, or using tracesSampler for finer control
-            tracesSampleRate: 1,
-            enabled: true,
         })
 
         // RequestHandler creates a separate execution context using domains, so that every transaction/span/breadcrumb is attached to its own Hub instance
@@ -79,59 +75,18 @@ export async function createServerApp(options: ServerAppOptions): Promise<Expres
         app.use(Sentry.Handlers.tracingHandler())
     }
 
-    if (options.enableLogging) {
-        app.use(morgan(DEFINE.IS_DEV ? 'dev' : 'combined'))
-    }
-
-    if (options.enableSessions) {
-        const sslEnabled = DEFINE.APP_URL.startsWith('https')
-        const redisHost = getRuntimeSecret(RuntimeSecret.REDIS_HOST)
-        const redisPort = parseInt(getRuntimeSecret(RuntimeSecret.REDIS_PORT))
-        console.info(`Starting express-session secure:${sslEnabled} useMemoryStorage:${options.useMemoryStorage} REDIS_HOST:${redisHost} REDIS_PORT:${redisPort}`)
-
-        let sessionStore: session.Store
-        if (options.useMemoryStorage) {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const MemoryStore = memoryStore(session)
-            sessionStore = new MemoryStore({})
-        } else {
-            const redisClient = createClient({
-                socket: {
-                    host: redisHost,
-                    port: redisPort,
-                },
-            })
-
-            await redisClient.connect()
-
-            sessionStore = new RedisStore({ client: redisClient })
-        }
-
-        app.use(session({
-            secret: getRuntimeSecret(RuntimeSecret.ENCRYPTION_KEY),
-            resave: false,
-            saveUninitialized: false,
-            proxy: trustProxy,
-            cookie: {
-                maxAge: COOKIE_DURATION,
-                httpOnly: true, // Cookies will not be available to Document.cookie api
-                secure: sslEnabled, // Cookies only sent over https
-            },
-            store: sessionStore,
-        }))
-    }
-
     // -----------------------------------------------------------------------------
     // Request Handlers
     // -----------------------------------------------------------------------------
 
-    app.use('/api/oauth', debugInfo, setUserInLocals, setupRouterErrorHandler(oauthRouter, true))
-    app.use('/api/settings', debugInfo, setUserInLocals, setupRouterErrorHandler(settingsRouter, true))
-    app.use('/api', (req, res, next) => {
-        next(new createHttpError.NotFound())
-    })
+    app.use('/api', routeApi(ctx))
+    app.use('/api', generate404())
+    app.use('/api', Sentry.Handlers.errorHandler())
+    app.use('/api', createErrorHandler(true))
 
-    app.use('*', setupRouterErrorHandler(vueRouter, false))
+    ctx.enableVue && app.use(routeVue())
+    app.use(generate404())
+    app.use(createErrorHandler(false))
 
     return app
 }

@@ -1,0 +1,17 @@
+:80 {
+	encode gzip
+
+	@notStatic {
+		not {
+			file {
+				try_files {path}
+			}
+		}
+	}
+
+	root * /app/dist/web/client
+	reverse_proxy @notStatic http://malcovercss-api:API_PORT {
+		trusted_proxies 172.16.0.0/12
+	}
+	file_server
+}

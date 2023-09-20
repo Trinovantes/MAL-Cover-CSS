@@ -1,39 +1,90 @@
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { QuasarUnusedPlugin } from 'quasar-unused-plugin'
+import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { VueSsrAssetsClientPlugin } from 'vue-ssr-assets-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import merge from 'webpack-merge'
-import { distClientDir, publicPath, staticDir, srcWebDir, manifestFile, commonWebConfig, isDev, distServerDir } from './webpack.common'
-import type { Configuration } from 'webpack'
+import { Configuration } from 'webpack'
+import path from 'node:path'
+import { commonWebConfig } from './webpack.common'
+import { distClientDir, distServerManifest, entryFile, isDev, manifestFileName, publicPath, publicPathOnServer, srcWebDir, srcWebStaticDir, srcWebTemplate } from './BuildConstants'
+import { BuildSecret, getBuildSecret, isAnalyze } from './BuildSecret'
+import 'webpack-dev-server'
 
 // ----------------------------------------------------------------------------
 // Client
 // ----------------------------------------------------------------------------
 
-const clientEntryConfig = ((): Configuration => merge(commonWebConfig, {
+export default ((): Configuration => merge(commonWebConfig, {
     entry: {
-        main: `${srcWebDir}/entryClient.ts`,
+        main: path.join(srcWebDir, 'entryClient.ts'),
     },
 
     output: {
-        path: distClientDir,
+        path: path.join(distClientDir, publicPathOnServer),
 
         filename: isDev
             ? '[name].js'
             : '[name].[contenthash].js',
 
-        // Important: Need to be a distinct subdir so that Express can match it before its catchall clause
-        // Does not need to be a real path on disk, just need to match the route in www.ts
         publicPath,
     },
 
+    devServer: {
+        allowedHosts: [new URL(getBuildSecret(BuildSecret.WEB_URL)).hostname],
+        port: getBuildSecret(BuildSecret.WEB_PORT),
+        devMiddleware: {
+            index: entryFile,
+            writeToDisk: (filePath) => {
+                // Since output.publicPath is '/public', app.html can only be accessed at /public/index.html
+                // Instead, we need to write it to disk and have webpack-dev-server serve it from '/' (contentBasePublicPath)
+                if (filePath.endsWith('.html')) {
+                    return true
+                }
+
+                if (filePath.endsWith(manifestFileName)) {
+                    return true
+                }
+
+                return false
+            },
+        },
+        historyApiFallback: {
+            index: entryFile,
+        },
+        static: [
+            {
+                directory: distClientDir,
+                publicPath: '/',
+            },
+            {
+                // CopyWebpackPlugin does not run during dev mode
+                directory: srcWebStaticDir,
+                publicPath: '/',
+            },
+        ],
+        headers: {
+            'Access-Control-Allow-Origin': '*',
+        },
+        proxy: {
+            '/api': getBuildSecret(BuildSecret.API_URL),
+        },
+    },
+
     plugins: [
+        (isDev
+            ? new HtmlWebpackPlugin({
+                template: srcWebTemplate,
+                filename: path.join(distClientDir, entryFile),
+            })
+            : null
+        ),
         new CopyWebpackPlugin({
             patterns: [
                 {
-                    from: staticDir,
-                    to: distServerDir,
+                    from: srcWebStaticDir,
+                    to: distClientDir,
                 },
             ],
         }),
@@ -46,17 +97,12 @@ const clientEntryConfig = ((): Configuration => merge(commonWebConfig, {
             enableSsr: true,
         }),
         new VueSsrAssetsClientPlugin({
-            fileName: manifestFile,
+            fileName: distServerManifest,
         }),
         new BundleAnalyzerPlugin({
-            analyzerMode: 'disabled',
-            generateStatsFile: false,
+            analyzerMode: isAnalyze()
+                ? 'server'
+                : 'disabled',
         }),
     ],
 }))()
-
-// ----------------------------------------------------------------------------
-// Exports
-// ----------------------------------------------------------------------------
-
-export default clientEntryConfig

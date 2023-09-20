@@ -1,13 +1,10 @@
-import assert from 'assert'
-import axios, { AxiosRequestConfig } from 'axios'
-import dayjs from 'dayjs'
 import { MAL_API_URL } from '@/common/Constants'
-import type { User } from '@/common/models/User'
-import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
-import { refreshAccessToken } from './oauth'
+import { DrizzleClient } from '@/common/db/createDb'
+import { User } from '@/common/db/models/User'
 
 // ----------------------------------------------------------------------------
 // v2 API Data
+// https://myanimelist.net/apiconfig/references/api/v2
 // ----------------------------------------------------------------------------
 
 export type MalError = {
@@ -76,75 +73,46 @@ export type MalMangaResponse = MalList<MalMangaListItem>
 // v2 API Data Fetch Functions
 // ----------------------------------------------------------------------------
 
-async function fetchFromMal<T>(accessToken: string, endpoint: string, config?: AxiosRequestConfig): Promise<T> {
-    const url = `${MAL_API_URL}/${endpoint}`
-    const requestConfig = {
-        ...config,
+async function fetchFromMal<T>(accessToken: string, endpoint: string): Promise<T> {
+    const res = await fetch(MAL_API_URL + endpoint, {
         headers: {
             Authorization: `Bearer ${accessToken}`,
         },
+    })
+
+    if (res.status !== 200) {
+        throw new Error(`${res.status}: Failed to fetch: ${await res.text()}`)
     }
 
-    console.info('Fetching (fetchFromMal)', url, config)
-    const res = await axios.get(url, requestConfig)
-
-    return res.data as T
+    return await res.json() as T
 }
 
-export function fetchMalUser(accessToken: string, config?: AxiosRequestConfig): Promise<MalUser> {
-    return fetchFromMal<MalUser>(accessToken, 'users/@me', config)
+export function fetchMalUser(accessToken: string): Promise<MalUser> {
+    return fetchFromMal<MalUser>(accessToken, '/users/@me')
 }
 
-async function fetchUserDataFromMal<T>(user: User, endpoint: string, config?: AxiosRequestConfig): Promise<T | null> {
-    assert(user.tokenExpires)
-    assert(user.accessToken)
-    assert(user.refreshToken)
-
-    try {
-        const tokenHasExpired = dayjs.utc(user.tokenExpires).isBefore(dayjs.utc())
-        if (tokenHasExpired) {
-            console.info(`${user.toString()} tokens have expired, going to refresh their tokens`)
-
-            const malRes = await refreshAccessToken(user.refreshToken)
-            const expires = getSqlTimestamp(dayjs.utc().add(malRes.expires_in, 'seconds').toDate())
-
-            await user.updateTokens({
-                tokenExpires: expires,
-                accessToken: malRes.access_token,
-                refreshToken: malRes.refresh_token,
-            })
-        }
-
-        return await fetchFromMal(user.accessToken, endpoint, config)
-    } catch (err) {
-        // Check if it's a known error
-        if (axios.isAxiosError(err) && err.response) {
-            if (err.response.status === 401) {
-                console.info(`${user.toString()} has revoked their authorization, going to delete the user`)
-
-                await user.updateTokens({
-                    tokenExpires: null,
-                    accessToken: null,
-                    refreshToken: null,
-                })
-
-                return null
-            } else if (err.response.status >= 500) {
-                console.info(`MyAnimeList server error ${err.response.status}`)
-                return null
-            }
-        }
-
-        // Unknown error
-        console.warn('Unhandled error while running fetchUserDataFromMal')
-        throw err
+export async function fetchMalAnimeList(db: DrizzleClient, user: User, limit = 100, offset = 0): Promise<MalAnimeResponse | null> {
+    if (!user.accessToken) {
+        throw new Error('Missing accessToken')
     }
+
+    const params = new URLSearchParams({
+        limit: limit.toString(),
+        offset: offset.toString(),
+    })
+
+    return await fetchFromMal<MalAnimeResponse>(user.accessToken, `/users/@me/animelist?${params.toString()}`)
 }
 
-export function fetchMalAnimeList(user: User, config: AxiosRequestConfig): Promise<MalAnimeResponse | null> {
-    return fetchUserDataFromMal<MalAnimeResponse>(user, 'users/@me/animelist', config)
-}
+export async function fetchMalMangaList(db: DrizzleClient, user: User, limit = 100, offset = 0): Promise<MalMangaResponse | null> {
+    if (!user.accessToken) {
+        throw new Error('Missing accessToken')
+    }
 
-export function fetchMalMangaList(user: User, config: AxiosRequestConfig): Promise<MalMangaResponse | null> {
-    return fetchUserDataFromMal<MalMangaResponse>(user, 'users/@me/mangalist', config)
+    const params = new URLSearchParams({
+        limit: limit.toString(),
+        offset: offset.toString(),
+    })
+
+    return await fetchFromMal<MalMangaResponse>(user.accessToken, `/users/@me/mangalist?${params.toString()}`)
 }

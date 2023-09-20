@@ -1,5 +1,5 @@
 import { expect } from '@playwright/test'
-import { SettingsPageTester } from '../fixtures/SettingsPageTester'
+import { SettingsPageTester } from '../fixtures/pages/SettingsPageTester'
 import { malAuthTest, malTest } from '../fixtures/malTest'
 
 malTest.describe('SettingsPage', () => {
@@ -18,8 +18,13 @@ malTest.describe('SettingsPage', () => {
         await expect(page).toHaveTitle(/Settings/)
     })
 
-    malAuthTest('auth user initially has no scrapped data', async() => {
-        await settingsPage.assertUsername('test_mal_user')
+    malAuthTest('auth user initially has no scrapped data', async({ apiMocker }) => {
+        await settingsPage.assertUsername(apiMocker.username)
         await settingsPage.assertLastChecked('N/A')
+    })
+
+    malAuthTest('deleting user redirects back to homepage', async({ page }) => {
+        await settingsPage.deleteUser()
+        await expect(page).toHaveURL('/')
     })
 })

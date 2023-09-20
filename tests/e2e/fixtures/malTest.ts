@@ -1,21 +1,23 @@
 import { expect, test as base } from '@playwright/test'
-import { MyAnimeListMocker } from './MyAnimeListMocker'
-import { PageHeaderTester } from './PageHeaderTester'
+import { ApiMocker } from './mockers/ApiMocker'
 
 type Fixtures = {
-    malMocker: MyAnimeListMocker
+    apiMocker: ApiMocker
 }
 
 export const malTest = base.extend<Fixtures>({
-    // eslint-disable-next-line no-empty-pattern
-    malMocker: async({ }, use) => {
-        const malMocker = new MyAnimeListMocker()
-        await use(malMocker)
+    apiMocker: async({}, use) => {
+        const apiMocker = new ApiMocker(false)
+        await use(apiMocker)
     },
 
-    page: async({ page, malMocker }, use) => {
+    page: async({ page, apiMocker }, use) => {
         page.on('pageerror', (error) => {
-            throw new Error(`[pageerror] ${error.name}: ${error.message}`)
+            if (error.stack?.includes('webpackHotUpdate')) {
+                return
+            }
+
+            throw new Error(`[pageerror] ${error.message} ${error.stack}`)
         })
 
         page.on('console', (msg) => {
@@ -23,28 +25,34 @@ export const malTest = base.extend<Fixtures>({
                 return
             }
 
-            throw new Error(`[pageerror] ${msg.text()}`)
+            if (msg.text().includes('401 (Unauthorized)')) {
+                return
+            }
+
+            if (msg.text().includes('403 (Forbidden)')) {
+                return
+            }
+
+            if (msg.text().includes('404 (Not Found)')) {
+                return
+            }
+
+            throw new Error(`[consoleerror] ${msg.text()}`)
         })
 
-        await malMocker.interceptApiRequests(page)
+        await apiMocker.interceptApiRequests(page)
 
         // Wait until the page is finished being tested
         await use(page)
 
+        // Make sure there are now error notifications
         await expect(page.locator('.q-notification.bg-negative')).toBeHidden()
     },
 })
 
 export const malAuthTest = malTest.extend({
-    page: async({ page }, use) => {
-        await page.goto('/')
-
-        const pageHeader = new PageHeaderTester(page)
-        await pageHeader.clickLogin() // Goes to api.myanimelist.net -> /api/oauth -> /settings
-
-        await page.waitForURL('/settings')
-
-        // Wait until the page is finished being tested
-        await use(page)
+    apiMocker: async({}, use) => {
+        const apiMocker = new ApiMocker(true)
+        await use(apiMocker)
     },
 })

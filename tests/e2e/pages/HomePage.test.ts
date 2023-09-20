@@ -1,14 +1,14 @@
 import { expect } from '@playwright/test'
-import { HomePageTester } from '../fixtures/HomePageTester'
-import { PageHeaderTester } from '../fixtures/PageHeaderTester'
+import { HomePageTester } from '../fixtures/pages/HomePageTester'
+import { MainLayoutHeaderTester } from '../fixtures/pages/MainLayoutHeaderTester'
 import { malTest } from '../fixtures/malTest'
 
 malTest.describe('HomePage', () => {
-    let pageHeader: PageHeaderTester
+    let header: MainLayoutHeaderTester
     let homePage: HomePageTester
 
     malTest.beforeEach(async({ page }) => {
-        pageHeader = new PageHeaderTester(page)
+        header = new MainLayoutHeaderTester(page)
         homePage = new HomePageTester(page)
         await homePage.goto()
     })
@@ -19,7 +19,7 @@ malTest.describe('HomePage', () => {
 
     malTest('user is logged out', async() => {
         await homePage.assertIsLoggedIn(false)
-        await pageHeader.assertIsLoggedIn(false)
+        await header.assertIsLoggedIn(false)
     })
 
     malTest.describe('Mobile MainLayoutHeader', () => {
@@ -31,22 +31,22 @@ malTest.describe('HomePage', () => {
         })
 
         malTest('expand btn is initially visible', async() => {
-            await pageHeader.assertIsMobileMode(false)
+            await header.assertIsMobileMode(false)
         })
 
         malTest('expand btn opens header items', async() => {
-            await pageHeader.expandMobileMenu()
-            await pageHeader.assertIsMobileMode(true)
+            await header.expandMobileMenu()
+            await header.assertIsMobileMode(true)
         })
 
         malTest('clicking anything in header closes header items', async() => {
-            const numLinks = await pageHeader.getNumMenuLinks()
+            const numLinks = await header.getNumMenuLinks()
             for (let i = 1; i < numLinks; i++) {
-                await pageHeader.expandMobileMenu()
-                await pageHeader.assertIsMobileMode(true)
+                await header.expandMobileMenu()
+                await header.assertIsMobileMode(true)
 
-                await pageHeader.clickNthMenuLink(i + 1)
-                await pageHeader.assertIsMobileMode(false)
+                await header.clickNthMenuLink(i + 1)
+                await header.assertIsMobileMode(false)
             }
         })
     })

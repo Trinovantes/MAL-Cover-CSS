@@ -1,7 +1,7 @@
+import { SSRContext } from '@vue/server-renderer'
+import express from 'express'
+import { createPinia } from 'pinia'
 import { useSSRContext } from 'vue'
-import type { SSRContext } from '@vue/server-renderer'
-import type express from 'express'
-import type { createPinia } from 'pinia'
 
 type QuasarSsrContext = {
     req: express.Request
@@ -17,13 +17,26 @@ type QuasarSsrContext = {
     }>
 }
 
-export type AppContext = SSRContext & QuasarSsrContext & {
+type VueSsrAssetsPluginContext = {
+    _matchedComponents: Set<string>
+}
+
+export type AppContext = SSRContext & QuasarSsrContext & VueSsrAssetsPluginContext & {
     url: string
     pinia?: ReturnType<typeof createPinia>
-    cookieHeaders?: Array<string>
-    teleports: Record<string, string>
+    ssrProxyCookies?: string | null
+}
 
-    _matchedComponents: Set<string>
+export function createAppContext(req: express.Request, res: express.Response): AppContext {
+    return {
+        url: req.originalUrl,
+
+        req,
+        res,
+        _modules: new Set(),
+        _meta: {},
+        _matchedComponents: new Set(),
+    }
 }
 
 export function useAppContext(): AppContext | undefined {

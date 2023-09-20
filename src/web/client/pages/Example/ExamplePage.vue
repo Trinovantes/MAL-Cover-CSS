@@ -1,16 +1,10 @@
 <script lang="ts" setup>
-import { useLiveMeta } from '../../utils/useLiveMeta'
-import type { ResponsiveLoaderAsset } from '../../utils/ResponsiveLoader'
+import { useLiveMeta } from '@/web/client/utils/useLiveMeta'
+import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
 
 const title = 'Example List Design'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveLoaderAsset
-
-useLiveMeta({
-    title,
-    image: img.src,
-})
+const image = examplePreviewImg.src
+useLiveMeta({ title, image })
 </script>
 
 <template>
@@ -29,7 +23,7 @@ useLiveMeta({
                     This example list design can only style your score. If wish to include additional information (e.g. tags) in your lists, then you need to make additional changes to the CSS yourself.
                 </p>
 
-                <LazyImage
+                <q-img
                     :src="require('./img/only-show-score.png?size=800').src"
                 />
             </div>
@@ -42,7 +36,7 @@ useLiveMeta({
                 First, go into <ExternalLink href="https://myanimelist.net/ownlist/style">List Style Design</ExternalLink> and click on Classic template.
             </p>
 
-            <LazyImage
+            <q-img
                 :src="require('./img/enable-classic-template.png?size=800').src"
             />
 
@@ -54,7 +48,7 @@ useLiveMeta({
                 After enabling Classic template, you can then go into Advanced CSS List Design and create a new Advanced CSS List Design.
             </p>
 
-            <LazyImage
+            <q-img
                 :src="require('./img/create-advanced-css.png?size=800').src"
             />
 
@@ -66,7 +60,7 @@ useLiveMeta({
                 :code="require('../Home/raw/how-to-use-example-covers.css')"
             />
 
-            <LazyImage
+            <q-img
                 :src="require('./img/save-advanced-css.png?size=800').src"
             />
 
@@ -88,7 +82,7 @@ useLiveMeta({
                 Finally, follow the link in the notice MyAnimeList showed you in the previous step to go into your List Style settings and set your anime/manga lists to use your new design.
             </p>
 
-            <LazyImage
+            <q-img
                 :src="require('./img/set-list-style.png?size=800').src"
             />
         </section>
@@ -98,11 +92,13 @@ useLiveMeta({
                 You can see this example list design in action on my <ExternalLink href="https://myanimelist.net/animelist/Trinovantes">profile page</ExternalLink>.
             </p>
 
-            <LazyImage
-                :src="require('../../assets/img/example-covers.jpg?size=400').src"
+            <q-img
+                :src="require('@/web/client/assets/img/example-covers.jpg?size=400').src"
             >
-                Example List Design
-            </LazyImage>
+                <div class="absolute-bottom caption">
+                    Example List Design
+                </div>
+            </q-img>
         </aside>
     </article>
 </template>

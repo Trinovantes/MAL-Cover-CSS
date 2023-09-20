@@ -1,5 +1,6 @@
 import { merge } from 'webpack-merge'
-import { commonNodeConfig, distCronDir, srcCronDir } from './webpack.common'
+import { commonNodeConfig } from './webpack.common'
+import { srcCronDir, distCronDir } from './BuildConstants'
 
 // ----------------------------------------------------------------------------
 // Cron

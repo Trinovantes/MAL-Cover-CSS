@@ -3,7 +3,8 @@ import hljs from 'highlight.js/lib/core'
 import { onMounted, ref, watch } from 'vue'
 import { escapeHtml } from '../utils/escapeHtml'
 import { sleep } from '@/common/utils/sleep'
-import type { LanguageFn } from 'highlight.js'
+import { LanguageFn } from 'highlight.js'
+import 'highlight.js/styles/monokai.css'
 
 const props = defineProps({
     code: {

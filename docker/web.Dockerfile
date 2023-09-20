@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-FROM node:18 as builder
+FROM node:20 as builder
 # -----------------------------------------------------------------------------
 
 WORKDIR /app
@@ -7,31 +7,34 @@ WORKDIR /app
 # Install dependencies
 COPY tsconfig.json              ./
 COPY yarn.lock package.json     ./
+COPY node_modules               ./node_modules
 COPY patches/                   ./patches/
 RUN yarn install
 
 # Build app
 COPY build/                     ./build/
-COPY src/@types/                ./src/@types/
-COPY src/common/                ./src/common/
-COPY src/web/                   ./src/web/
+COPY src/                       ./src/
 RUN \
     --mount=type=secret,id=GIT_HASH \
-    --mount=type=secret,id=APP_URL \
-    --mount=type=secret,id=APP_PORT \
+    --mount=type=secret,id=WEB_URL \
+    --mount=type=secret,id=WEB_PORT \
+    --mount=type=secret,id=API_URL \
+    --mount=type=secret,id=API_PORT \
     NODE_ENV=production \
-    yarn buildWebClient
+    yarn buildWeb
 
 # -----------------------------------------------------------------------------
-FROM nginx:alpine
+FROM caddy:2-alpine
 LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 
 WORKDIR /app
 
-# Mount points
-RUN mkdir -p                    /app/dist/web/generated
-
 # Copy app
-COPY ./docker/web.conf          /etc/nginx/conf.d/default.conf
+COPY ./docker/web.Caddyfile     /etc/caddy/Caddyfile
 COPY --from=builder /app/dist   /app/dist/
+
+# Edit in API_PORT
+RUN \
+    --mount=type=secret,id=API_PORT \
+    sed -i "s/API_PORT/$(cat /run/secrets/API_PORT)/" /etc/caddy/Caddyfile

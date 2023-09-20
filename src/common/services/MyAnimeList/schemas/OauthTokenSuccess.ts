@@ -1,39 +1,17 @@
-import Ajv from 'ajv'
+import { Type, Static } from '@sinclair/typebox'
+import { Value } from '@sinclair/typebox/value'
 
-// ----------------------------------------------------------------------------
-// OauthTokenSuccess
-// ----------------------------------------------------------------------------
-
-export type OauthTokenSuccess = {
-    'token_type': string
-    'expires_in': number
-    'access_token': string
-    'refresh_token': string
-}
-
-const schema = {
-    type: 'object',
-    properties: {
-        token_type: {
-            type: 'string',
-        },
-        expires_in: {
-            type: 'number',
-        },
-        access_token: {
-            type: 'string',
-        },
-        refresh_token: {
-            type: 'string',
-        },
-    },
-    required: ['token_type', 'expires_in', 'access_token', 'refresh_token'],
+const tbOauthTokenSuccess = Type.Object({
+    token_type: Type.String(),
+    expires_in: Type.Number(),
+    access_token: Type.String(),
+    refresh_token: Type.String(),
+}, {
     additionalProperties: false,
-}
+})
 
-const ajv = new Ajv()
-const validator = ajv.compile(schema)
+export type OauthTokenSuccess = Static<typeof tbOauthTokenSuccess>
 
 export function isOauthTokenSuccess(obj?: unknown): obj is OauthTokenSuccess {
-    return Boolean(validator(obj))
+    return Value.Check(tbOauthTokenSuccess, obj)
 }

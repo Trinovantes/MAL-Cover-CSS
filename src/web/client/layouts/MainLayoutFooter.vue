@@ -10,7 +10,7 @@ const year = new Date().getFullYear()
                 &copy; {{ year }} {{ APP_NAME }}. This is a third party website and is not affiliated with MyAnimeList
             </p>
             <p>
-                Souce code available on <ExternalLink href="https://github.com/Trinovantes/MAL-Cover-CSS" color="white">GitHub</ExternalLink>.
+                <ExternalLink href="https://github.com/Trinovantes/MAL-Cover-CSS" :dark="true">GitHub</ExternalLink>
             </p>
         </div>
     </footer>
@@ -18,10 +18,12 @@ const year = new Date().getFullYear()
 
 <style lang="scss" scoped>
 footer{
-    font-size: 1rem;
     color: #999;
-
     background: $dark-page;
-    padding: ($padding * 3) 0;
+    padding: $hspace 0;
+
+    p{
+        margin: math.div($padding, 2) 0;
+    }
 }
 </style>

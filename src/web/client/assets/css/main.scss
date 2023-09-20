@@ -1,17 +1,33 @@
 @import './reset.scss';
 @import './quasar.scss';
-@import 'highlight.js/styles/monokai.css';
 
 // ----------------------------------------------------------------------------
 // General Elements
 // ----------------------------------------------------------------------------
+
+:root {
+    --q-primary: #{$primary};
+    --q-secondary: #{$secondary};
+    --q-accent: #{$accent};
+
+    --q-dark: #{$dark};
+    --q-dark-page: #{$dark-page};
+
+    --q-positive: #{$positive};
+    --q-negative: #{$negative};
+    --q-info: #{$info};
+    --q-warning: #{$warning};
+}
 
 noscript{
     font-weight: bold;
     text-align: center;
 
     background: $warning;
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: $header-height;
     padding: math.div($padding, 2);
 
     position: fixed;
@@ -20,25 +36,45 @@ noscript{
     z-index: 9999;
 }
 
-body{
-    color: $dark;
-    font-size: 1.25rem;
-    font-family: 'Roboto', sans-serif;
-    line-height: $ratio;
-
-    > iframe{
-        // Hide cloudflare's injected iframe
-        position: fixed;
-    }
+html, body, #app{
+    height: 100%;
 }
 
-a:not(.q-btn){
+body{
+    color: $dark;
+    font-size: 1rem;
+    font-family: 'Roboto', sans-serif;
+    line-height: $ratio;
+}
+
+a:not(.q-btn):not(.q-tab){
     color: $primary;
     text-decoration: none;
-    transition: 0.25s;
+
+    &,
+    &.external-link .q-icon{
+        transition: $transition;
+    }
 
     &:hover{
-        text-decoration: underline;
+        &,
+        &.external-link .q-icon{
+            color: $dark;
+        }
+    }
+
+    &.dark{
+        &,
+        &.external-link .q-icon{
+            color: $secondary;
+        }
+
+        &:hover{
+            &,
+            &.external-link .q-icon{
+                color: white;
+            }
+        }
     }
 }
 
@@ -56,7 +92,7 @@ h2{
 
 h3{
     font-size: 2rem;
-    font-weight: 900;
+    font-weight: bold;
     line-height: 1.25;
 }
 
@@ -78,8 +114,20 @@ h6{
     line-height: 1.25;
 }
 
+strong{
+    font-weight: bold;
+}
+em{
+    font-style: italic;
+}
+
+$list-item-padding: math.div($padding, 2);
+$list-padding: $hspace + $list-item-padding;
+
 ul, ol, dl{
-    padding-left: $padding * 2;
+    display: grid;
+    gap: $list-item-padding;
+    padding-left: $list-padding;
 }
 ul{
     list-style-type: disc;
@@ -92,28 +140,23 @@ dl{
         font-weight: bold;
     }
     dd{
-        margin-left: $padding * 2;
+        margin-left: $list-padding;
     }
 }
 li{
-    p,
-    figure{
-        &:not(:first-child) {
-            margin-top: $padding * 2;
-        }
-        &:not(:last-child) {
-            margin-bottom: $padding * 2;
-        }
+    > ul,
+    > ol,
+    > dl{
+        margin-top: $list-item-padding;
     }
 }
 
 pre{
     background: $light-on-light;
     overflow: auto;
-    padding: $padding * 2;
+    padding: $hspace;
     width: 100%;
 
-    font-family: 'Courier New', Courier, monospace;
     line-height: 1.25;
     text-align: left !important;
 
@@ -165,18 +208,6 @@ label{
     }
 }
 
-input,
-select{
-    border: 1px solid $light-on-light;
-    padding: math.div($padding, 2);
-}
-
-figure{
-    img {
-        border: math.div($padding, 2) solid $light-on-light;
-    }
-}
-
 // ----------------------------------------------------------------------------
 // Helper Classes
 // ----------------------------------------------------------------------------
@@ -184,7 +215,7 @@ figure{
 .flex-hgap{
     display: flex;
     flex-direction: row;
-    gap: $padding * 2;
+    gap: $padding;
 }
 
 .flex-vgap{
@@ -193,34 +224,19 @@ figure{
     gap: $padding * 2;
 }
 
-.space{
+.flex-1{
     flex: 1;
-
-    @media (max-width: $mobile-breakpoint) {
-        display: none;
-    }
-}
-
-.grid{
-    display: grid;
-    gap: $padding * 2;
-
-    @media (max-width: $mobile-breakpoint) {
-        grid-template-columns: auto !important;
-    }
-
-    > *{
-        margin: 0 !important;
-    }
 }
 
 @for $i from 2 through 6{
     .grid-#{$i}{
+        display: grid;
         grid-template-columns: repeat(#{$i}, 1fr);
+        gap: $padding;
     }
 }
 
-.all-cols{
+.grid-full{
     grid-column-start: 1;
     grid-column-end: -1;
 }
@@ -243,6 +259,20 @@ figure{
     }
 }
 
+.container{
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: $padding;
+    padding-right: $padding;
+
+    max-width: $max-container-width;
+    width: $container-width;
+
+    @media (max-width: $mobile-breakpoint) {
+        width: 100%;
+    }
+}
+
 .full-height-container{
     min-height: calc(100vh - #{$header-height});
 
@@ -251,31 +281,14 @@ figure{
     }
 }
 
-.container{
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: $padding * 2;
-    padding-right: $padding * 2;
-
-    max-width: $max-page-width;
-    width: $container-width;
-
-    @media (max-width: $large-mobile-breakpoint) {
-        width: 80%;
-    }
-
-    @media (max-width: $mobile-breakpoint) {
-        width: 100%;
-    }
-}
-
 .text-container{
+    display: grid;
+    grid-template-columns: 100%;
+    gap: $hspace * 2;
     padding-top: $vspace;
     padding-bottom: $vspace;
 
-    display: grid;
-    grid-template-columns: 100%;
-    gap: $column-gap;
+    font-size: 1.25rem;
 
     &:not(.full){
         grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
@@ -284,13 +297,14 @@ figure{
             grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
         }
 
-        @media (max-width: $large-mobile-breakpoint) {
+        @media (max-width: $mobile-breakpoint) {
             grid-template-columns: 100%;
         }
     }
 
     h1{
-        @extend .all-cols;
+        grid-column-start: 1;
+        grid-column-end: -1;
     }
 
     h2,
@@ -299,7 +313,7 @@ figure{
     h5,
     h6{
         &:not(:first-child) {
-            margin-top: ($padding * 2);
+            margin-top: $hspace;
         }
 
         & + h2,
@@ -314,5 +328,19 @@ figure{
     > section,
     > aside{
         @extend .flex-vgap;
+    }
+
+    .q-img{
+        border: math.div($padding, 2) solid $light-on-light;
+
+        .caption{
+            font-size: 1rem;
+            font-style: italic;
+            text-align: center;
+
+            background: rgba(0, 0, 0, 0.75);
+            color: white;
+            padding: $padding;
+        }
     }
 }

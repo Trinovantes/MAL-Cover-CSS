@@ -1,16 +1,12 @@
-import path from 'path'
-import { RuntimeSecret } from '@/common/utils/RuntimeSecret'
-import type { PlaywrightTestConfig } from '@playwright/test'
+import { PlaywrightTestConfig } from '@playwright/test'
+import { getBuildSecret, BuildSecret } from 'build/BuildSecret'
 
-// Assume we are running webpack from the project root (../)
-const rootDir = path.resolve()
-const testDir = path.join(rootDir, 'tests', 'e2e')
-
-const url = 'http://test.malcovercss.link:9040'
+const webUrl = getBuildSecret(BuildSecret.WEB_URL)
 const isContinousIntegration = Boolean(process.env.CI)
 
 const config: PlaywrightTestConfig = {
-    testDir,
+    testDir: './tests/e2e',
+    outputDir: './tests/e2e/results',
     timeout: 10 * 1000, // ms
     retries: isContinousIntegration ? 2 : 0,
     workers: isContinousIntegration ? 2 : 4,
@@ -19,21 +15,18 @@ const config: PlaywrightTestConfig = {
     forbidOnly: isContinousIntegration,
 
     webServer: {
-        command: 'yarn start',
-        url,
-        timeout: 120 * 1000, // ms
+        command: 'yarn devWebClient',
+        url: webUrl,
+        timeout: 60 * 1000, // ms
         reuseExistingServer: !isContinousIntegration,
-        env: {
-            [RuntimeSecret.IS_TEST]: 'true',
-        },
     },
 
     use: {
-        baseURL: url,
+        baseURL: webUrl,
         trace: 'on-first-retry',
-        viewport: {
-            width: 1440,
-            height: 800,
+        screenshot: 'only-on-failure',
+        launchOptions: {
+            args: ['--host-resolver-rules=MAP test.malcovercss.link 0.0.0.0'],
         },
     },
 }

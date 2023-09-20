@@ -1,11 +1,10 @@
 <script lang="ts" setup>
-import { useLiveMeta } from '../../utils/useLiveMeta'
+import { useLiveMeta } from '@/web/client/utils/useLiveMeta'
+import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
 
 const title = 'Guide'
-
-useLiveMeta({
-    title,
-})
+const image = examplePreviewImg.src
+useLiveMeta({ title, image })
 </script>
 
 <template>
@@ -76,7 +75,7 @@ useLiveMeta({
 
             <h3>Example Usage</h3>
             <p>
-                The <router-link to="/example">Example list design</router-link> makes use of the generated stylesheets.
+                The <router-link to="/example">example list design</router-link> makes use of the generated stylesheets.
                 You can see this example in action on my <ExternalLink href="https://myanimelist.net/animelist/Trinovantes">profile page</ExternalLink>.
             </p>
 

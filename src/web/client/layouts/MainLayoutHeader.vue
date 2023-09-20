@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { useApi } from '../services/useApi'
+import { useApi } from '../utils/useApi'
 import { useUserStore } from '../store/User/useUserStore'
 import { APP_NAME } from '@/common/Constants'
 
@@ -10,13 +10,13 @@ const closeHeaderItems = () => {
 }
 
 const userStore = useUserStore()
-const currentUser = computed(() => userStore.currentUser)
+const currentUser = computed(() => userStore.user)
 
 const { login, logout } = useApi()
 </script>
 
 <template>
-    <header>
+    <nav>
         <div class="container">
             <div class="header-logo">
                 <q-btn
@@ -31,7 +31,7 @@ const { login, logout } = useApi()
                 </router-link>
             </div>
 
-            <nav
+            <div
                 class="header-items"
                 :class="{
                     expanded: isHeaderItemsExpanded
@@ -47,16 +47,15 @@ const { login, logout } = useApi()
                     Classic vs. Modern
                 </router-link>
 
-                <div class="space" />
+                <div class="flex-1" />
 
                 <template v-if="currentUser">
                     <router-link to="/settings" @click="closeHeaderItems">
                         Settings
                     </router-link>
 
-                    <div class="seperator" />
-
                     <q-btn
+                        class="dashboard-btn"
                         color="negative"
                         unelevated
                         rounded
@@ -68,9 +67,8 @@ const { login, logout } = useApi()
                     />
                 </template>
                 <template v-else>
-                    <div class="seperator" />
-
                     <q-btn
+                        class="dashboard-btn"
                         color="positive"
                         unelevated
                         rounded
@@ -81,82 +79,93 @@ const { login, logout } = useApi()
                         @click="login(); closeHeaderItems()"
                     />
                 </template>
-            </nav>
+            </div>
         </div>
-    </header>
+    </nav>
 </template>
 
 <style lang="scss" scoped>
-header{
-    color: white;
-    line-height: $header-line-height;
-
+nav{
     background: $dark;
     padding: $padding 0;
+    line-height: $header-line-height;
 
     .container{
         display: flex;
         align-items: center;
-        padding-left: $padding;
-        padding-right: $padding;
 
-        @media (max-width: $large-mobile-breakpoint) {
+        @media (max-width: $mobile-breakpoint) {
             flex-wrap: wrap;
             padding-left: $padding * 2;
             padding-right: $padding * 2;
         }
     }
 
-    a{
-        color: white;
-        display: flex;
-        font-weight: bold;
-        text-decoration: none;
-
-        &:not(.q-btn) {
+    .header-items,
+    .header-logo{
+        a,
+        button{
+            background: none;
+            border: 0;
             padding: $padding;
-        }
+            cursor: pointer;
 
-        &:hover{
-            color: $secondary;
-            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            text-align: left;
+            transition: $transition;
+
+            &:hover{
+                color: $secondary;
+            }
         }
     }
 
     .header-logo{
-        font-weight: bold;
-
-        @media (max-width: $large-mobile-breakpoint) {
+        @media (max-width: $mobile-breakpoint) {
             width: 100%;
             display: grid;
             grid-template-columns: $header-btn-size 1fr $header-btn-size;
         }
 
         a.logo{
-            align-items: center;
-            display: flex;
-            font-size: 1.618rem;
-            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: $padding;
+            padding: 0;
+
+            @media (max-width: $mobile-breakpoint) {
+                margin-right: 0;
+
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         .expand-btn{
             border: 1px solid $light-on-dark;
-            display: none;
             width: $header-btn-size;
             height: $header-btn-size;
 
-            @media (max-width: $large-mobile-breakpoint) {
-                display: inherit;
+            display: none;
+            align-items: center;
+            justify-content: center;
+
+            @media (max-width: $mobile-breakpoint) {
+                display: flex;
             }
         }
     }
 
-    nav.header-items{
+    .header-items{
+        font-weight: bold;
+
         align-items: center;
         display: flex;
         flex: 1;
 
-        @media (max-width: $large-mobile-breakpoint) {
+        @media (max-width: $mobile-breakpoint) {
             display: block;
             flex: none;
             overflow: hidden;
@@ -175,18 +184,9 @@ header{
                 opacity: 1;
             }
 
-            > *:last-child{
-                margin-bottom: $padding;
-            }
-
-            .seperator{
-                height: $padding * 2;
-            }
-
-            a:not(.q-btn){
+            a{
                 border-bottom: 1px solid $light-on-dark;
-                padding-left: 0;
-                padding-right: 0;
+                display: block;
                 width: 100%;
 
                 &:first-of-type{
@@ -194,8 +194,10 @@ header{
                 }
             }
 
-            .q-btn{
+            .dashboard-btn{
                 display: block;
+                margin-top: $padding * 2;
+                margin-bottom: $padding;
                 padding: math.div($padding, 2) $padding;
                 width: 100%;
             }

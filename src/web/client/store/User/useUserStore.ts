@@ -1,20 +1,21 @@
 import { defineStore } from 'pinia'
-import { fetchDeleteUser, fetchLogin, fetchLogout, fetchUser } from '../../services/api'
-import { HydrationKey, loadStateFromDom } from '../Hydration'
-import type { AppContext } from '@/web/AppContext'
-import type { ErrorResponse, RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/schemas/ApiResponse'
+import { HydrationKey, loadStateFromWindow } from '../Hydration'
+import { AppContext } from '@/web/AppContext'
+import { RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/interfaces/ApiResponse'
+import { fetchWithSsrProxy } from '@/web/client/utils/fetchWithSsrProxy'
+import { LoginPayload } from '@/web/server/interfaces/LoginPayload'
 
 // ----------------------------------------------------------------------------
 // State
 // ----------------------------------------------------------------------------
 
 export type UserState = {
-    currentUser: UserResponse | null
+    user: UserResponse | null
 }
 
 export function createDefaultUserState(): UserState {
     const defaultState: UserState = {
-        currentUser: null,
+        user: null,
     }
 
     return defaultState
@@ -29,30 +30,54 @@ export const useUserStore = defineStore('User', {
 
     actions: {
         async init(appContext?: AppContext) {
-            if (appContext) {
-                const user = await fetchUser(appContext)
-                this.currentUser = user
-            } else {
-                const initState = loadStateFromDom(HydrationKey.USER)
-                this.$patch(initState ?? {})
+            if (this.user) {
+                return
             }
+
+            if (!DEFINE.IS_SSR) {
+                const savedState = loadStateFromWindow(HydrationKey.UserStore)
+                if (savedState) {
+                    this.$patch(savedState)
+                    return
+                }
+            }
+
+            const { data } = await fetchWithSsrProxy<UserResponse>('/api/settings/user', { method: 'GET' }, appContext)
+            this.user = data
         },
 
-        async login(restorePath: string): Promise<RedirectResponse | ErrorResponse> {
-            const res = await fetchLogin(restorePath)
-            this.currentUser = null
+        async deleteUser() {
+            const res = await fetchWithSsrProxy<SuccessResponse>('/api/settings/user', {
+                method: 'DELETE',
+            })
+
+            this.user = null
             return res
         },
 
-        async logout(): Promise<SuccessResponse | ErrorResponse> {
-            const res = await fetchLogout()
-            this.currentUser = null
+        async login(restorePath: string) {
+            const loginPayload: LoginPayload = {
+                restorePath,
+            }
+
+            const res = await fetchWithSsrProxy<RedirectResponse>('/api/oauth/login', {
+                method: 'POST',
+                body: JSON.stringify(loginPayload),
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+
+            this.user = null
             return res
         },
 
-        async deleteUser(): Promise<SuccessResponse | ErrorResponse> {
-            const res = await fetchDeleteUser()
-            this.currentUser = null
+        async logout() {
+            const res = await fetchWithSsrProxy<SuccessResponse>('/api/oauth/logout', {
+                method: 'POST',
+            })
+
+            this.user = null
             return res
         },
     },

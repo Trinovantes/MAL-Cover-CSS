@@ -1,4 +1,4 @@
-import type { RouteRecordRaw } from 'vue-router'
+import { RouteRecordRaw } from 'vue-router'
 
 export const enum RouteName {
     Home = 'Home',
@@ -7,7 +7,6 @@ export const enum RouteName {
 }
 
 export enum RouteMetaKey {
-    RequireUnauth = 'RequireUnauth',
     RequireAuth = 'RequireAuth',
 }
 
@@ -46,8 +45,6 @@ export const routes: Array<RouteRecordRaw> = [
     {
         path: '/:pathMatch(.*)*',
         name: RouteName.Error404,
-        redirect: {
-            name: RouteName.Home,
-        },
+        component: () => import('../pages/Home/HomePage.vue'),
     },
 ]

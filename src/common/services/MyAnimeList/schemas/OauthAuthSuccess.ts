@@ -1,31 +1,15 @@
-import Ajv from 'ajv'
+import { Type, Static } from '@sinclair/typebox'
+import { Value } from '@sinclair/typebox/value'
 
-// ----------------------------------------------------------------------------
-// OauthAuthSuccess
-// ----------------------------------------------------------------------------
-
-export type OauthAuthSuccess = {
-    'state': string // encoded JSON object
-    'code': string
-}
-
-const schema = {
-    type: 'object',
-    properties: {
-        state: {
-            type: 'string',
-        },
-        code: {
-            type: 'string',
-        },
-    },
-    required: ['state', 'code'],
+const tbOauthAuthSuccess = Type.Object({
+    state: Type.String(), // encoded JSON object
+    code: Type.String(),
+}, {
     additionalProperties: false,
-}
+})
 
-const ajv = new Ajv()
-const validator = ajv.compile(schema)
+export type OauthAuthSuccess = Static<typeof tbOauthAuthSuccess>
 
 export function isOauthAuthSuccess(obj?: unknown): obj is OauthAuthSuccess {
-    return Boolean(validator(obj))
+    return Value.Check(tbOauthAuthSuccess, obj)
 }

@@ -1,32 +1,29 @@
 <script lang="ts" setup>
-import dayjs from 'dayjs'
 import { computed } from 'vue'
-import { useApi } from '../../services/useApi'
-import { useUserStore } from '../../store/User/useUserStore'
-import { useLiveMeta } from '../../utils/useLiveMeta'
+import { useApi } from '@/web/client/utils/useApi'
+import { useUserStore } from '@/web/client/store/User/useUserStore'
+import { useLiveMeta } from '@/web/client/utils/useLiveMeta'
+import { getRelativeTime } from '@/common/utils/getRelativeTime'
 
 const title = 'Settings'
-
-useLiveMeta({
-    title,
-})
+useLiveMeta({ title })
 
 const userStore = useUserStore()
-const currentUser = computed(() => userStore.currentUser)
+const currentUser = computed(() => userStore.user)
 const username = computed(() => currentUser.value?.malUsername)
 const lastChecked = computed(() => {
     if (!currentUser.value?.lastChecked) {
         return 'N/A'
     }
 
-    return dayjs.utc(currentUser.value.lastChecked).fromNow()
+    return getRelativeTime(currentUser.value.lastChecked)
 })
 const lastCheckedTitle = computed(() => {
     if (!currentUser.value?.lastChecked) {
         return 'N/A'
     }
 
-    return dayjs.utc(currentUser.value.lastChecked).tz(dayjs.tz.guess()).format('LLL')
+    return new Date(currentUser.value.lastChecked).toISOString()
 })
 const lastCheckedHint = computed(() => {
     if (currentUser.value?.lastChecked) {

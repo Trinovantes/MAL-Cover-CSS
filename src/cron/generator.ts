@@ -1,13 +1,19 @@
-// eslint-disable-next-line import/order
-import '@/common/utils/setupDayjs'
-
-import fs from 'fs'
-import path from 'path'
+import fs from 'node:fs'
+import path from 'node:path'
 import * as Sentry from '@sentry/node'
 import '@sentry/tracing'
 import { SENTRY_DSN } from '@/common/Constants'
-import { migrateDb } from '@/common/db/migration'
-import { Item, MediaType } from '@/common/models/Item'
+import { Item, selectItems } from '@/common/db/models/Item'
+import { DrizzleClient } from '@/common/db/createDb'
+import { ItemType } from '@/common/db/models/ItemType'
+import { createLogger } from '@/common/node/createLogger'
+import { initDb } from '@/common/db/initDb'
+
+// ----------------------------------------------------------------------------
+// Pino
+// ----------------------------------------------------------------------------
+
+const logger = createLogger()
 
 // ----------------------------------------------------------------------------
 // Sentry
@@ -31,42 +37,19 @@ enum CssSelector {
     More = 'more',
 }
 
-async function generateCss() {
-    if (process.argv.length !== 3) {
-        throw new Error('Missing outputDir in argv')
-    }
-
-    const outputDir = path.resolve(process.argv[2])
-    if (!fs.existsSync(outputDir)) {
-        throw new Error(`outputDir ${outputDir} does not exist`)
-    }
-
-    console.info(`Starting to generate css into ${outputDir}`)
-    const transaction = Sentry.startTransaction({
-        op: 'generateCss',
-        name: 'Generate CSS Cron Job',
-    })
+function generateCss(db: DrizzleClient, outputDir: string) {
+    logger.info(`Starting to generate css into ${outputDir}`)
 
     const selectors = Object.values(CssSelector)
-    const mediaTypes = [...Object.values(MediaType), undefined]
-    const comboToGenerate = crossProduct(selectors, mediaTypes)
+    const mediaTypes = [...Object.values(ItemType), undefined]
+    const combosToGenerate = crossProduct(selectors, mediaTypes)
 
-    for (const combo of comboToGenerate) {
-        try {
-            const child = transaction.startChild({ op: 'generate', description: `generate(${outputDir}, ${combo[0]}, ${combo[1]})` })
-            await generate(outputDir, combo[0], combo[1])
-            child.finish()
-        } catch (err) {
-            console.warn('Failed to generate', comboToGenerate)
-            console.warn(err)
-            Sentry.captureException(err)
-        }
+    for (const combo of combosToGenerate) {
+        generate(db, outputDir, combo[0], combo[1])
     }
-
-    transaction.finish()
 }
 
-async function generate(outputDir: string, selector: CssSelector, mediaType?: MediaType) {
+function generate(db: DrizzleClient, outputDir: string, selector: CssSelector, mediaType?: ItemType) {
     if (mediaType === undefined && selector === CssSelector.More) {
         // The '#more[mal id]' selector is based on MAL's id which is not unique for both manga and anime
         // i.e. different manga/anime can share the same id
@@ -75,21 +58,19 @@ async function generate(outputDir: string, selector: CssSelector, mediaType?: Me
 
     const fileName = `${mediaType === undefined ? 'all' : mediaType}-${selector}.css`
     const outputFile = path.resolve(outputDir, fileName)
-    console.info(`Starting to write: ${outputFile}`)
-
     const cssFileStream = fs.createWriteStream(outputFile, { flags: 'w' })
     cssFileStream.on('error', (err) => {
-        console.warn('Failed to write css file', fileName)
-        console.warn(err)
+        logger.warn('Failed to write css file', fileName)
+        logger.warn(err)
     })
 
-    const items = await Item.fetchAll(mediaType)
+    const items = selectItems(db, mediaType)
     for (const item of items) {
         const cssRule = getCssRule(selector, item)
         cssFileStream.write(cssRule)
     }
 
-    console.info(`Finished writing ${outputFile}`)
+    logger.info(`Finished writing ${outputFile}`)
     cssFileStream.end()
 }
 
@@ -139,12 +120,32 @@ function crossProduct<A, B>(aList: Array<A>, bList: Array<B>): Array<[A, B]> {
 // ----------------------------------------------------------------------------
 
 async function main() {
-    await migrateDb()
-    await generateCss()
+    if (process.argv.length !== 3) {
+        throw new Error('Missing outputDir in argv')
+    }
+
+    const outputDir = path.resolve(process.argv[2])
+    if (!fs.existsSync(outputDir)) {
+        throw new Error(`outputDir:${outputDir} does not exist`)
+    }
+
+    const transaction = Sentry.startTransaction({
+        op: 'generateCss',
+        name: 'Generate CSS Cron Job',
+    })
+
+    try {
+        const db = await initDb(logger)
+        generateCss(db, outputDir)
+    } catch (err) {
+        logger.error(err)
+        Sentry.captureException(err)
+    }
+
+    transaction.finish()
 }
 
 main().catch((err) => {
-    console.warn(err)
-    Sentry.captureException(err)
+    logger.error(err)
     process.exit(1)
 })

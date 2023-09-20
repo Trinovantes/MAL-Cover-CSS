@@ -11,17 +11,21 @@ on:
       - .editorconfig
       - .gitignore
 
+env:
+  CRON_IMAGE: ghcr.io/trinovantes/malcovercss-cron
+  API_IMAGE: ghcr.io/trinovantes/malcovercss-api
+  WEB_IMAGE: ghcr.io/trinovantes/malcovercss-web
+
 jobs:
   test:
     name: Test
-    environment: development
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
       - name: Create .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: echo "${{ secrets.ENV_DEV }}" > .env
 
       - name: Save yarn cache location to env
         run: echo "YARN_CACHE=$(yarn cache dir)" >> $GITHUB_ENV
@@ -32,57 +36,60 @@ jobs:
           path: ${{ env.YARN_CACHE }}
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
 
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run linter
+        run: yarn lint
+
+      - name: Run unit tests
+        run: yarn unit
+
       - name: Cache playwright
         uses: actions/cache@v2
-        id: playwright-cache
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
-
-      - name: Install dependencies
-        run: yarn install
 
       - name: Install playwright
         if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: yarn playwright install --with-deps
 
-      - name: Run linter
-        run: yarn lint
-
-      - name: Build server
-        run: yarn buildWeb
-        env:
-          NODE_ENV: development
-
-      - name: Update hosts file
-        run: echo "127.0.0.1 test.malcovercss.link" | sudo tee -a /etc/hosts
-
-      - name: Run tests
-        run: yarn test
+      - name: Run playwright
+        run: yarn e2e
 
       - name: Upload playwright results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           retention-days: 30
           name: playwright
-          path: |
-            test-results/
-            playwright-report/
+          path: tests/e2e/results/
 
   build:
     needs: test
     name: Build
-    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Create .env file
+        run: echo "${{ secrets.ENV_PROD }}" > .env
+
+      - name: Save yarn cache location to env
+        run: echo "YARN_CACHE=$(yarn cache dir)" >> $GITHUB_ENV
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.YARN_CACHE }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: yarn install
+
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Create .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Pull images from registry
         run: make pull || true
@@ -95,14 +102,18 @@ jobs:
 
       - name: Copy dist from image to disk for sentry upload
         run: |
-          mkdir -p ./dist/cron
-          TEMP_CONTAINER=$(docker create ghcr.io/trinovantes/malcovercss-cron)
-          docker cp $TEMP_CONTAINER:/app/dist/cron/. ./dist/cron
+          mkdir -p ./dist
+
+          TEMP_CONTAINER=$(docker create ${{ env.CRON_IMAGE }})
+          docker cp $TEMP_CONTAINER:/app/dist/. ./dist
           docker rm $TEMP_CONTAINER
 
-          mkdir -p ./dist/web
-          TEMP_CONTAINER=$(docker create ghcr.io/trinovantes/malcovercss-web-app)
-          docker cp $TEMP_CONTAINER:/app/dist/web/. ./dist/web
+          TEMP_CONTAINER=$(docker create ${{ env.WEB_IMAGE }})
+          docker cp $TEMP_CONTAINER:/app/dist/. ./dist
+          docker rm $TEMP_CONTAINER
+
+          TEMP_CONTAINER=$(docker create ${{ env.API_IMAGE }})
+          docker cp $TEMP_CONTAINER:/app/dist/. ./dist
           docker rm $TEMP_CONTAINER
 
       - name: Create sentry release
@@ -113,23 +124,22 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
-          sourcemaps: ./dist/cron ./dist/web
+          sourcemaps: ./dist/cron ./dist/web/client/public ./dist/web/server
           url_prefix: ~/
 
   deploy:
     needs: build
     name: Deploy
-    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Create .env file
+        run: echo "${{ secrets.ENV_PROD }}" > .env
+
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-      - name: Create .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Create SSH key to production
         run: |

@@ -1,31 +1,35 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useApi } from '../../services/useApi'
-import { useUserStore } from '../../store/User/useUserStore'
-import { useLiveMeta } from '../../utils/useLiveMeta'
+import { useApi } from '@/web/client/utils/useApi'
+import { useUserStore } from '@/web/client/store/User/useUserStore'
+import { useLiveMeta } from '@/web/client/utils/useLiveMeta'
 import { APP_NAME, APP_DESC } from '@/common/Constants'
-import type { ResponsiveLoaderAsset } from '../../utils/ResponsiveLoader'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const img = require('../../assets/img/example-covers.jpg?size=800') as ResponsiveLoaderAsset
+import { IntersectionValue } from 'quasar'
+import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
+import settingsImg from './img/modern-image-settings.png?rl'
 
 useLiveMeta({
     title: APP_NAME,
     desc: APP_DESC,
-    image: img.src,
+    image: examplePreviewImg.src,
 })
 
 const userStore = useUserStore()
-const currentUser = computed(() => userStore.currentUser)
-
+const user = computed(() => userStore.user)
 const { login } = useApi()
 
-const onIntersect = (entry: IntersectionObserverEntry) => {
-    if (!entry.isIntersecting) {
-        return
-    }
+const intersectConfig: IntersectionValue = {
+    cfg: {
+        threshold: [0.25],
+    },
+    handler: (entry) => {
+        if (!entry?.isIntersecting) {
+            return true
+        }
 
-    entry.target.classList.add('visible')
+        entry.target?.classList.add('visible')
+        return false
+    },
 }
 </script>
 
@@ -33,11 +37,9 @@ const onIntersect = (entry: IntersectionObserverEntry) => {
     <article class="hero-unit">
         <div class="container full-height-container vertical">
             <section>
-                <LazyImage
-                    :src="require('../../assets/img/example-covers.jpg').src"
-                    :height="435"
-                    object-fit="cover"
-                    object-position="top"
+                <q-img
+                    :src="examplePreviewImg.src"
+                    fit="cover"
                 />
             </section>
             <section class="flex-vgap">
@@ -51,7 +53,7 @@ const onIntersect = (entry: IntersectionObserverEntry) => {
 
                 <div class="flex-hgap">
                     <q-btn
-                        v-if="currentUser"
+                        v-if="user"
                         color="secondary"
                         unelevated
                         no-caps
@@ -81,20 +83,15 @@ const onIntersect = (entry: IntersectionObserverEntry) => {
     </article>
 
     <article
-        v-intersection.once="{
-            handler: onIntersect,
-            cfg: {
-                threshold: [0.25],
-            },
-        }"
+        v-intersection.once="intersectConfig"
         class="hero-unit"
     >
         <div class="container full-height-container">
             <section>
-                <LazyImage
-                    :src="require('../../assets/img/example-covers.jpg').src"
-                    :height="600"
-                    object-fit="cover"
+                <q-img
+                    :src="require('@/web/client/assets/img/example-covers.jpg?size=400').src"
+                    height="600"
+                    fit="cover"
                 />
             </section>
             <section class="flex-vgap">
@@ -103,7 +100,7 @@ const onIntersect = (entry: IntersectionObserverEntry) => {
                 </h1>
 
                 <h2>
-                    If you're just looking for a Classic list design, try out this example. You can see it in action on my <ExternalLink href="https://myanimelist.net/animelist/Trinovantes">profile page</ExternalLink>
+                    If you're just looking for a Classic list design, try out this example list design
                 </h2>
 
                 <CodeBlock
@@ -115,7 +112,7 @@ const onIntersect = (entry: IntersectionObserverEntry) => {
                         outline
                         unelevated
                         no-caps
-                        label="How to Set Up Example"
+                        label="How to Set Up Example List Design"
                         to="/example"
                     />
                 </div>
@@ -124,18 +121,13 @@ const onIntersect = (entry: IntersectionObserverEntry) => {
     </article>
 
     <article
-        v-intersection.once="{
-            handler: onIntersect,
-            cfg: {
-                threshold: [0.25],
-            },
-        }"
+        v-intersection.once="intersectConfig"
         class="hero-unit"
     >
         <div class="container full-height-container">
             <section>
-                <LazyImage
-                    :src="require('./img/modern-image-settings.png').src"
+                <q-img
+                    :src="settingsImg.src"
                 />
             </section>
             <section class="flex-vgap">
@@ -168,13 +160,13 @@ article.hero-unit{
     }
 
     h1{
-        font-weight: bold;
+        font-weight: 700;
         font-size: 3rem;
-        line-height: 1.2;
+        line-height: 1.25;
     }
 
     h2{
-        font-weight: normal;
+        font-weight: 300;
     }
 
     .q-btn{
@@ -182,18 +174,25 @@ article.hero-unit{
         padding: $padding ($padding * 2.5);
     }
 
-    figure :deep(img){
-        border-radius: math.div($padding, 4);
-        overflow: hidden;
+    .q-img {
+        :deep(img){
+            border: math.div($padding, 2) solid $light-on-light;
+            border-radius: math.div($padding, 4);
+            overflow: hidden;
 
-        box-shadow:
-            0 0.4px 1.3px rgba(0, 0, 0, 0.045),
-            0 1.1px 3.2px rgba(0, 0, 0, 0.065),
-            0 2px 6px rgba(0, 0, 0, 0.08),
-            0 3.6px 10.7px rgba(0, 0, 0, 0.095),
-            0 6.7px 20.1px rgba(0, 0, 0, 0.115),
-            0 16px 48px rgba(0, 0, 0, 0.16)
-        ;
+            box-shadow:
+                0 0.4px 1.3px rgba(0, 0, 0, 0.045),
+                0 1.1px 3.2px rgba(0, 0, 0, 0.065),
+                0 2px 6px rgba(0, 0, 0, 0.08),
+                0 3.6px 10.7px rgba(0, 0, 0, 0.095),
+                0 6.7px 20.1px rgba(0, 0, 0, 0.115),
+                0 16px 48px rgba(0, 0, 0, 0.16)
+            ;
+        }
+
+        @media (max-width: $mobile-breakpoint) {
+            max-height: 400px;
+        }
     }
 
     &:first-child{
@@ -203,15 +202,40 @@ article.hero-unit{
         h2{
             color: $light-on-primary;
         }
+    }
 
-        figure :deep(img){
-            border: none;
+    @media (max-width: $mobile-breakpoint) {
+        &:not(:last-of-type){
+            border-bottom: 1px solid $light-on-light;
         }
     }
 
-    @media (max-width: $large-mobile-breakpoint) {
-        &:not(:last-of-type){
-            border-bottom: 1px solid $light-on-light;
+    .container{
+        padding-top: $vspace;
+        padding-bottom: $vspace;
+
+        display: grid;
+        grid-template-columns: calc(50% - #{$hspace}) calc(50% - #{$hspace});
+        align-items: center;
+        align-content: center;
+        gap: $hspace * 2;
+
+        @mixin vertical-container{
+            grid-template-columns: 100%;
+            text-align: center;
+
+            .flex-hgap{
+                justify-content: center;
+                gap: $padding * 2;
+            }
+        }
+
+        &.vertical{
+            @include vertical-container;
+        }
+
+        @media (max-width: $mobile-breakpoint) {
+            @include vertical-container;
         }
     }
 
@@ -236,33 +260,6 @@ article.hero-unit{
 
                 animation-name: fadeInLeft;
             }
-        }
-    }
-
-    .container{
-        padding-top: $vspace;
-        padding-bottom: $vspace;
-
-        display: grid;
-        grid-template-columns: calc(50% - #{math.div($column-gap, 2)}) calc(50% - #{math.div($column-gap, 2)});
-        align-items: center;
-        gap: $column-gap;
-
-        @mixin vertical-container{
-            grid-template-columns: 100%;
-            text-align: center;
-
-            .flex-hgap{
-                justify-content: center;
-            }
-        }
-
-        &.vertical{
-            @include vertical-container;
-        }
-
-        @media (max-width: $large-mobile-breakpoint) {
-            @include vertical-container;
         }
     }
 

@@ -1,43 +1,37 @@
-// eslint-disable-next-line import/order
-import '@/common/utils/setupDayjs'
+// This file will be renamed to www.js after being compiled by webpack
+// It is kept as entryServer for historical value to match Vue's SSR guides
 
 import http from 'http'
-import { migrateDb } from '@/common/db/migration'
-import { getRuntimeSecret, RuntimeSecret } from '@/common/utils/RuntimeSecret'
 import { createServerApp } from './server/createServerApp'
-import { setupTestInterceptors } from './server/setupTestInterceptors'
+import { initDb } from '@/common/db/initDb'
+import { createSessionStore } from './server/utils/createSessionStore'
+import { pinoHttp } from 'pino-http'
+import { createLogger } from '@/common/node/createLogger'
+
+const logger = createLogger()
 
 async function main() {
-    await migrateDb()
+    const app = createServerApp({
+        trustProxy: !DEFINE.IS_DEV,
+        enableCors: DEFINE.IS_DEV,
+        enableStaticFiles: DEFINE.IS_DEV,
+        enableSentry: !DEFINE.IS_DEV,
+        enableVue: true,
 
-    const isDev = DEFINE.IS_DEV
-    const isProd = !DEFINE.IS_DEV
-    const isTest = getRuntimeSecret(RuntimeSecret.IS_TEST, 'false') === 'true'
-
-    if (isTest) {
-        setupTestInterceptors()
-    }
-
-    const app = await createServerApp({
-        trustProxy: isProd,
-        useMemoryStorage: isTest,
-        enableStaticFiles: isDev,
-        enableSentry: isProd,
-        enableLogging: getRuntimeSecret(RuntimeSecret.ENABLE_LOGGING) === 'true',
-        enableSessions: getRuntimeSecret(RuntimeSecret.ENABLE_SESSIONS) === 'true',
+        db: await initDb(logger),
+        sessionStore: await createSessionStore(),
+        httpLogger: pinoHttp({ logger }),
     })
 
-    const port = parseInt(DEFINE.APP_PORT ?? '3000')
+    const port = parseInt(DEFINE.API_PORT)
     const server = http.createServer(app)
 
-    console.info('Starting HTTP Server')
     server.listen(port, '0.0.0.0', (): void => {
-        console.info('Server Ready', server.address())
-    })
-
-    server.on('error', (error) => {
-        console.warn('Server Error', error)
+        logger.info('Server Ready', server.address())
     })
 }
 
-main().catch(console.error)
+main().catch((err) => {
+    logger.error(err)
+    process.exit(1)
+})

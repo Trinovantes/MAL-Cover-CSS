@@ -3,31 +3,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { VueLoaderPlugin } from 'vue-loader'
 import webpack, { DefinePlugin } from 'webpack'
 import merge from 'webpack-merge'
-import { BuildSecret, getBuildSecret, getGitHash } from './utils/BuildSecret'
-
-// ----------------------------------------------------------------------------
-// Constants
-// ----------------------------------------------------------------------------
-
-// Assume we are running webpack from the project root (../)
-const rootDir = path.resolve()
-
-export const isDev = (process.env.NODE_ENV === 'development')
-export const manifestFileName = 'ssr-manifest.json'
-export const publicPath = '/public/'
-
-export const distDir = path.join(rootDir, 'dist')
-export const distCronDir = path.join(distDir, 'cron')
-export const distServerDir = path.join(distDir, 'web')
-export const distClientDir = path.join(distServerDir, publicPath)
-export const manifestFile = path.join(distServerDir, manifestFileName)
-
-export const srcDir = path.join(rootDir, 'src')
-export const srcCronDir = path.join(srcDir, 'cron')
-export const srcWebDir = path.join(srcDir, 'web')
-export const staticDir = path.join(srcDir, 'web', 'static')
-
-export const rawDirRegexp = /\/raw\//
+import { isDev, srcDir, buildConstants, rawDirRegexp, publicPath } from './BuildConstants'
 
 // ----------------------------------------------------------------------------
 // Common
@@ -48,17 +24,7 @@ const commonConfig: webpack.Configuration = {
     },
 
     plugins: [
-        new DefinePlugin({
-            __VUE_OPTIONS_API__: JSON.stringify(true),
-            __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
-
-            'DEFINE.IS_DEV': JSON.stringify(isDev),
-            'DEFINE.IS_SSR': "(typeof window === 'undefined')",
-            'DEFINE.GIT_HASH': JSON.stringify(getGitHash(rootDir)),
-
-            'DEFINE.APP_URL': JSON.stringify(getBuildSecret(BuildSecret.APP_URL)),
-            'DEFINE.APP_PORT': JSON.stringify(getBuildSecret(BuildSecret.APP_PORT)),
-        }),
+        new DefinePlugin(buildConstants),
         new VueLoaderPlugin(),
     ],
 
@@ -123,7 +89,7 @@ export const commonWebConfig = merge(commonConfig, {
                 type: 'asset',
             },
             {
-                test: /\.(jpe?g|png|gif|svg|webp)$/i,
+                test: /\.(jpe?g|png|gif|webp)$/i,
                 use: [
                     {
                         loader: 'responsive-loader',
@@ -144,7 +110,6 @@ export const commonNodeConfig = merge(commonConfig, {
     target: 'node',
 
     output: {
-        // This tells the server bundle to use Node-style exports
         libraryTarget: 'commonjs2',
     },
 
@@ -154,7 +119,6 @@ export const commonNodeConfig = merge(commonConfig, {
                 // Do not emit css in the server bundle
                 test: /\.(css|sass|scss)$/,
                 use: 'null-loader',
-                exclude: rawDirRegexp,
             },
             {
                 // Do not emit fonts in the server bundle
@@ -162,7 +126,7 @@ export const commonNodeConfig = merge(commonConfig, {
                 use: 'null-loader',
             },
             {
-                test: /\.(jpe?g|png|gif|svg|webp)$/i,
+                test: /\.(jpe?g|png|gif|webp)$/i,
                 use: [
                     {
                         loader: 'responsive-loader',
@@ -182,10 +146,7 @@ export const commonNodeConfig = merge(commonConfig, {
     },
 
     externals: [
-        '@sentry/vue',
-        '@sentry/node',
-        '@sentry/tracing',
+        'better-sqlite3',
         'express',
-        'sqlite3',
     ],
 })

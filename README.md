@@ -15,25 +15,36 @@ Secret | Description
 `SSH_PRIVATE_KEY`| `ssh-keygen -N '' -f ~/.ssh/github-actions -C "github-actions"` <br> Add `github-actions.pub` to `~/.ssh/authorized_keys` <br> Add `github-actions` to this secret
 `SSH_KEYSCAN`| `ssh-keyscan -t ecdsa SSH_HOST`
 
-### `ENV_FILE`
-```
-# Build env
-APP_URL             https://www.malcovercss.link
-APP_PORT            9040
+### `ENV_DEV` and `ENV_PROD`
 
-# Runtime env (during dev when running outside of docker)
-REDIS_HOST          localhost
-REDIS_PORT          9041
+```sh
+# -----------------------------------------------------------------------------
+# Build env (must be passed to frontend via webpack.DefinePlugin)
+# -----------------------------------------------------------------------------
 
+WEB_URL=http://test.malcovercss.link:9040
+WEB_PORT=9040
+API_URL=http://test.malcovercss.link:9042
+API_PORT=9042
+
+# -----------------------------------------------------------------------------
 # Runtime env
-ENCRYPTION_KEY      openssl rand -base64 32
-MAL_CLIENT_ID       From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
-MAL_CLIENT_SECRET   From https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
+# -----------------------------------------------------------------------------
 
-ENABLE_LOGGING      true
-ENABLE_SESSIONS     true
+# Only for dev (when redis is outside of docker)
+REDIS_HOST=localhost
+REDIS_PORT=9041
 
-AWS_ENDPOINT_URL
-AWS_ACCESS_KEY_ID
-AWS_SECRET_ACCESS_KEY
+S3_BUCKET_BACKUP=
+
+# openssl rand -base64 32
+ENCRYPTION_KEY=
+
+# https://myanimelist.net/login.php?from=%2Fapiconfig&account_policy=AP1
+MAL_CLIENT_ID=
+MAL_CLIENT_SECRET=
+
+AWS_ENDPOINT_URL=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
 ```
