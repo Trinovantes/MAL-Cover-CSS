@@ -21,7 +21,10 @@ RUN \
     --mount=type=secret,id=API_URL \
     --mount=type=secret,id=API_PORT \
     NODE_ENV=production \
-    yarn buildWeb
+    yarn build
+
+# Remove dev dependencies
+RUN yarn install --production
 
 # -----------------------------------------------------------------------------
 FROM node:20-alpine
@@ -32,16 +35,12 @@ WORKDIR /app
 
 ENV NODE_ENV 'production'
 
-# Install dependencies
-COPY yarn.lock package.json     ./
-COPY node_modules               ./node_modules
-COPY patches/                   ./patches/
-RUN yarn install
+# Copy app
+COPY --from=builder /app/package.json   ./
+COPY --from=builder /app/node_modules   ./node_modules
+COPY --from=builder /app/dist/          ./dist/
 
 # Mount points
-RUN mkdir -p                    ./db/live
-
-# Copy app
-COPY --from=builder /app/dist/  ./dist/
+RUN mkdir -p ./db/live
 
 CMD yarn startWeb

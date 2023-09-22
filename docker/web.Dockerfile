@@ -21,7 +21,10 @@ RUN \
     --mount=type=secret,id=API_URL \
     --mount=type=secret,id=API_PORT \
     NODE_ENV=production \
-    yarn buildWeb
+    yarn build
+
+# Remove dev dependencies
+RUN yarn install --production
 
 # -----------------------------------------------------------------------------
 FROM caddy:2-alpine
