@@ -124,8 +124,7 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
-          sourcemaps: ./dist/cron ./dist/web/client/public ./dist/web/server
-          url_prefix: ~/
+          sourcemaps: ./dist
 
   deploy:
     needs: build
