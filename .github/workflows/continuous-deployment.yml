@@ -76,18 +76,6 @@ jobs:
       - name: Create .env file
         run: echo "${{ secrets.ENV_PROD }}" > .env
 
-      - name: Save yarn cache location to env
-        run: echo "YARN_CACHE=$(yarn cache dir)" >> $GITHUB_ENV
-
-      - name: Cache node_modules
-        uses: actions/cache@v3
-        with:
-          path: ${{ env.YARN_CACHE }}
-          key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
-
-      - name: Install dependencies
-        run: yarn install
-
       - name: Log into registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
