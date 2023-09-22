@@ -27,7 +27,8 @@ async function main() {
     const server = http.createServer(app)
 
     server.listen(port, '0.0.0.0', (): void => {
-        logger.info('Server Ready', server.address())
+        logger.info('Server Ready')
+        logger.info(server.address())
     })
 }
 
