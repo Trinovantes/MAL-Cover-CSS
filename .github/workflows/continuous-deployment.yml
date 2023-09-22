@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create .env file
         run: echo "${{ secrets.ENV_DEV }}" > .env
@@ -31,7 +31,7 @@ jobs:
         run: echo "YARN_CACHE=$(yarn cache dir)" >> $GITHUB_ENV
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.YARN_CACHE }}
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
@@ -46,7 +46,7 @@ jobs:
         run: yarn unit
 
       - name: Cache playwright
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create .env file
         run: echo "${{ secrets.ENV_PROD }}" > .env
@@ -80,7 +80,7 @@ jobs:
         run: echo "YARN_CACHE=$(yarn cache dir)" >> $GITHUB_ENV
 
       - name: Cache node_modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ${{ env.YARN_CACHE }}
           key: ${{ runner.os }}-node-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
@@ -132,7 +132,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Create .env file
         run: echo "${{ secrets.ENV_PROD }}" > .env
