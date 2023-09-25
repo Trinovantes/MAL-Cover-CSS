@@ -185,6 +185,20 @@ describe('updateUserTokens', () => {
         expect(() => updateUserTokens(db, user.id, { tokenExpires: now, accessToken: null, refreshToken: token })).toThrowError()
         expect(() => updateUserTokens(db, user.id, { tokenExpires: now, accessToken: token, refreshToken: null })).toThrowError()
     })
+
+    test('tokens can be retrieved later', () => {
+        const token = 'Hello World'
+        const hourAgo = getSqlTimestampFromNow(-3600)
+        const now = getSqlTimestampFromNow(0)
+
+        const user = upsertMockUser()
+        updateUserTokens(db, user.id, { tokenExpires: hourAgo, accessToken: token, refreshToken: token })
+
+        const users = selectUsersToScrape(db, now)
+        expect(users.length).toBe(1)
+        expect(users[0].accessToken).toBe(token)
+        expect(users[0].refreshToken).toBe(token)
+    })
 })
 
 // ----------------------------------------------------------------------------

@@ -134,6 +134,13 @@ export function updateUserTokens(db: DrizzleClient, id: number, payload: Pick<Us
         throw new Error('Tokens must all be null or non-null')
     }
 
+    if (payload.accessToken) {
+        payload.accessToken = encrypt(payload.accessToken)
+    }
+    if (payload.refreshToken) {
+        payload.refreshToken = encrypt(payload.refreshToken)
+    }
+
     return db
         .update(userTable)
         .set({
