@@ -45,11 +45,11 @@ build: \
 	build-api
 
 stop: \
-	stop-redis \
-	stop-backup \
-	stop-cron \
+	stop-api \
 	stop-web \
-	stop-api
+	stop-cron \
+	stop-backup \
+	stop-redis
 
 run: \
 	run-redis \
