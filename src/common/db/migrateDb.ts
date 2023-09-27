@@ -25,9 +25,9 @@ export async function migrateDb(db: DrizzleClient, migrations: Array<Migration>,
 }
 
 function migrate(db: DrizzleClient, migrations: Array<Migration>, attempt: number, logger?: Logger) {
-    createMigrationTable(db)
-
     db.transaction((tx) => {
+        createMigrationTable(tx)
+
         const currentVersion = getCurrentMigrationVersion(db)
         const migrationsToRun = currentVersion
             ? migrations.filter((migration) => migration.version > currentVersion)
