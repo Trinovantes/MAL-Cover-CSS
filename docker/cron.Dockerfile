@@ -30,6 +30,8 @@ FROM node:20-alpine
 LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 
+RUN apk update && apk add --no-cache curl
+
 WORKDIR /app
 
 ENV NODE_ENV 'production'
@@ -38,10 +40,11 @@ ENV NODE_ENV 'production'
 COPY --from=builder /app/package.json   ./
 COPY --from=builder /app/node_modules   ./node_modules
 COPY --from=builder /app/dist/          ./dist/
+COPY docker/                            ./docker
 
 # Mount points
-RUN mkdir -p ./db/live
-RUN mkdir -p ./dist/client/generated
+RUN mkdir -p                            ./db/live
+RUN mkdir -p                            ./dist/client/generated
 
-RUN echo "15 * * * * cd /app && yarn startScraper && yarn startGenerator" >> /etc/crontabs/root
+RUN echo "15 * * * * cd /app && sh ./docker/cron.sh" >> /etc/crontabs/root
 CMD crond -f
