@@ -12,6 +12,6 @@ type Options = {
 
 export type ServerAppContext = Readonly<Options> & {
     db: DrizzleClient
-    sessionStore: Required<session.SessionOptions['store']>
+    sessionStore: Required<session.SessionOptions>['store']
     httpLogger: HttpLogger
 }
