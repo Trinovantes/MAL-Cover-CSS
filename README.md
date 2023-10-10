@@ -27,6 +27,10 @@ WEB_PORT=9040
 API_URL=http://test.malcovercss.link:9042
 API_PORT=9042
 
+SENTRY_ORG=
+SENTRY_PROJECT=
+SENTRY_AUTH_TOKEN=
+
 # -----------------------------------------------------------------------------
 # Runtime env
 # -----------------------------------------------------------------------------
