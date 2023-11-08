@@ -59,6 +59,7 @@ export function createServerApp(ctx: ServerAppContext) {
             dsn: SENTRY_DSN,
             release: DEFINE.GIT_HASH,
             tracesSampleRate: 0.1,
+            profilesSampleRate: 0.1,
             integrations: [
                 // Enable HTTP calls tracing
                 new Sentry.Integrations.Http({ tracing: true }),

@@ -26,7 +26,8 @@ const logger = createLogger()
 Sentry.init({
     dsn: SENTRY_DSN,
     release: DEFINE.GIT_HASH,
-    tracesSampleRate: 1.0,
+    tracesSampleRate: 0.1,
+    profilesSampleRate: 0.1,
     enabled: !DEFINE.IS_DEV,
 })
 
