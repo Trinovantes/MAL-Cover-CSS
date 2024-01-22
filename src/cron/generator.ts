@@ -83,17 +83,17 @@ function getCssRule(selector: CssSelector, item: Item): string {
     let cssRule = ''
 
     switch (selector) {
-        case 'more':
+        case CssSelector.More:
             cssRule += `#more${item.malId}`
             break
 
-        case 'self':
+        case CssSelector.Self:
             cssRule += '.animetitle'
             cssRule += `[href^="/${item.mediaType}/${item.malId}/"]`
             break
 
-        case 'before':
-        case 'after':
+        case CssSelector.Before:
+        case CssSelector.After:
             cssRule += '.animetitle'
             cssRule += `[href^="/${item.mediaType}/${item.malId}/"]:${selector}`
             break

@@ -1,0 +1,109 @@
+diff --git a/node_modules/pino/pino.d.ts b/node_modules/pino/pino.d.ts
+index aedce42..3198b18 100644
+--- a/node_modules/pino/pino.d.ts
++++ b/node_modules/pino/pino.d.ts
+@@ -37,7 +37,7 @@ type CustomLevelLogger<CustomLevels extends string> = { [level in CustomLevels]:
+ * A synchronous callback that will run on each creation of a new child.
+ * @param child: The newly created child logger instance.
+ */
+-type OnChildCallback<CustomLevels extends string = never> = (child: pino.Logger<CustomLevels>) => void
++type OnChildCallback<CustomLevels extends string = string> = (child: pino.Logger<CustomLevels>) => void
+ 
+ export interface redactOptions {
+     paths: string[];
+@@ -45,7 +45,7 @@ export interface redactOptions {
+     remove?: boolean;
+ }
+ 
+-export interface LoggerExtras<CustomLevels extends string = never> extends EventEmitter {
++export interface LoggerExtras<CustomLevels extends string = string> extends EventEmitter {
+     /**
+      * Exposes the Pino package version. Also available on the exported pino function.
+      */
+@@ -80,7 +80,7 @@ export interface LoggerExtras<CustomLevels extends string = never> extends Event
+      * @param options: an options object that will override child logger inherited options.
+      * @returns a child logger instance.
+      */
+-    child<ChildCustomLevels extends string = never>(bindings: pino.Bindings, options?: ChildLoggerOptions<ChildCustomLevels>): pino.Logger<CustomLevels | ChildCustomLevels>;
++    child<ChildCustomLevels extends string = string>(bindings: pino.Bindings, options?: ChildLoggerOptions<ChildCustomLevels>): pino.Logger<CustomLevels | ChildCustomLevels>;
+ 
+     /**
+      * This can be used to modify the callback function on creation of a new child.
+@@ -225,7 +225,7 @@ declare namespace pino {
+     type SerializerFn = (value: any) => any;
+     type WriteFn = (o: object) => void;
+ 
+-    type LevelChangeEventListener<CustomLevels extends string = never> = (
++    type LevelChangeEventListener<CustomLevels extends string = string> = (
+         lvl: LevelWithSilentOrString,
+         val: number,
+         prevLvl: LevelWithSilentOrString,
+@@ -235,7 +235,7 @@ declare namespace pino {
+ 
+     type LogDescriptor = Record<string, any>;
+ 
+-    type Logger<CustomLevels extends string = never> = BaseLogger & LoggerExtras<CustomLevels> & CustomLevelLogger<CustomLevels>;
++    type Logger<CustomLevels extends string = string> = BaseLogger & LoggerExtras<CustomLevels> & CustomLevelLogger<CustomLevels>;
+ 
+     type SerializedError = pinoStdSerializers.SerializedError;
+     type SerializedResponse = pinoStdSerializers.SerializedResponse;
+@@ -320,7 +320,7 @@ declare namespace pino {
+         (msg: string, ...args: any[]): void;
+     }
+ 
+-    interface LoggerOptions<CustomLevels extends string = never> {
++    interface LoggerOptions<CustomLevels extends string = string> {
+         transport?: TransportSingleOptions | TransportMultiOptions | TransportPipelineOptions
+         /**
+          * Avoid error causes by circular references in the object tree. Default: `true`.
+@@ -638,7 +638,7 @@ declare namespace pino {
+         crlf?: boolean;
+     }
+ 
+-    interface ChildLoggerOptions<CustomLevels extends string = never> {
++    interface ChildLoggerOptions<CustomLevels extends string = string> {
+         level?: LevelOrString;
+         serializers?: { [key: string]: SerializerFn };
+         customLevels?: { [level in CustomLevels]: number };
+@@ -791,7 +791,7 @@ declare namespace pino {
+  * relative protocol is enabled. Default: process.stdout
+  * @returns a new logger instance.
+  */
+-declare function pino<CustomLevels extends string = never>(optionsOrStream?: LoggerOptions<CustomLevels> | DestinationStream): Logger<CustomLevels>;
++declare function pino<CustomLevels extends string = string>(optionsOrStream?: LoggerOptions<CustomLevels> | DestinationStream): Logger<CustomLevels>;
+ 
+ /**
+  * @param [options]: an options object
+@@ -799,7 +799,7 @@ declare function pino<CustomLevels extends string = never>(optionsOrStream?: Log
+  * relative protocol is enabled. Default: process.stdout
+  * @returns a new logger instance.
+  */
+-declare function pino<CustomLevels extends string = never>(options: LoggerOptions<CustomLevels>, stream: DestinationStream): Logger<CustomLevels>;
++declare function pino<CustomLevels extends string = string>(options: LoggerOptions<CustomLevels>, stream: DestinationStream): Logger<CustomLevels>;
+ 
+ 
+ // Pass through all the top-level exports, allows `import {version} from "pino"`
+@@ -822,7 +822,7 @@ export type LevelWithSilent = pino.LevelWithSilent;
+ export type LevelWithSilentOrString = pino.LevelWithSilentOrString;
+ export type LevelChangeEventListener<CustomLevels extends string> = pino.LevelChangeEventListener<CustomLevels>;
+ export type LogDescriptor = pino.LogDescriptor;
+-export type Logger<CustomLevels extends string = never> = pino.Logger<CustomLevels>;
++export type Logger<CustomLevels extends string = string> = pino.Logger<CustomLevels>;
+ export type SerializedError = pino.SerializedError;
+ export type SerializerFn = pino.SerializerFn;
+ export type SerializedRequest = pino.SerializedRequest;
+@@ -831,12 +831,12 @@ export type WriteFn = pino.WriteFn;
+ 
+ // Interfaces
+ export interface BaseLogger extends pino.BaseLogger {}
+-export interface ChildLoggerOptions<CustomLevels extends string = never> extends pino.ChildLoggerOptions<CustomLevels> {}
++export interface ChildLoggerOptions<CustomLevels extends string = string> extends pino.ChildLoggerOptions<CustomLevels> {}
+ export interface DestinationStream extends pino.DestinationStream {}
+ export interface LevelMapping extends pino.LevelMapping {}
+ export interface LogEvent extends pino.LogEvent {}
+ export interface LogFn extends pino.LogFn {}
+-export interface LoggerOptions<CustomLevels extends string = never> extends pino.LoggerOptions<CustomLevels> {}
++export interface LoggerOptions<CustomLevels extends string = string> extends pino.LoggerOptions<CustomLevels> {}
+ export interface MultiStreamOptions extends pino.MultiStreamOptions {}
+ export interface MultiStreamRes<TLevel = Level> extends pino.MultiStreamRes<TLevel> {}
+ export interface StreamEntry<TLevel = Level> extends pino.StreamEntry<TLevel> {}

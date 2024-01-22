@@ -7,8 +7,10 @@ export async function clearSession(req: express.Request, res: express.Response):
         req.session.destroy((err) => {
             if (err === undefined || err === null) {
                 resolve()
-            } else {
+            } else if (err instanceof Error) {
                 reject(err)
+            } else {
+                reject(new Error(`Failed to clear session err:${String(err)}`))
             }
         })
     })
