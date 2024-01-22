@@ -3,9 +3,9 @@
 set -e # Exit on error
 set -u # Error when undefined variable
 
-SENTRY_CRONS="https://o504161.ingest.sentry.io/api/5590526/cron/malcovercss-backup/8b8ac206cace4704956e4ebeed1420a3/"
+# SENTRY_CRONS="https://o504161.ingest.sentry.io/api/5590526/cron/malcovercss-backup/8b8ac206cace4704956e4ebeed1420a3/"
 
-curl "${SENTRY_CRONS}?status=in_progress"
+# curl "${SENTRY_CRONS}?status=in_progress"
 
 echo "\nStarting to backup database"
 sqlite3 ./db/live/malcovercss.sqlite3 ".backup './db/backups/$(date --utc +%FT%TZ).sqlite3'"
@@ -21,4 +21,4 @@ find -name "*.sqlite3" -type f -print | sed 's/\.\///' | sort | tail -n 1 | xarg
 echo "\nStarting to delete old backups"
 find -name "*.sqlite3" -type f -print | sort | head -n -30 | xargs -t -r rm
 
-curl "${SENTRY_CRONS}?status=ok"
+# curl "${SENTRY_CRONS}?status=ok"
