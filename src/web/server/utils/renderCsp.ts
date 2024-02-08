@@ -7,7 +7,7 @@ export function renderCsp(originalHtml: string) {
     if (DEFINE.IS_DEV) {
         const webUrl = new URL(DEFINE.WEB_URL)
         localhost = webUrl.host
-        localhostWs = `ws://${webUrl.host}`
+        localhostWs = `ws://${webUrl.host} *.malcovercss.link:*`
     }
 
     const nonce = crypto.randomBytes(16).toString('base64')

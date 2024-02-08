@@ -2,11 +2,11 @@
 import { computed } from 'vue'
 import { useApi } from '@/web/client/utils/useApi'
 import { useUserStore } from '@/web/client/store/User/useUserStore'
-import { useLiveMeta } from '@/web/client/utils/useLiveMeta'
 import { getRelativeTime } from '@/common/utils/getRelativeTime'
+import { useSeoMeta } from '@unhead/vue'
 
 const title = 'Settings'
-useLiveMeta({ title })
+useSeoMeta({ title })
 
 const userStore = useUserStore()
 const currentUser = computed(() => userStore.user)

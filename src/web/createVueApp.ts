@@ -1,7 +1,7 @@
 import { createPinia } from 'pinia'
 import { Quasar, Notify, QuasarPluginOptions } from 'quasar'
 import { createSSRApp } from 'vue'
-import { createMetaManager, defaultConfig } from 'vue-meta'
+import { createHead } from '@unhead/vue'
 import AppLoader from './client/AppLoader.vue'
 import ClientOnly from './client/components/ClientOnly.vue'
 import CodeBlock from './client/components/CodeBlock.vue'
@@ -15,6 +15,7 @@ import { createRouter } from 'vue-router'
 type VueApp = {
     app: ReturnType<typeof createSSRApp>
     router: ReturnType<typeof createRouter>
+    head: ReturnType<typeof createHead>
 }
 
 export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
@@ -41,15 +42,9 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     app.use(router)
     await router.isReady()
 
-    // Vue Meta
-    const metaManager = createMetaManager(DEFINE.IS_SSR, {
-        ...defaultConfig,
-        'theme-color': {
-            tag: 'meta',
-            keyAttribute: 'name',
-        },
-    })
-    app.use(metaManager)
+    // Unhead
+    const head = createHead()
+    app.use(head)
 
     // Quasar
     app.use<[Partial<QuasarPluginOptions>, SSRContext?]>(Quasar, {
@@ -61,5 +56,6 @@ export async function createVueApp(appContext?: AppContext): Promise<VueApp> {
     return {
         app,
         router,
+        head,
     }
 }

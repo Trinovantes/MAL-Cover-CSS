@@ -1,10 +1,14 @@
 <script lang="ts" setup>
-import { useLiveMeta } from '@/web/client/utils/useLiveMeta'
 import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
+import { useSeoMeta } from '@unhead/vue'
 
 const title = 'Classic vs. Modern Templates'
-const image = examplePreviewImg.src
-useLiveMeta({ title, image })
+const ogImage = examplePreviewImg.src
+useSeoMeta({
+    title,
+    ogImage,
+    twitterCard: 'summary_large_image',
+})
 </script>
 
 <template>

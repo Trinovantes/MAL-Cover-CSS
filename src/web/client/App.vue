@@ -1,6 +1,4 @@
 <template>
-    <metainfo />
-
     <router-view v-slot="{ Component }">
         <template v-if="Component">
             <suspense>

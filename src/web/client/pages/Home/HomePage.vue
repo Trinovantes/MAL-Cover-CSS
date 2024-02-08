@@ -2,16 +2,17 @@
 import { computed } from 'vue'
 import { useApi } from '@/web/client/utils/useApi'
 import { useUserStore } from '@/web/client/store/User/useUserStore'
-import { useLiveMeta } from '@/web/client/utils/useLiveMeta'
 import { APP_NAME, APP_DESC } from '@/common/Constants'
 import { IntersectionValue } from 'quasar'
 import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
 import settingsImg from './img/modern-image-settings.png?rl'
+import { useSeoMeta } from '@unhead/vue'
 
-useLiveMeta({
+useSeoMeta({
     title: APP_NAME,
-    desc: APP_DESC,
-    image: examplePreviewImg.src,
+    description: APP_DESC,
+    ogImage: examplePreviewImg.src,
+    twitterCard: 'summary_large_image',
 })
 
 const userStore = useUserStore()
