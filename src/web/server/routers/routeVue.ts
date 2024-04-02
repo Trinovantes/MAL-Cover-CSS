@@ -29,7 +29,7 @@ export function routeVue() {
         // Render the app on the server
         const appHtml = await renderToString(app, appContext)
         const payload = await renderSSRHead(head)
-        const { header, footer } = assetRenderer.renderAssets(appContext._matchedComponents, false, true)
+        const { header, footer } = assetRenderer.renderAssets(appContext._matchedComponents)
         const rawHtml = renderRawHtml(htmlTemplate, appContext, header + payload.headTags, footer + payload.bodyTags, appHtml)
         const { html, csp } = renderCsp(rawHtml)
 

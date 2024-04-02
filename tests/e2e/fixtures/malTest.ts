@@ -1,14 +1,35 @@
 import { expect, test as base } from '@playwright/test'
 import { ApiMocker } from './mockers/ApiMocker'
+import { SettingsPageTester } from './pages/SettingsPageTester'
+import { HomePageTester } from './pages/HomePageTester'
+import { MainLayoutHeaderTester } from './pages/MainLayoutHeaderTester'
 
 type Fixtures = {
     apiMocker: ApiMocker
+    header: MainLayoutHeaderTester
+    homePage: HomePageTester
+    settingsPage: SettingsPageTester
 }
 
 export const malTest = base.extend<Fixtures>({
     apiMocker: async({}, use) => {
-        const apiMocker = new ApiMocker(false)
+        const apiMocker = new ApiMocker()
         await use(apiMocker)
+    },
+
+    header: async({ page }, use) => {
+        const tester = new MainLayoutHeaderTester(page)
+        await use(tester)
+    },
+
+    homePage: async({ page }, use) => {
+        const tester = new HomePageTester(page)
+        await use(tester)
+    },
+
+    settingsPage: async({ page }, use) => {
+        const tester = new SettingsPageTester(page)
+        await use(tester)
     },
 
     page: async({ page, apiMocker }, use) => {
@@ -47,12 +68,5 @@ export const malTest = base.extend<Fixtures>({
 
         // Make sure there are now error notifications
         await expect(page.locator('.q-notification.bg-negative')).toBeHidden()
-    },
-})
-
-export const malAuthTest = malTest.extend({
-    apiMocker: async({}, use) => {
-        const apiMocker = new ApiMocker(true)
-        await use(apiMocker)
     },
 })

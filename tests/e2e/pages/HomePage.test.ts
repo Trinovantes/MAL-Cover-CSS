@@ -1,15 +1,8 @@
 import { expect } from '@playwright/test'
-import { HomePageTester } from '../fixtures/pages/HomePageTester'
-import { MainLayoutHeaderTester } from '../fixtures/pages/MainLayoutHeaderTester'
 import { malTest } from '../fixtures/malTest'
 
 malTest.describe('HomePage', () => {
-    let header: MainLayoutHeaderTester
-    let homePage: HomePageTester
-
-    malTest.beforeEach(async({ page }) => {
-        header = new MainLayoutHeaderTester(page)
-        homePage = new HomePageTester(page)
+    malTest.beforeEach(async({ homePage }) => {
         await homePage.goto()
     })
 
@@ -17,7 +10,7 @@ malTest.describe('HomePage', () => {
         await expect(page).toHaveTitle('MAL Cover CSS')
     })
 
-    malTest('user is logged out', async() => {
+    malTest('user is logged out', async({ homePage, header }) => {
         await homePage.assertIsLoggedIn(false)
         await header.assertIsLoggedIn(false)
     })
@@ -30,16 +23,16 @@ malTest.describe('HomePage', () => {
             })
         })
 
-        malTest('expand btn is initially visible', async() => {
+        malTest('expand btn is initially visible', async({ header }) => {
             await header.assertIsMobileMode(false)
         })
 
-        malTest('expand btn opens header items', async() => {
+        malTest('expand btn opens header items', async({ header }) => {
             await header.expandMobileMenu()
             await header.assertIsMobileMode(true)
         })
 
-        malTest('clicking anything in header closes header items', async() => {
+        malTest('clicking anything in header closes header items', async({ header }) => {
             const numLinks = await header.getNumMenuLinks()
             for (let i = 1; i < numLinks; i++) {
                 await header.expandMobileMenu()

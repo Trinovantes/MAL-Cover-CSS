@@ -1,7 +1,7 @@
 // This file will be renamed to www.js after being compiled by webpack
 // It is kept as entryServer for historical value to match Vue's SSR guides
 
-import http from 'http'
+import http from 'node:http'
 import { createServerApp } from './server/createServerApp'
 import { initDb } from '@/common/db/initDb'
 import { createSessionStore } from './server/utils/createSessionStore'
@@ -32,7 +32,7 @@ async function main() {
     })
 }
 
-main().catch((err) => {
+main().catch((err: unknown) => {
     logger.error(err)
     process.exit(1)
 })

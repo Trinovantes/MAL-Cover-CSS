@@ -67,9 +67,12 @@ export default ((): Configuration => merge(commonWebConfig, {
         headers: {
             'Access-Control-Allow-Origin': '*',
         },
-        proxy: {
-            '/api': getBuildSecret(BuildSecret.API_URL),
-        },
+        proxy: [
+            {
+                context: ['/api'],
+                target: getBuildSecret(BuildSecret.API_URL),
+            },
+        ],
     },
 
     plugins: [

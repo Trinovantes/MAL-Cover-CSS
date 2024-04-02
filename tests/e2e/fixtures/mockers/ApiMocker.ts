@@ -7,9 +7,9 @@ const apiUrl = getBuildSecret(BuildSecret.API_URL)
 export class ApiMocker {
     readonly username = 'trinovantes'
 
-    #isLoggedIn: boolean
+    #isLoggedIn = false
 
-    constructor(isLoggedIn: boolean) {
+    setIsLoggedIn(isLoggedIn: boolean) {
         this.#isLoggedIn = isLoggedIn
     }
 

@@ -1,29 +1,28 @@
 import { expect } from '@playwright/test'
-import { SettingsPageTester } from '../fixtures/pages/SettingsPageTester'
-import { malAuthTest, malTest } from '../fixtures/malTest'
+import { malTest } from '../fixtures/malTest'
 
 malTest.describe('SettingsPage', () => {
-    let settingsPage: SettingsPageTester
-
-    malTest.beforeEach(async({ page }) => {
-        settingsPage = new SettingsPageTester(page)
+    malTest.beforeEach(async({ settingsPage, apiMocker }) => {
+        apiMocker.setIsLoggedIn(true)
         await settingsPage.goto()
     })
 
-    malTest('unauth user cannot see page', async({ page }) => {
+    malTest('unauth user cannot see page', async({ settingsPage, page, apiMocker }) => {
+        apiMocker.setIsLoggedIn(false)
+        await settingsPage.goto()
         await expect(page).toHaveURL('/')
     })
 
-    malAuthTest('auth user can see page', async({ page }) => {
+    malTest('auth user can see page', async({ page }) => {
         await expect(page).toHaveTitle(/Settings/)
     })
 
-    malAuthTest('auth user initially has no scrapped data', async({ apiMocker }) => {
+    malTest('auth user initially has no scrapped data', async({ apiMocker, settingsPage }) => {
         await settingsPage.assertUsername(apiMocker.username)
         await settingsPage.assertLastChecked('N/A')
     })
 
-    malAuthTest('deleting user redirects back to homepage', async({ page }) => {
+    malTest('deleting user redirects back to homepage', async({ page, settingsPage }) => {
         await settingsPage.deleteUser()
         await expect(page).toHaveURL('/')
     })

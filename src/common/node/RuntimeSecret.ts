@@ -1,4 +1,4 @@
-import fs from 'fs'
+import fs from 'node:fs'
 import { config } from 'dotenv'
 import { ENCRYPTION_KEY_LENGTH } from '@/common/Constants'
 

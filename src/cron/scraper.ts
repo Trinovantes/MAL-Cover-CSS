@@ -138,7 +138,7 @@ async function main(): Promise<void> {
     transaction.finish()
 }
 
-main().catch((err) => {
+main().catch((err: unknown) => {
     logger.error(err)
     process.exit(1)
 })

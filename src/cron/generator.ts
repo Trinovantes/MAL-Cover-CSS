@@ -146,7 +146,7 @@ async function main() {
     transaction.finish()
 }
 
-main().catch((err) => {
+main().catch((err: unknown) => {
     logger.error(err)
     process.exit(1)
 })
