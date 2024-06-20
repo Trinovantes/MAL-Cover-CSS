@@ -85,7 +85,10 @@ export function createServerApp(ctx: ServerAppContext) {
     app.use('/api', Sentry.Handlers.errorHandler())
     app.use('/api', createErrorHandler(true))
 
-    ctx.enableVue && app.use(routeVue())
+    if (ctx.enableVue) {
+        app.use(routeVue())
+    }
+
     app.use(generate404())
     app.use(createErrorHandler(false))
 

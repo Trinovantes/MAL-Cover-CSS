@@ -94,8 +94,6 @@ export const commonWebConfig = merge(commonConfig, {
                     {
                         loader: 'responsive-loader',
                         options: {
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            adapter: require('responsive-loader/sharp'),
                             format: 'webp',
                             publicPath,
                         },
@@ -131,8 +129,6 @@ export const commonNodeConfig = merge(commonConfig, {
                     {
                         loader: 'responsive-loader',
                         options: {
-                            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                            adapter: require('responsive-loader/sharp'),
                             format: 'webp',
                             publicPath,
 

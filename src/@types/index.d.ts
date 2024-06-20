@@ -18,7 +18,7 @@ declare global {
         SSR_HTML_TEMPLATE: string
     }>
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface, @typescript-eslint/consistent-type-definitions
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type, @typescript-eslint/consistent-type-definitions
     interface Window extends HydrationMap {}
 }
 

@@ -8,61 +8,61 @@ import { User } from '@/common/db/models/User'
 // ----------------------------------------------------------------------------
 
 export type MalError = {
-    'error': string
-    'message': string
+    error: string
+    message: string
 }
 
 export type MalUser = {
-    'id': number
-    'name': string
-    'gender': string
-    'location': string
-    'joined_at': string
-    'picture': string
+    id: number
+    name: string
+    gender: string
+    location: string
+    joined_at: string
+    picture: string
 }
 
 export type MalAnimeListItem = {
-    'node': {
-        'id': number
-        'title': string
-        'main_picture': {
-            'medium': string
-            'large': string
+    node: {
+        id: number
+        title: string
+        main_picture: {
+            medium: string
+            large: string
         }
     }
-    'list_status': {
-        'status': string
-        'is_rewatching': boolean
-        'num_watched_episodes': number
-        'score': number
-        'updated_at': string
+    list_status: {
+        status: string
+        is_rewatching: boolean
+        num_watched_episodes: number
+        score: number
+        updated_at: string
     }
 }
 
 export type MalMangaListItem = {
-    'node': {
-        'id': number
-        'title': string
-        'main_picture'?: {
-            'medium': string
-            'large': string
+    node: {
+        id: number
+        title: string
+        main_picture?: {
+            medium: string
+            large: string
         }
     }
-    'list_status': {
-        'status': string
-        'is_rereading': boolean
-        'num_volumes_read': number
-        'num_chapters_read': number
-        'score': number
-        'updated_at': string
+    list_status: {
+        status: string
+        is_rereading: boolean
+        num_volumes_read: number
+        num_chapters_read: number
+        score: number
+        updated_at: string
     }
 }
 
 type MalList<T> = {
-    'data': Array<T>
-    'paging': {
-        'next'?: string
-        'previous'?: string
+    data: Array<T>
+    paging: {
+        next?: string
+        previous?: string
     }
 }
 

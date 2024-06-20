@@ -1,10 +1,7 @@
 // This file will be renamed to main.js after being compiled by webpack
 // It is kept as entryClient for historical value to match Vue's SSR guides
 
-// eslint-disable-next-line import/order
 import './client/assets/css/main.scss'
-
-import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/vue'
 import { SENTRY_DSN } from '@/common/Constants'
 import { createVueApp } from './createVueApp'
@@ -21,7 +18,7 @@ async function main() {
             tracesSampleRate: 0.1,
             profilesSampleRate: 0.1,
             integrations: [
-                new BrowserTracing({
+                new Sentry.BrowserTracing({
                     routingInstrumentation: Sentry.vueRouterInstrumentation(router),
                 }),
             ],
