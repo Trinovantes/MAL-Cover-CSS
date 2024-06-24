@@ -29,6 +29,7 @@
         "source-map-support": "^0.5.19"
     },
     "devDependencies": {
+        "@eslint/compat": "^1.1.0",
         "@eslint/js": "^9.4.0",
         "@nuxt/devalue": "^2.0.2",
         "@originjs/vite-plugin-require-context": "^1.0.9",
