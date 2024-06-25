@@ -20,12 +20,11 @@
         "e2e": "playwright test",
         "lint": "vue-tsc --noemit && eslint",
         "analyze": "WEBPACK_ANALYZE=true NODE_ENV=production webpack --config build/webpack.config.web.client.ts",
-        "postinstall": "patch-package"
+        "prepare": "patch-package"
     },
     "dependencies": {
         "better-sqlite3": "^11.0.0",
         "express": "^4.17.1",
-        "patch-package": "^8.0.0",
         "source-map-support": "^0.5.19"
     },
     "devDependencies": {
@@ -73,6 +72,7 @@
         "mini-css-extract-plugin": "^2.0.0",
         "morgan": "^1.10.0",
         "null-loader": "^4.0.1",
+        "patch-package": "^8.0.0",
         "pinia": "^2.0.14",
         "pino": "^9.2.0",
         "pino-http": "^10.1.0",
