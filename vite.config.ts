@@ -27,5 +27,6 @@ export default defineConfig({
         silent: isContinuousIntegration,
         restoreMocks: true,
         dir: './tests/unit',
+        pool: 'forks',
     },
 })
