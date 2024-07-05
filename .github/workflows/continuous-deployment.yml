@@ -45,7 +45,7 @@ jobs:
         run: yarn unit
 
       - name: Cache playwright
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('**/yarn.lock', '**/package-lock.json') }}
@@ -58,7 +58,7 @@ jobs:
         run: yarn e2e
 
       - name: Upload playwright results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           retention-days: 30
           name: playwright
