@@ -248,6 +248,8 @@ article.hero-unit{
         }
         &.visible{
             .container{
+                animation-name: fadeInLeft;
+
                 @keyframes fadeInLeft {
                     0% {
                         opacity: 0;
@@ -258,8 +260,6 @@ article.hero-unit{
                         transform: translateZ(0);
                     }
                 }
-
-                animation-name: fadeInLeft;
             }
         }
     }

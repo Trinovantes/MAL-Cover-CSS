@@ -1,7 +1,7 @@
-import { SSRContext } from '@vue/server-renderer'
 import express from 'express'
-import { createPinia } from 'pinia'
+import { SSRContext } from '@vue/server-renderer'
 import { useSSRContext } from 'vue'
+import type { createPinia } from 'pinia'
 
 type QuasarSsrContext = {
     req: express.Request

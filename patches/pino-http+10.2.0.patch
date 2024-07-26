@@ -1,5 +1,5 @@
 diff --git a/node_modules/pino-http/index.d.ts b/node_modules/pino-http/index.d.ts
-index 781a5a4..e664698 100644
+index df22a2a..06421be 100644
 --- a/node_modules/pino-http/index.d.ts
 +++ b/node_modules/pino-http/index.d.ts
 @@ -12,17 +12,17 @@ import { IncomingMessage, ServerResponse } from 'http';

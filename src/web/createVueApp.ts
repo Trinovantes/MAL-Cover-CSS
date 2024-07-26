@@ -10,7 +10,7 @@ import { createVueRouter } from './client/router/createVueRouter'
 import { useUserStore } from './client/store/User/useUserStore'
 import { AppContext } from './AppContext'
 import { SSRContext } from '@vue/server-renderer'
-import { createRouter } from 'vue-router'
+import type { createRouter } from 'vue-router'
 
 type VueApp = {
     app: ReturnType<typeof createSSRApp>
