@@ -1,5 +1,5 @@
 diff --git a/node_modules/pino-http/index.d.ts b/node_modules/pino-http/index.d.ts
-index df22a2a..06421be 100644
+index c7c482d..e291f9f 100644
 --- a/node_modules/pino-http/index.d.ts
 +++ b/node_modules/pino-http/index.d.ts
 @@ -12,17 +12,17 @@ import { IncomingMessage, ServerResponse } from 'http';
@@ -22,4 +22,4 @@ index df22a2a..06421be 100644
 +export interface Options<IM = IncomingMessage, SR = ServerResponse, CustomLevels extends string = string> extends pino.LoggerOptions {
      logger?: pino.Logger<CustomLevels> | undefined;
      genReqId?: GenReqId<IM, SR> | undefined;
-     useLevel?: pino.LevelWithSilent | undefined;
+     useLevel?: pino.LevelWithSilent | CustomLevels | undefined;

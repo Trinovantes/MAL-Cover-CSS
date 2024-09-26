@@ -30,8 +30,8 @@ $light-on-light:   rgba(22, 22, 22, 0.1);
 // ----------------------------------------------------------------------------
 
 $primary   : #2e51a2;
-$secondary : lighten($primary, 20%);
-$accent    : darken($primary, 20%);
+$secondary : color.adjust($primary, $lightness: 20%);
+$accent    : color.adjust($primary, $lightness: -20%);
 
 $positive  : #21BA45;
 $negative  : #C10015;
