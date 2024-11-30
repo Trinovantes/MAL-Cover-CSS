@@ -7,9 +7,11 @@ const isContinousIntegration = Boolean(process.env.CI)
 const config: PlaywrightTestConfig = {
     testDir: './tests/e2e',
     outputDir: './tests/e2e/results',
+
     timeout: 10 * 1000, // ms
-    retries: isContinousIntegration ? 2 : 0,
-    workers: isContinousIntegration ? 2 : 4,
+    retries: isContinousIntegration ? 3 : 0,
+    workers: isContinousIntegration ? 1 : undefined,
+    reporter: 'list',
 
     // Throw error when there are "test.only" tests in CI (e.g. focus test being commited)
     forbidOnly: isContinousIntegration,

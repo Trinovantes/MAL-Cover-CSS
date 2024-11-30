@@ -1,5 +1,9 @@
+@use 'sass:color';
+@use 'sass:math';
+@use './variables.scss' as *;
+
 // Patch Quasar default styles with modern flexbox
-@import 'quasar/dist/quasar.prod.css';
+@import url('quasar/dist/quasar.prod.css');
 
 body.mobile{
     .q-focus-helper{

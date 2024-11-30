@@ -14,7 +14,6 @@ export function mockApi(db: DrizzleClient) {
         trustProxy: false,
         enableCors: false,
         enableStaticFiles: false,
-        enableSentry: false,
         enableVue: false,
 
         db,

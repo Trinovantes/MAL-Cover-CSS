@@ -1,7 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import * as Sentry from '@sentry/node'
-import '@sentry/tracing'
 import { SENTRY_DSN } from '@/common/Constants'
 import { Item, selectItems } from '@/common/db/models/Item'
 import { DrizzleClient } from '@/common/db/createDb'
@@ -23,7 +22,7 @@ Sentry.init({
     dsn: SENTRY_DSN,
     release: DEFINE.GIT_HASH,
     tracesSampleRate: 0.1,
-    profilesSampleRate: 0.1,
+    profilesSampleRate: 0.0,
     enabled: !DEFINE.IS_DEV,
 })
 
@@ -130,20 +129,18 @@ async function main() {
         throw new Error(`outputDir:${outputDir} does not exist`)
     }
 
-    const transaction = Sentry.startTransaction({
+    await Sentry.startSpan({
         op: 'generateCss',
         name: 'Generate CSS Cron Job',
+    }, async() => {
+        try {
+            const db = await initDb(logger)
+            generateCss(db, outputDir)
+        } catch (err) {
+            logger.error(err)
+            Sentry.captureException(err)
+        }
     })
-
-    try {
-        const db = await initDb(logger)
-        generateCss(db, outputDir)
-    } catch (err) {
-        logger.error(err)
-        Sentry.captureException(err)
-    }
-
-    transaction.finish()
 }
 
 main().catch((err: unknown) => {

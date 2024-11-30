@@ -4,8 +4,9 @@ import { Logger } from 'pino'
 import { userTable } from './models/User'
 import { itemTable } from './models/Item'
 
-export type DrizzleClient = ReturnType<typeof createDb>['db']
-export type DrizzleTransaction = Parameters<Parameters<DrizzleClient['transaction']>[0]>[0]
+type DrizzleDb = ReturnType<typeof createDb>['db']
+export type DrizzleTransaction = Parameters<Parameters<DrizzleDb['transaction']>[0]>[0]
+export type DrizzleClient = DrizzleDb | DrizzleTransaction
 
 export function createDb(filePath: string, cleanOnExit: boolean, logger?: Logger) {
     const logDb = (message: unknown, ...additionalArgs: Array<unknown>) => {

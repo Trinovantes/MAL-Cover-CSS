@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/node'
-import '@sentry/tracing'
 import { SENTRY_DSN, DELAY_BETWEEN_SCRAPPING, DELAY_BETWEEN_REQUESTS, ITEMS_PER_LIST_REQUEST } from '@/common/Constants'
 import { fetchMalAnimeList, fetchMalMangaList } from '@/common/services/MyAnimeList/data'
 import { getSqlTimestamp, getSqlTimestampFromNow } from '@/common/utils/getSqlTimestamp'
@@ -27,7 +26,7 @@ Sentry.init({
     dsn: SENTRY_DSN,
     release: DEFINE.GIT_HASH,
     tracesSampleRate: 0.1,
-    profilesSampleRate: 0.1,
+    profilesSampleRate: 0.0,
     enabled: !DEFINE.IS_DEV,
 })
 
@@ -121,21 +120,19 @@ function cleanUsers(db: DrizzleClient) {
 // ----------------------------------------------------------------------------
 
 async function main(): Promise<void> {
-    const transaction = Sentry.startTransaction({
+    await Sentry.startSpan({
         op: 'scrapeUsers',
         name: 'Scrape Users Cron Job',
+    }, async() => {
+        try {
+            const db = await initDb(logger)
+            await scrapeUsers(db)
+            cleanUsers(db)
+        } catch (err) {
+            logger.error(err)
+            Sentry.captureException(err)
+        }
     })
-
-    try {
-        const db = await initDb(logger)
-        await scrapeUsers(db)
-        cleanUsers(db)
-    } catch (err) {
-        logger.error(err)
-        Sentry.captureException(err)
-    }
-
-    transaction.finish()
 }
 
 main().catch((err: unknown) => {

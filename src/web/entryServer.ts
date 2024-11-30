@@ -15,7 +15,6 @@ async function main() {
         trustProxy: !DEFINE.IS_DEV,
         enableCors: DEFINE.IS_DEV,
         enableStaticFiles: DEFINE.IS_DEV,
-        enableSentry: !DEFINE.IS_DEV,
         enableVue: true,
 
         db: await initDb(logger),

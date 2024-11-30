@@ -6,7 +6,6 @@ type Options = {
     trustProxy: boolean
     enableCors: boolean
     enableStaticFiles: boolean
-    enableSentry: boolean
     enableVue: boolean
 }
 

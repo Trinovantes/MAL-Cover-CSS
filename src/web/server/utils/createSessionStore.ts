@@ -1,5 +1,5 @@
 import { getRuntimeSecret, RuntimeSecret } from '@/common/node/RuntimeSecret'
-import RedisStore from 'connect-redis'
+import { RedisStore } from 'connect-redis'
 import { createClient } from 'redis'
 
 export async function createSessionStore() {

@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-FROM node:20-alpine as builder
+FROM node:22-alpine as builder
 # -----------------------------------------------------------------------------
 
 WORKDIR /app
@@ -26,7 +26,7 @@ RUN \
 RUN yarn install --production
 
 # -----------------------------------------------------------------------------
-FROM node:20-alpine
+FROM node:22-alpine
 LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 

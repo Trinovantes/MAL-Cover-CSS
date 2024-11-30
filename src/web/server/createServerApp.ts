@@ -1,8 +1,7 @@
-import * as Sentry from '@sentry/node'
 import cors from 'cors'
 import express from 'express'
 import session from 'express-session'
-import { COOKIE_DURATION, SENTRY_DSN } from '@/common/Constants'
+import { COOKIE_DURATION } from '@/common/Constants'
 import { getRuntimeSecret, RuntimeSecret } from '@/common/node/RuntimeSecret'
 import { routeApi } from './routers/routeApi'
 import { routeVue } from './routers/routeVue'
@@ -54,35 +53,12 @@ export function createServerApp(ctx: ServerAppContext) {
         app.use(DEFINE.SSR_PUBLIC_PATH, express.static(DEFINE.SSR_PUBLIC_DIR))
     }
 
-    if (ctx.enableSentry) {
-        Sentry.init({
-            dsn: SENTRY_DSN,
-            release: DEFINE.GIT_HASH,
-            tracesSampleRate: 0.1,
-            profilesSampleRate: 0.1,
-            integrations: [
-                // Enable HTTP calls tracing
-                new Sentry.Integrations.Http({ tracing: true }),
-
-                // Enable Express.js middleware tracing
-                new Sentry.Integrations.Express({ app }),
-            ],
-        })
-
-        // RequestHandler creates a separate execution context using domains, so that every transaction/span/breadcrumb is attached to its own Hub instance
-        app.use(Sentry.Handlers.requestHandler())
-
-        // TracingHandler creates a trace for every incoming request
-        app.use(Sentry.Handlers.tracingHandler())
-    }
-
     // -----------------------------------------------------------------------------
     // Request Handlers
     // -----------------------------------------------------------------------------
 
     app.use('/api', routeApi(ctx))
     app.use('/api', generate404())
-    app.use('/api', Sentry.Handlers.errorHandler())
     app.use('/api', createErrorHandler(true))
 
     if (ctx.enableVue) {
