@@ -2,7 +2,7 @@ import cors from 'cors'
 import express from 'express'
 import session from 'express-session'
 import { COOKIE_DURATION } from '@/common/Constants'
-import { getRuntimeSecret, RuntimeSecret } from '@/common/node/RuntimeSecret'
+import { getRuntimeSecret } from '@/common/node/RuntimeSecret'
 import { routeApi } from './routers/routeApi'
 import { routeVue } from './routers/routeVue'
 import { createErrorHandler } from './utils/createErrorHandler'
@@ -24,7 +24,7 @@ export function createServerApp(ctx: ServerAppContext) {
 
     // Cookies session
     app.use(session({
-        secret: getRuntimeSecret(RuntimeSecret.ENCRYPTION_KEY),
+        secret: getRuntimeSecret('ENCRYPTION_KEY'),
         resave: false,
         saveUninitialized: false,
         proxy: ctx.trustProxy,

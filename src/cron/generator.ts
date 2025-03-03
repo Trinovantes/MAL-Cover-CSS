@@ -4,7 +4,7 @@ import * as Sentry from '@sentry/node'
 import { SENTRY_DSN } from '@/common/Constants'
 import { Item, selectItems } from '@/common/db/models/Item'
 import { DrizzleClient } from '@/common/db/createDb'
-import { ItemType } from '@/common/db/models/ItemType'
+import { ALL_ITEM_TYPES, ItemType } from '@/common/db/models/ItemType'
 import { createLogger } from '@/common/node/createLogger'
 import { initDb } from '@/common/db/initDb'
 
@@ -30,27 +30,26 @@ Sentry.init({
 // Generator
 // ----------------------------------------------------------------------------
 
-enum CssSelector {
-    Self = 'self',
-    Before = 'before',
-    After = 'after',
-    More = 'more',
-}
+const ALL_CSS_SELECTORS = [
+    'self',
+    'before',
+    'after',
+    'more',
+] as const
+
+type CssSelector = typeof ALL_CSS_SELECTORS[number]
 
 function generateCss(db: DrizzleClient, outputDir: string) {
     logger.info(`Starting to generate css into ${outputDir}`)
 
-    const selectors = Object.values(CssSelector)
-    const mediaTypes = [...Object.values(ItemType), undefined]
-    const combosToGenerate = crossProduct(selectors, mediaTypes)
-
+    const combosToGenerate = crossProduct(ALL_CSS_SELECTORS, [...ALL_ITEM_TYPES, undefined])
     for (const combo of combosToGenerate) {
         generate(db, outputDir, combo[0], combo[1])
     }
 }
 
 function generate(db: DrizzleClient, outputDir: string, selector: CssSelector, mediaType?: ItemType) {
-    if (mediaType === undefined && selector === CssSelector.More) {
+    if (mediaType === undefined && selector === 'more') {
         // The '#more[mal id]' selector is based on MAL's id which is not unique for both manga and anime
         // i.e. different manga/anime can share the same id
         return
@@ -82,17 +81,17 @@ function getCssRule(selector: CssSelector, item: Item): string {
     let cssRule = ''
 
     switch (selector) {
-        case CssSelector.More:
+        case 'more':
             cssRule += `#more${item.malId}`
             break
 
-        case CssSelector.Self:
+        case 'self':
             cssRule += '.animetitle'
             cssRule += `[href^="/${item.mediaType}/${item.malId}/"]`
             break
 
-        case CssSelector.Before:
-        case CssSelector.After:
+        case 'before':
+        case 'after':
             cssRule += '.animetitle'
             cssRule += `[href^="/${item.mediaType}/${item.malId}/"]:${selector}`
             break
@@ -103,7 +102,7 @@ function getCssRule(selector: CssSelector, item: Item): string {
     return cssRule
 }
 
-function crossProduct<A, B>(aList: Array<A>, bList: Array<B>): Array<[A, B]> {
+function crossProduct<A, B>(aList: ReadonlyArray<A>, bList: ReadonlyArray<B>): Array<[A, B]> {
     const product: Array<[A, B]> = []
 
     for (const a of aList) {

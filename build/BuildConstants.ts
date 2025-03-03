@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { getBuildSecret, BuildSecret, getGitHash } from './BuildSecret'
+import { getBuildSecret, getGitHash } from './BuildSecret'
 
 // Assume we are running webpack from the project root (../)
 const rootDir = path.resolve()
@@ -12,7 +12,7 @@ export const rawDirRegexp = /\/raw\//
 
 export const publicPathOnServer = '/public/'
 export const publicPath = isDev
-    ? getBuildSecret(BuildSecret.WEB_URL) + publicPathOnServer
+    ? getBuildSecret('WEB_URL') + publicPathOnServer
     : publicPathOnServer
 
 export const srcDir = path.join(rootDir, 'src')
@@ -39,10 +39,10 @@ export const buildConstants = {
     'DEFINE.IS_SSR': "(typeof window === 'undefined')",
     'DEFINE.GIT_HASH': JSON.stringify(gitHash),
 
-    'DEFINE.WEB_URL': JSON.stringify(getBuildSecret(BuildSecret.WEB_URL)),
-    'DEFINE.WEB_PORT': JSON.stringify(getBuildSecret(BuildSecret.WEB_PORT)),
-    'DEFINE.API_URL': JSON.stringify(getBuildSecret(BuildSecret.API_URL)),
-    'DEFINE.API_PORT': JSON.stringify(getBuildSecret(BuildSecret.API_PORT)),
+    'DEFINE.WEB_URL': JSON.stringify(getBuildSecret('WEB_URL')),
+    'DEFINE.WEB_PORT': JSON.stringify(getBuildSecret('WEB_PORT')),
+    'DEFINE.API_URL': JSON.stringify(getBuildSecret('API_URL')),
+    'DEFINE.API_PORT': JSON.stringify(getBuildSecret('API_PORT')),
 
     'DEFINE.SSR_PUBLIC_PATH': JSON.stringify('/'),
     'DEFINE.SSR_PUBLIC_DIR': JSON.stringify(distClientDir),

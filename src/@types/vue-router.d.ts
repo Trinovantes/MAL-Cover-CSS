@@ -1,8 +1,8 @@
-import { RouteMetaKey } from '@/web/client/router/routes'
+import { ROUTE_META_KEY } from '@/web/client/router/routes'
 
 declare module 'vue-router' {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
     export interface RouteMeta {
-        [RouteMetaKey.RequireAuth]?: boolean
+        [ROUTE_META_KEY.REQUIRE_AUTH]?: boolean
     }
 }

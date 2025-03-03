@@ -41,12 +41,10 @@ async function scrapeUsers(db: DrizzleClient) {
 
     for (const user of users) {
         logger.info(`Scraping ${stringifyUser(user)}`)
-
-        for (const mediaType of Object.values(ItemType)) {
-            await scrapeUser(db, user, mediaType)
-            updateUserLastChecked(db, user.id, getSqlTimestamp())
-            await sleep(DELAY_BETWEEN_REQUESTS)
-        }
+        await scrapeUser(db, user, 'anime')
+        await scrapeUser(db, user, 'manga')
+        updateUserLastChecked(db, user.id, getSqlTimestamp())
+        await sleep(DELAY_BETWEEN_REQUESTS)
     }
 }
 
@@ -83,7 +81,7 @@ async function fetchUserList(db: DrizzleClient, user: User, mediaType: ItemType,
             })
         }
 
-        return (mediaType === ItemType.Anime)
+        return (mediaType === 'anime')
             ? await fetchMalAnimeList(db, user, ITEMS_PER_LIST_REQUEST, offset)
             : await fetchMalMangaList(db, user, ITEMS_PER_LIST_REQUEST, offset)
     } catch (err) {

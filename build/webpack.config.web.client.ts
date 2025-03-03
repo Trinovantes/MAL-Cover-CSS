@@ -9,7 +9,7 @@ import { Configuration } from 'webpack'
 import path from 'node:path'
 import { commonWebConfig } from './webpack.common'
 import { distClientDir, distServerManifest, entryFile, isDev, manifestFileName, publicPath, publicPathOnServer, srcWebDir, srcWebStaticDir, srcWebTemplate } from './BuildConstants'
-import { BuildSecret, getBuildSecret, isAnalyze } from './BuildSecret'
+import { getBuildSecret, isAnalyze } from './BuildSecret'
 import 'webpack-dev-server'
 
 // ----------------------------------------------------------------------------
@@ -32,8 +32,8 @@ export default ((): Configuration => merge(commonWebConfig, {
     },
 
     devServer: {
-        allowedHosts: [new URL(getBuildSecret(BuildSecret.WEB_URL)).hostname],
-        port: getBuildSecret(BuildSecret.WEB_PORT),
+        allowedHosts: [new URL(getBuildSecret('WEB_URL')).hostname],
+        port: getBuildSecret('WEB_PORT'),
         devMiddleware: {
             index: entryFile,
             writeToDisk: (filePath) => {
@@ -70,7 +70,7 @@ export default ((): Configuration => merge(commonWebConfig, {
         proxy: [
             {
                 context: ['/api'],
-                target: getBuildSecret(BuildSecret.API_URL),
+                target: getBuildSecret('API_URL'),
             },
         ],
     },

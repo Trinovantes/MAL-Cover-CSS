@@ -56,8 +56,8 @@ describe('upsertItem', () => {
     })
 
     test('when same item id used for anime and manga', () => {
-        upsertMockItem(42, ItemType.Anime)
-        upsertMockItem(42, ItemType.Manga)
+        upsertMockItem(42, 'anime')
+        upsertMockItem(42, 'manga')
 
         const items = selectItems(db)
         expect(items.length).toBe(2)
@@ -68,10 +68,10 @@ describe('upsertItem', () => {
         const newDate = 'Date 2'
 
         vi.mocked(getSqlTimestamp).mockReturnValue(oldDate)
-        const oldItem = upsertMockItem(1, ItemType.Anime)
+        const oldItem = upsertMockItem(1, 'anime')
 
         vi.mocked(getSqlTimestamp).mockReturnValue(newDate)
-        const newItem = upsertMockItem(1, ItemType.Anime, 'Some URL')
+        const newItem = upsertMockItem(1, 'anime', 'Some URL')
 
         expect(newItem.id).toBe(oldItem.id)
         expect(newItem.malId).toBe(oldItem.malId)
@@ -87,7 +87,7 @@ describe('upsertItem', () => {
 // Helpers
 // ----------------------------------------------------------------------------
 
-function upsertMockItem(malId: number, mediaType = ItemType.Anime, imgUrl: string | null = null) {
+function upsertMockItem(malId: number, mediaType: ItemType = 'anime', imgUrl: string | null = null) {
     return upsertItem(db, {
         mediaType,
         malId,

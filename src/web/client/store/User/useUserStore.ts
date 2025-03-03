@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { HydrationKey, loadStateFromWindow } from '../Hydration'
+import { loadStateFromWindow } from '../Hydration'
 import { AppContext } from '@/web/AppContext'
 import { RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/interfaces/ApiResponse'
 import { fetchWithSsrProxy } from '@/web/client/utils/fetchWithSsrProxy'
@@ -35,7 +35,7 @@ export const useUserStore = defineStore('User', {
             }
 
             if (!DEFINE.IS_SSR) {
-                const savedState = loadStateFromWindow(HydrationKey.UserStore)
+                const savedState = loadStateFromWindow('UserStore')
                 if (savedState) {
                     this.$patch(savedState)
                     return

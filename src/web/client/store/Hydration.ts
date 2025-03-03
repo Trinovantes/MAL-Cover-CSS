@@ -1,12 +1,8 @@
 import devalue from '@nuxt/devalue'
 import { UserState } from './User/useUserStore'
 
-export enum HydrationKey {
-    UserStore = 'UserStore',
-}
-
 export type HydrationMap = {
-    [HydrationKey.UserStore]: UserState
+    ['UserStore']: UserState
 }
 
 export function saveStateToWindow<K extends keyof HydrationMap>(key: K, state: HydrationMap[K]): string {

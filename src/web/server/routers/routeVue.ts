@@ -6,7 +6,7 @@ import { createAsyncHandler } from '@/web/server/utils/createAsyncHandler'
 import { renderCsp } from '@/web/server/utils/renderCsp'
 import { renderRawHtml } from '@/web/server/utils/renderRawHtml'
 import { createAppContext } from '@/web/AppContext'
-import { RouteName } from '@/web/client/router/routes'
+import { ROUTE_NAME } from '@/web/client/router/routes'
 import { createVueApp } from '@/web/createVueApp'
 import { renderSSRHead } from '@unhead/ssr'
 
@@ -18,7 +18,7 @@ export function routeVue() {
     router.use(createAsyncHandler(async(req, res) => {
         const appContext = createAppContext(req, res)
         const { app, router, head } = await createVueApp(appContext)
-        const is404 = (router.currentRoute.value.name === RouteName.Error404)
+        const is404 = (router.currentRoute.value.name === ROUTE_NAME.ERROR_404)
 
         // Check if Vue matched to a different route
         if (!is404 && router.currentRoute.value.fullPath !== req.originalUrl) {

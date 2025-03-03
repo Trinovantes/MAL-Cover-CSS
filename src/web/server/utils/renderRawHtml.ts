@@ -1,11 +1,11 @@
 import { AppContext } from '@/web/AppContext'
-import { HydrationKey, saveStateToWindow } from '@/web/client/store/Hydration'
+import { saveStateToWindow } from '@/web/client/store/Hydration'
 import { useUserStore } from '@/web/client/store/User/useUserStore'
 
 export function renderRawHtml(htmlTemplate: string, appContext: AppContext, header: string, footer: string, appHtml: string): string {
     const head = `
         <script>
-            ${saveStateToWindow(HydrationKey.UserStore, useUserStore(appContext.pinia).$state)};
+            ${saveStateToWindow('UserStore', useUserStore(appContext.pinia).$state)};
         </script>
 
         ${header}

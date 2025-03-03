@@ -1,8 +1,8 @@
 import { RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/interfaces/ApiResponse'
 import { Page } from '@playwright/test'
-import { BuildSecret, getBuildSecret } from 'build/BuildSecret'
+import { getBuildSecret } from 'build/BuildSecret'
 
-const apiUrl = getBuildSecret(BuildSecret.API_URL)
+const apiUrl = getBuildSecret('API_URL')
 
 export class ApiMocker {
     readonly username = 'trinovantes'

@@ -1,7 +1,7 @@
 import { PlaywrightTestConfig } from '@playwright/test'
-import { getBuildSecret, BuildSecret } from 'build/BuildSecret'
+import { getBuildSecret } from 'build/BuildSecret'
 
-const webUrl = getBuildSecret(BuildSecret.WEB_URL)
+const webUrl = getBuildSecret('WEB_URL')
 const isContinousIntegration = Boolean(process.env.CI)
 
 const config: PlaywrightTestConfig = {

@@ -1,10 +1,10 @@
-import { getRuntimeSecret, RuntimeSecret } from '@/common/node/RuntimeSecret'
+import { getRuntimeSecret } from '@/common/node/RuntimeSecret'
 import { RedisStore } from 'connect-redis'
 import { createClient } from 'redis'
 
 export async function createSessionStore() {
-    const redisHost = getRuntimeSecret(RuntimeSecret.REDIS_HOST)
-    const redisPort = getRuntimeSecret(RuntimeSecret.REDIS_PORT)
+    const redisHost = getRuntimeSecret('REDIS_HOST')
+    const redisPort = getRuntimeSecret('REDIS_PORT')
     const redisClient = createClient({
         socket: {
             host: redisHost,

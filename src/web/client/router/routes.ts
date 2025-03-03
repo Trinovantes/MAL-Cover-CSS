@@ -1,14 +1,13 @@
 import { RouteRecordRaw } from 'vue-router'
 
-export const enum RouteName {
-    Home = 'Home',
-    Settings = 'Settings',
-    Error404 = 'Error404',
-}
+export const ROUTE_NAME = Object.freeze({
+    HOME: 'Home',
+    ERROR_404: 'Error404',
+})
 
-export enum RouteMetaKey {
-    RequireAuth = 'RequireAuth',
-}
+export const ROUTE_META_KEY = Object.freeze({
+    REQUIRE_AUTH: 'RequireAuth',
+})
 
 export const routes: Array<RouteRecordRaw> = [
     {
@@ -17,7 +16,7 @@ export const routes: Array<RouteRecordRaw> = [
         children: [
             {
                 path: '',
-                name: RouteName.Home,
+                name: ROUTE_NAME.HOME,
                 component: () => import('../pages/Home/HomePage.vue'),
             },
             {
@@ -34,17 +33,16 @@ export const routes: Array<RouteRecordRaw> = [
             },
             {
                 path: 'settings',
-                name: RouteName.Settings,
                 component: () => import('../pages/Settings/SettingsPage.vue'),
                 meta: {
-                    [RouteMetaKey.RequireAuth]: true,
+                    [ROUTE_META_KEY.REQUIRE_AUTH]: true,
                 },
             },
         ],
     },
     {
         path: '/:pathMatch(.*)*',
-        name: RouteName.Error404,
+        name: ROUTE_NAME.ERROR_404,
         component: () => import('../pages/Home/HomePage.vue'),
     },
 ]

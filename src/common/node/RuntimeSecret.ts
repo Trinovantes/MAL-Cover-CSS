@@ -6,16 +6,13 @@ import { ENCRYPTION_KEY_LENGTH } from '@/common/Constants'
 const envFile = process.env.ENV_FILE ?? '.env'
 config({ path: envFile })
 
-export enum RuntimeSecret {
-    REDIS_HOST = 'REDIS_HOST',
-    REDIS_PORT = 'REDIS_PORT',
-
-    S3_BUCKET_UPLOAD = 'S3_BUCKET_UPLOAD',
-
-    ENCRYPTION_KEY = 'ENCRYPTION_KEY',
-    MAL_CLIENT_ID = 'MAL_CLIENT_ID',
-    MAL_CLIENT_SECRET = 'MAL_CLIENT_SECRET',
-}
+export type RuntimeSecret =
+    'REDIS_HOST' |
+    'REDIS_PORT' |
+    'S3_BUCKET_UPLOAD' |
+    'ENCRYPTION_KEY' |
+    'MAL_CLIENT_ID' |
+    'MAL_CLIENT_SECRET'
 
 const secretsCache = new Map<RuntimeSecret, string>()
 
@@ -51,7 +48,7 @@ export function getRuntimeSecret(key: RuntimeSecret, defaultValue?: string): str
 }
 
 export function getEncryptionKey(): Buffer {
-    const key64 = getRuntimeSecret(RuntimeSecret.ENCRYPTION_KEY)
+    const key64 = getRuntimeSecret('ENCRYPTION_KEY')
     const key = Buffer.from(key64, 'base64')
 
     if (key.length !== ENCRYPTION_KEY_LENGTH) {
