@@ -9,6 +9,7 @@ import { createAppContext } from '@/web/AppContext'
 import { ROUTE_NAME } from '@/web/client/router/routes'
 import { createVueApp } from '@/web/createVueApp'
 import { renderSSRHead } from '@unhead/ssr'
+import { createHead } from '@unhead/vue/server'
 
 export function routeVue() {
     const router = express.Router()
@@ -17,7 +18,8 @@ export function routeVue() {
 
     router.use(createAsyncHandler(async(req, res) => {
         const appContext = createAppContext(req, res)
-        const { app, router, head } = await createVueApp(appContext)
+        const head = createHead({ disableDefaults: true })
+        const { app, router } = await createVueApp(head, appContext)
         const is404 = (router.currentRoute.value.name === ROUTE_NAME.ERROR_404)
 
         // Check if Vue matched to a different route

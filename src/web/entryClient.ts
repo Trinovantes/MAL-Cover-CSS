@@ -5,10 +5,12 @@ import './client/assets/css/main.scss'
 import * as Sentry from '@sentry/vue'
 import { SENTRY_DSN } from '@/common/Constants'
 import { createVueApp } from './createVueApp'
+import { createHead } from '@unhead/vue/client'
 
 async function main() {
     console.info('Release', DEFINE.GIT_HASH)
-    const { app, router } = await createVueApp()
+    const head = createHead()
+    const { app, router } = await createVueApp(head)
 
     if (!DEFINE.IS_DEV) {
         Sentry.init({
