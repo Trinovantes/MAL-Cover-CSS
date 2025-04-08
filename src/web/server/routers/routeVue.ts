@@ -3,13 +3,15 @@ import { renderToString } from '@vue/server-renderer'
 import express from 'express'
 import { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin/dist/utils/VueSsrAssetsRenderer'
 import { createAsyncHandler } from '@/web/server/utils/createAsyncHandler'
-import { renderCsp } from '@/web/server/utils/renderCsp'
 import { renderRawHtml } from '@/web/server/utils/renderRawHtml'
 import { createAppContext } from '@/web/AppContext'
 import { ROUTE_NAME } from '@/web/client/router/routes'
 import { createVueApp } from '@/web/createVueApp'
 import { renderSSRHead } from '@unhead/ssr'
 import { createHead } from '@unhead/vue/server'
+import { createCspNonce } from '../utils/createCspNonce'
+import { saveStateToWindow } from '@/web/client/store/Hydration'
+import { useUserStore } from '@/web/client/store/User/useUserStore'
 
 export function routeVue() {
     const router = express.Router()
@@ -30,20 +32,32 @@ export function routeVue() {
 
         // Render the app on the server
         const appHtml = await renderToString(app, appContext)
-        const payload = await renderSSRHead(head)
-        const { header, footer } = assetRenderer.renderAssets(appContext._matchedComponents)
-        const rawHtml = renderRawHtml(htmlTemplate, appContext, header + payload.headTags, footer + payload.bodyTags, appHtml)
-        const { html, csp } = renderCsp(rawHtml)
+        const unhead = await renderSSRHead(head)
+        const renderedPage = {
+            appHtml,
+            unhead,
+            teleports: appContext.teleports,
+            quasar: appContext._meta,
+            vueSsrAssets: {
+                matchedComponents: [...appContext._matchedComponents],
+            },
+            piniaStores: [
+                saveStateToWindow('__INITIAL_USER_STATE__', useUserStore(appContext.pinia).$state),
+            ],
+        }
 
         // Proxy any cookies from internal fetch calls back to client
         if (appContext.ssrProxyCookies) {
             res.setHeader('Set-Cookie', appContext.ssrProxyCookies)
         }
 
-        res.setHeader('Content-Type', 'text/html')
+        const { nonce, csp } = createCspNonce()
         res.setHeader('Content-Security-Policy', csp)
+
+        const renderedHtml = renderRawHtml(htmlTemplate, renderedPage, assetRenderer, nonce)
+        res.setHeader('Content-Type', 'text/html')
         res.status(is404 ? 404 : 200)
-        res.send(html)
+        res.send(renderedHtml)
     }))
 
     return router

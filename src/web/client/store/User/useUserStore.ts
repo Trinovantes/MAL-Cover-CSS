@@ -35,7 +35,7 @@ export const useUserStore = defineStore('User', {
             }
 
             if (!DEFINE.IS_SSR) {
-                const savedState = loadStateFromWindow('UserStore')
+                const savedState = loadStateFromWindow('__INITIAL_USER_STATE__')
                 if (savedState) {
                     this.$patch(savedState)
                     return
