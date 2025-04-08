@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-FROM node:22-alpine as builder
+FROM node:22-alpine AS builder
 # -----------------------------------------------------------------------------
 
 WORKDIR /app
@@ -27,12 +27,12 @@ RUN yarn install --production
 
 # -----------------------------------------------------------------------------
 FROM node:22-alpine
-LABEL org.opencontainers.image.source https://github.com/Trinovantes/MAL-Cover-CSS
+LABEL org.opencontainers.image.source=https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 
 WORKDIR /app
 
-ENV NODE_ENV 'production'
+ENV NODE_ENV='production'
 
 # Copy app
 COPY --from=builder /app/package.json   ./
@@ -42,4 +42,4 @@ COPY --from=builder /app/dist/          ./dist/
 # Mount points
 RUN mkdir -p ./db/live
 
-CMD yarn startWeb
+CMD ["yarn", "startWeb"]
