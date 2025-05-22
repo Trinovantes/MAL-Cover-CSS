@@ -18,6 +18,7 @@ export default defineConfig({
         replace({
             values: buildConstants,
             delimiters: ['\\b', ''],
+            preventAssignment: true,
         }),
         vue(),
         ViteRequireContext(),

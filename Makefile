@@ -166,7 +166,7 @@ stop-cron:
 
 run-cron: stop-cron
 	docker run \
-		--mount type=bind,source=/var/www/malcovercss/generated,target=/app/dist/client/generated \
+		--mount type=bind,source=/var/www/malcovercss/generated,target=/app/dist/web/client/generated \
 		--mount type=bind,source=/var/www/malcovercss/live,target=/app/db/live \
 		--env-file .env \
 		--log-driver local \

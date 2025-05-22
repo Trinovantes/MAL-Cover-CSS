@@ -1,16 +1,17 @@
-import * as Sentry from '@sentry/node'
-import { SENTRY_DSN, DELAY_BETWEEN_SCRAPPING, DELAY_BETWEEN_REQUESTS, ITEMS_PER_LIST_REQUEST } from '@/common/Constants'
-import { fetchMalAnimeList, fetchMalMangaList } from '@/common/services/MyAnimeList/data'
+import { DELAY_BETWEEN_SCRAPPING, DELAY_BETWEEN_REQUESTS, ITEMS_PER_LIST_REQUEST, DB_FILE } from '@/common/Constants'
+import { fetchMalAnimeList, fetchMalMangaList, MalAnimeResponse, MalMangaResponse } from '@/common/services/MyAnimeList/data'
 import { getSqlTimestamp, getSqlTimestampFromNow } from '@/common/utils/getSqlTimestamp'
 import { sleep } from '@/common/utils/sleep'
-import { DrizzleClient } from '@/common/db/createDb'
+import { createDb, DrizzleClient } from '@/common/db/createDb'
 import { User, deleteUser, selectUsersToDelete, selectUsersToScrape, stringifyUser, updateUserLastChecked, updateUserTokens } from '@/common/db/models/User'
 import { ItemType } from '@/common/db/models/ItemType'
 import { upsertItem } from '@/common/db/models/Item'
-import { isBefore } from 'date-fns'
+import { isAfter } from 'date-fns'
 import { createLogger } from '@/common/node/createLogger'
 import { refreshAccessToken } from '@/common/services/MyAnimeList/oauth'
-import { initDb } from '@/common/db/initDb'
+import * as Sentry from '@sentry/node'
+import { SENTRY_DSN } from '@/common/Constants'
+import { getMigrations } from '@/common/db/getMigrations'
 
 // ----------------------------------------------------------------------------
 // Pino
@@ -25,8 +26,6 @@ const logger = createLogger()
 Sentry.init({
     dsn: SENTRY_DSN,
     release: DEFINE.GIT_HASH,
-    tracesSampleRate: 0.1,
-    profilesSampleRate: 0.0,
     enabled: !DEFINE.IS_DEV,
 })
 
@@ -41,17 +40,29 @@ async function scrapeUsers(db: DrizzleClient) {
 
     for (const user of users) {
         logger.info(`Scraping ${stringifyUser(user)}`)
-        await scrapeUser(db, user, 'anime')
-        await scrapeUser(db, user, 'manga')
-        updateUserLastChecked(db, user.id, getSqlTimestamp())
         await sleep(DELAY_BETWEEN_REQUESTS)
+
+        const animeSuccess = await scrapeUser(db, user, 'anime')
+        if (!animeSuccess) {
+            continue
+        }
+
+        const mangaSuccess = await scrapeUser(db, user, 'manga')
+        if (!mangaSuccess) {
+            continue
+        }
+
+        updateUserLastChecked(db, user.id, getSqlTimestamp())
     }
 }
 
-async function scrapeUser(db: DrizzleClient, user: User, mediaType: ItemType, offset = 0) {
+async function scrapeUser(db: DrizzleClient, user: User, mediaType: ItemType, offset = 0): Promise<boolean> {
     const malList = await fetchUserList(db, user, mediaType, offset)
+    if (!malList) {
+        return false
+    }
 
-    for (const malItem of malList?.data ?? []) {
+    for (const malItem of malList.data) {
         const malId = malItem.node.id
         const imgUrl = malItem.node.main_picture?.medium ?? null
         upsertItem(db, { mediaType, malId, imgUrl })
@@ -59,26 +70,36 @@ async function scrapeUser(db: DrizzleClient, user: User, mediaType: ItemType, of
 
     if (malList?.paging.next) {
         const nextOffset = offset + ITEMS_PER_LIST_REQUEST
-        await scrapeUser(db, user, mediaType, nextOffset)
+        return await scrapeUser(db, user, mediaType, nextOffset)
     }
+
+    return true
 }
 
-async function fetchUserList(db: DrizzleClient, user: User, mediaType: ItemType, offset: number) {
+async function fetchUserList(db: DrizzleClient, user: User, mediaType: ItemType, offset: number): Promise<MalAnimeResponse | MalMangaResponse | null> {
     if (!user.tokenExpires || !user.accessToken || !user.refreshToken) {
         logger.warn(`Skipping ${stringifyUser(user)} due to missing accessToken or refreshToken`)
         return null
     }
 
     try {
-        const tokenHasExpired = isBefore(new Date(user.tokenExpires), new Date())
+        const now = new Date()
+        const expiry = new Date(user.tokenExpires)
+        const tokenHasExpired = isAfter(now, expiry)
         if (tokenHasExpired) {
             logger.info(`${stringifyUser(user)} tokens have expired, going to refresh their tokens`)
             const malRes = await refreshAccessToken(user.refreshToken)
-            updateUserTokens(db, user.id, {
+            const updatedUser = updateUserTokens(db, user.id, {
                 tokenExpires: getSqlTimestampFromNow(malRes.expires_in),
                 accessToken: malRes.access_token,
                 refreshToken: malRes.refresh_token,
             })
+
+            if (!updatedUser) {
+                throw new Error(`Failed to save new refreshToken (${stringifyUser(user)})`)
+            }
+
+            user = updatedUser
         }
 
         return (mediaType === 'anime')
@@ -88,13 +109,14 @@ async function fetchUserList(db: DrizzleClient, user: User, mediaType: ItemType,
         if (!(err instanceof Error)) {
             throw err
         }
-
-        if (!err.message.includes('401')) {
+        if (!err.message.startsWith('[401]')) {
             throw err
         }
 
-        logger.info(`Deleting ${stringifyUser(user)} because they have revoked their authorization`)
+        logger.warn(err)
+        logger.info(`Deleting ${stringifyUser(user)} because they have probably revoked their authorization`)
         deleteUser(db, user.id)
+
         return null
     }
 }
@@ -123,7 +145,11 @@ async function main(): Promise<void> {
         name: 'Scrape Users Cron Job',
     }, async() => {
         try {
-            const db = await initDb(logger)
+            const db = await createDb(DB_FILE, {
+                cleanOnExit: true,
+                migrations: await getMigrations(),
+            })
+
             await scrapeUsers(db)
             cleanUsers(db)
         } catch (err) {

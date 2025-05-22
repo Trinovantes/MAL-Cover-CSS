@@ -1,14 +1,12 @@
 import { DB_MEMORY, ENCRYPTION_KEY_LENGTH } from '@/common/Constants'
-import { createDb } from '@/common/db/createDb'
+import { createDb, DrizzleClient } from '@/common/db/createDb'
 import { getMigrations } from '@/common/db/getMigrations'
-import { migrateDb } from '@/common/db/migrateDb'
 import { selectUsersToDelete, selectUsersToScrape, updateUserLastChecked, updateUserTokens, upsertUser } from '@/common/db/models/User'
 import { getEncryptionKey } from '@/common/node/RuntimeSecret'
 import { getSqlTimestamp, getSqlTimestampFromNow } from '@/common/utils/getSqlTimestamp'
 import { vi, describe, test, beforeEach, afterEach, expect } from 'vitest'
 
-let dbHandles: ReturnType<typeof createDb>
-let db: (typeof dbHandles)['db']
+let db: DrizzleClient
 
 const mocks = vi.hoisted(() => {
     return {
@@ -33,18 +31,16 @@ vi.mock('@/common/utils/getSqlTimestamp', async() => {
 })
 
 beforeEach(async() => {
-    dbHandles = createDb(DB_MEMORY, false)
-    db = dbHandles.db
-
-    const migrations = getMigrations()
-    await migrateDb(dbHandles.db, migrations)
+    db = await createDb(DB_MEMORY, {
+        migrations: await getMigrations(),
+    })
 
     vi.mocked(getEncryptionKey).mockReturnValue(Buffer.alloc(ENCRYPTION_KEY_LENGTH, '0'))
     vi.mocked(getSqlTimestamp).mockReturnValue('Mocked Date')
 })
 
 afterEach(() => {
-    dbHandles.client.close()
+    db.$client.close()
 })
 
 describe('upsertUser', () => {
@@ -165,8 +161,8 @@ describe('updateUserLastChecked', () => {
         const now = getSqlTimestampFromNow(0)
         const user = upsertMockUser()
         const updatedUser = updateUserLastChecked(db, user.id, now)
-        expect(updatedUser.id).toBe(user.id)
-        expect(updatedUser.lastChecked).toBe(now)
+        expect(updatedUser?.id).toBe(user.id)
+        expect(updatedUser?.lastChecked).toBe(now)
     })
 })
 

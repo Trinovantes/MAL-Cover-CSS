@@ -18,6 +18,7 @@ export const ENCRYPTION_IV_LENGTH = 12 // bytes
 export const ENCRYPTION_AUTH_TAG_LENGTH = 16 // bytes
 
 export const MAX_MIGRATION_ATTEMPTS = 5
+export const RETRY_MIGRATION_AFTER_MS = 100
 export const DB_FILE = './db/live/malcovercss.sqlite3'
 export const DB_MEMORY = ':memory:'
 

@@ -21,7 +21,7 @@ export type Item = InferSelectModel<typeof itemTable>
 // Helpers
 // ----------------------------------------------------------------------------
 
-export function upsertItem(db: DrizzleClient, payload: Pick<Item, 'mediaType' | 'malId' | 'imgUrl'>) {
+export function upsertItem(db: DrizzleClient, payload: Pick<Item, 'mediaType' | 'malId' | 'imgUrl'>): Item {
     const now = getSqlTimestamp()
 
     return db
@@ -42,7 +42,7 @@ export function upsertItem(db: DrizzleClient, payload: Pick<Item, 'mediaType' | 
         .get()
 }
 
-export function selectItems(db: DrizzleClient, mediaType?: ItemType) {
+export function selectItems(db: DrizzleClient, mediaType?: ItemType): Array<Item> {
     if (mediaType === undefined) {
         return db
             .select()

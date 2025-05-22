@@ -2,7 +2,7 @@ import { Type, Static } from '@sinclair/typebox'
 import { Value } from '@sinclair/typebox/value'
 
 const tbOauthAuthFailure = Type.Object({
-    state: Type.String(), // encoded JSON object
+    state: Type.Optional(Type.String()), // encoded JSON object
     error: Type.String(),
     message: Type.String(),
     hint: Type.Optional(Type.String()),

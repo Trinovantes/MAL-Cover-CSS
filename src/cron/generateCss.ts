@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import * as Sentry from '@sentry/node'
-import { SENTRY_DSN } from '@/common/Constants'
 import { Item, selectItems } from '@/common/db/models/Item'
-import { DrizzleClient } from '@/common/db/createDb'
+import { createDb, DrizzleClient } from '@/common/db/createDb'
 import { ALL_ITEM_TYPES, ItemType } from '@/common/db/models/ItemType'
 import { createLogger } from '@/common/node/createLogger'
-import { initDb } from '@/common/db/initDb'
+import * as Sentry from '@sentry/node'
+import { DB_FILE, SENTRY_DSN } from '@/common/Constants'
+import { getMigrations } from '@/common/db/getMigrations'
 
 // ----------------------------------------------------------------------------
 // Pino
@@ -21,8 +21,6 @@ const logger = createLogger()
 Sentry.init({
     dsn: SENTRY_DSN,
     release: DEFINE.GIT_HASH,
-    tracesSampleRate: 0.1,
-    profilesSampleRate: 0.0,
     enabled: !DEFINE.IS_DEV,
 })
 
@@ -133,7 +131,11 @@ async function main() {
         name: 'Generate CSS Cron Job',
     }, async() => {
         try {
-            const db = await initDb(logger)
+            const db = await createDb(DB_FILE, {
+                cleanOnExit: true,
+                migrations: await getMigrations(),
+            })
+
             generateCss(db, outputDir)
         } catch (err) {
             logger.error(err)

@@ -141,9 +141,12 @@ export const commonNodeConfig = merge(commonConfig, {
         ],
     },
 
-    externals: {
-        '@sentry/node': 'commonjs @sentry/node',
-        'better-sqlite3': 'commonjs better-sqlite3',
-        'express': 'commonjs express',
-    },
+    externals: [
+        {
+            '@sentry/node': 'commonjs @sentry/node',
+            'better-sqlite3': 'commonjs better-sqlite3',
+            'express': 'commonjs express',
+        },
+        /^bun(:\w+)?/i,
+    ],
 })

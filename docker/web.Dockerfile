@@ -34,7 +34,7 @@ WORKDIR /app
 
 # Copy app
 COPY ./docker/web.Caddyfile     /etc/caddy/Caddyfile
-COPY --from=builder /app/dist   /app/dist/
+COPY --from=builder /app/dist/  /app/dist/
 
 # Edit in API_PORT
 RUN \

@@ -46,11 +46,10 @@ export async function fetchAccessToken(authCode: string, codeChallenge: string):
     const malRes = await res.json() as unknown
 
     if (isOauthAuthFailure(malRes)) {
-        throw new Error(`Failed to obtain access token (${malRes.error})`)
+        throw new Error(`[${res.status}] Failed to obtain access token error:"${malRes.error}" message:"${malRes.message}"`)
     }
-
     if (!isOauthTokenSuccess(malRes)) {
-        throw new Error(`Unexpected malRes: ${JSON.stringify(malRes)}`)
+        throw new Error(`[${res.status}] Unexpected malRes: ${JSON.stringify(malRes)}`)
     }
 
     return malRes
@@ -74,11 +73,10 @@ export async function refreshAccessToken(refreshToken: string): Promise<OauthTok
     const malRes = await res.json() as unknown
 
     if (isOauthAuthFailure(malRes)) {
-        throw new Error(`Failed to obtain access token (${malRes.error})`)
+        throw new Error(`[${res.status}] Failed to obtain access token error:"${malRes.error}" message:"${malRes.message}"`)
     }
-
     if (!isOauthTokenSuccess(malRes)) {
-        throw new Error(`Unexpected malRes: ${JSON.stringify(malRes)}`)
+        throw new Error(`[${res.status}] Unexpected malRes: ${JSON.stringify(malRes)}`)
     }
 
     return malRes

@@ -9,7 +9,7 @@ RUN apk update && apk add --no-cache curl sqlite aws-cli && aws --version
 WORKDIR /app
 
 # Copy app
-COPY docker/    ./docker
+COPY docker/    ./docker/
 
 # Mount points
 RUN mkdir -p    ./db/backups

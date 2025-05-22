@@ -1,14 +1,12 @@
 import { DB_MEMORY } from '@/common/Constants'
-import { createDb } from '@/common/db/createDb'
+import { createDb, DrizzleClient } from '@/common/db/createDb'
 import { getMigrations } from '@/common/db/getMigrations'
-import { migrateDb } from '@/common/db/migrateDb'
 import { selectItems, upsertItem } from '@/common/db/models/Item'
 import { ItemType } from '@/common/db/models/ItemType'
 import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 import { vi, describe, test, beforeEach, afterEach, expect } from 'vitest'
 
-let dbHandles: ReturnType<typeof createDb>
-let db: (typeof dbHandles)['db']
+let db: DrizzleClient
 
 const mocks = vi.hoisted(() => {
     return {
@@ -23,17 +21,15 @@ vi.mock('@/common/utils/getSqlTimestamp', () => {
 })
 
 beforeEach(async() => {
-    dbHandles = createDb(DB_MEMORY, false)
-    db = dbHandles.db
-
-    const migrations = getMigrations()
-    await migrateDb(dbHandles.db, migrations)
+    db = await createDb(DB_MEMORY, {
+        migrations: await getMigrations(),
+    })
 
     vi.mocked(getSqlTimestamp).mockReturnValue('Mocked Date')
 })
 
 afterEach(() => {
-    dbHandles.client.close()
+    db.$client.close()
 })
 
 describe('upsertItem', () => {
@@ -79,7 +75,7 @@ describe('upsertItem', () => {
         expect(newItem.imgUrl).not.toBeNull()
         expect(newItem.createdAt).toBe(oldDate)
         expect(newItem.updatedAt).toBe(newDate)
-        expect(selectItems(dbHandles.db).length).toBe(1)
+        expect(selectItems(db).length).toBe(1)
     })
 })
 

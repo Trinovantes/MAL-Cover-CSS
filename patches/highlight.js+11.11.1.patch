@@ -1,17 +1,15 @@
 diff --git a/node_modules/highlight.js/package.json b/node_modules/highlight.js/package.json
-index 6ee1be7..3784d30 100644
+index 6ee1be7..6a81044 100644
 --- a/node_modules/highlight.js/package.json
 +++ b/node_modules/highlight.js/package.json
-@@ -108,9 +108,9 @@
-       "require": "./lib/core.js",
-       "import": "./es/core.js"
+@@ -112,6 +112,10 @@
+       "require": "./lib/languages/*.js",
+       "import": "./es/languages/*.js"
      },
--    "./lib/languages/*": {
--      "require": "./lib/languages/*.js",
--      "import": "./es/languages/*.js"
 +    "./lib/languages": {
 +      "require": "./lib/languages",
 +      "import": "./es/languages"
-     },
++    },
      "./scss/*": "./scss/*",
      "./styles/*": "./styles/*",
+     "./types/*": "./types/*"

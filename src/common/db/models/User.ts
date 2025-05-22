@@ -19,12 +19,13 @@ export const userTable = sqliteTable('User', {
 })
 
 export type User = InferSelectModel<typeof userTable>
+export type UserData = Pick<User, 'id' | 'malUserId' | 'malUsername' | 'lastChecked'>
 
 // ----------------------------------------------------------------------------
 // Helpers
 // ----------------------------------------------------------------------------
 
-export function stringifyUser(user: Pick<User, 'malUsername' | 'malUserId'>) {
+export function stringifyUser(user: Pick<User, 'malUsername' | 'malUserId'>): string {
     return `User:${user.malUsername}(${user.malUserId})`
 }
 
@@ -36,7 +37,7 @@ export function decryptUser(user: User): User {
     }
 }
 
-export function upsertUser(db: DrizzleClient, payload: Pick<User, 'malUserId' | 'malUsername' | 'tokenExpires' | 'accessToken' | 'refreshToken'>) {
+export function upsertUser(db: DrizzleClient, payload: Pick<User, 'malUserId' | 'malUsername' | 'tokenExpires' | 'accessToken' | 'refreshToken'>): User {
     if (!(payload.tokenExpires !== null && payload.accessToken !== null && payload.refreshToken !== null)) {
         throw new Error('Invalid token')
     }
@@ -45,7 +46,7 @@ export function upsertUser(db: DrizzleClient, payload: Pick<User, 'malUserId' | 
     const encryptedAccessToken = encrypt(payload.accessToken)
     const encryptedRefreshToken = encrypt(payload.refreshToken)
 
-    return db
+    const user = db
         .insert(userTable)
         .values({
             malUsername: payload.malUsername,
@@ -69,10 +70,12 @@ export function upsertUser(db: DrizzleClient, payload: Pick<User, 'malUserId' | 
             },
         })
         .returning()
-        .all().map(decryptUser)[0]
+        .get()
+
+    return decryptUser(user)
 }
 
-export function selectUser(db: DrizzleClient, malUserId: number) {
+export function selectUser(db: DrizzleClient, malUserId: number): UserData | null {
     return db
         .select({
             id: userTable.id,
@@ -82,26 +85,28 @@ export function selectUser(db: DrizzleClient, malUserId: number) {
         })
         .from(userTable)
         .where(sql`${userTable.malUserId} = ${malUserId}`)
-        .get()
+        .get() ?? null
 }
 
-export function selectUsersToScrape(db: DrizzleClient, staleTime: string) {
+export function selectUsersToScrape(db: DrizzleClient, staleTime: string): Array<User> {
     if (!isValidSqlTimestamp(staleTime)) {
         throw new Error(`Invalid timestamp:${staleTime}`)
     }
 
-    return db
+    const users = db
         .select()
         .from(userTable)
         .where(sql`
             ${userTable.lastChecked} IS NULL OR
             ${userTable.lastChecked} < ${staleTime}
         `)
-        .all().map(decryptUser)
+        .all()
+
+    return users.map(decryptUser)
 }
 
-export function selectUsersToDelete(db: DrizzleClient) {
-    return db
+export function selectUsersToDelete(db: DrizzleClient): Array<User> {
+    const users = db
         .select()
         .from(userTable)
         .where(sql`
@@ -109,23 +114,31 @@ export function selectUsersToDelete(db: DrizzleClient) {
             ${userTable.accessToken} IS NULL AND
             ${userTable.refreshToken} IS NULL
         `)
-        .all().map(decryptUser)
+        .all()
+
+    return users.map(decryptUser)
 }
 
-export function updateUserLastChecked(db: DrizzleClient, id: number, lastChecked: string) {
+export function updateUserLastChecked(db: DrizzleClient, id: number, lastChecked: string): User | null {
     if (!isValidSqlTimestamp(lastChecked)) {
         throw new Error(`Invalid timestamp:${lastChecked}`)
     }
 
-    return db
+    const user = db
         .update(userTable)
         .set({ lastChecked })
         .where(sql`${userTable.id} = ${id}`)
         .returning()
-        .all().map(decryptUser)[0]
+        .get() as User | undefined
+
+    if (!user) {
+        return null
+    }
+
+    return decryptUser(user)
 }
 
-export function updateUserTokens(db: DrizzleClient, id: number, payload: Pick<User, 'tokenExpires' | 'accessToken' | 'refreshToken'>) {
+export function updateUserTokens(db: DrizzleClient, id: number, payload: Pick<User, 'tokenExpires' | 'accessToken' | 'refreshToken'>): User | null {
     if (payload.tokenExpires && !isValidSqlTimestamp(payload.tokenExpires)) {
         throw new Error(`Invalid timestamp:${payload.tokenExpires}`)
     }
@@ -141,7 +154,7 @@ export function updateUserTokens(db: DrizzleClient, id: number, payload: Pick<Us
         payload.refreshToken = encrypt(payload.refreshToken)
     }
 
-    return db
+    const user = db
         .update(userTable)
         .set({
             ...payload,
@@ -149,13 +162,25 @@ export function updateUserTokens(db: DrizzleClient, id: number, payload: Pick<Us
         })
         .where(sql`${userTable.id} = ${id}`)
         .returning()
-        .all().map(decryptUser)[0]
+        .get() as User | undefined
+
+    if (!user) {
+        return null
+    }
+
+    return decryptUser(user)
 }
 
-export function deleteUser(db: DrizzleClient, id: number) {
-    return db
+export function deleteUser(db: DrizzleClient, id: number): User | null {
+    const user = db
         .delete(userTable)
         .where(sql`${userTable.id} = ${id}`)
         .returning()
-        .all().map(decryptUser)[0]
+        .get() as User | undefined
+
+    if (!user) {
+        return null
+    }
+
+    return decryptUser(user)
 }
