@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { APP_NAME } from '@/common/Constants'
+import { APP_NAME } from '../../../common/Constants.ts'
+
 const year = new Date().getFullYear()
 </script>
 

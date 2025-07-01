@@ -1,6 +1,6 @@
-import { ErrorRequestHandler } from 'express'
+import type { ErrorRequestHandler } from 'express'
 import { HttpError } from 'http-errors'
-import { ErrorResponse } from '../interfaces/ApiResponse'
+import type { ErrorResponse } from '../interfaces/ApiResponse.ts'
 
 export function createErrorHandler(isJsonResponse: boolean): ErrorRequestHandler {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -1,16 +1,36 @@
 # -----------------------------------------------------------------------------
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS base
 # -----------------------------------------------------------------------------
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable pnpm
 
 WORKDIR /app
 
-# Install dependencies
 COPY tsconfig.json              ./
-COPY yarn.lock package.json     ./
+COPY package.json               ./
+COPY pnpm-workspace.yaml        ./
+COPY pnpm-lock.yaml             ./
 COPY patches/                   ./patches/
-RUN yarn install
 
-# Build app
+# -----------------------------------------------------------------------------
+FROM base AS deps
+# -----------------------------------------------------------------------------
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install \
+        --frozen-lockfile \
+        --production
+
+# -----------------------------------------------------------------------------
+FROM base AS builder
+# -----------------------------------------------------------------------------
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install \
+        --frozen-lockfile
+
 COPY build/                     ./build/
 COPY src/                       ./src/
 RUN \
@@ -20,10 +40,7 @@ RUN \
     --mount=type=secret,id=API_URL \
     --mount=type=secret,id=API_PORT \
     NODE_ENV=production \
-    yarn build
-
-# Remove dev dependencies
-RUN yarn install --production
+    pnpm build
 
 # -----------------------------------------------------------------------------
 FROM caddy:2-alpine
@@ -33,8 +50,8 @@ LABEL org.opencontainers.image.source=https://github.com/Trinovantes/MAL-Cover-C
 WORKDIR /app
 
 # Copy app
-COPY ./docker/web.Caddyfile     /etc/caddy/Caddyfile
-COPY --from=builder /app/dist/  /app/dist/
+COPY --from=builder /app/dist/          ./dist/
+COPY ./docker/web.Caddyfile             /etc/caddy/Caddyfile
 
 # Edit in API_PORT
 RUN \

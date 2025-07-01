@@ -1,18 +1,18 @@
 import fs from 'node:fs'
 import { config } from 'dotenv'
-import { ENCRYPTION_KEY_LENGTH } from '@/common/Constants'
+import { ENCRYPTION_KEY_LENGTH } from '../Constants.ts'
 
 // Loads .env into process.env
 const envFile = process.env.ENV_FILE ?? '.env'
-config({ path: envFile })
+config({ path: envFile, quiet: true })
 
 export type RuntimeSecret =
-    'REDIS_HOST' |
-    'REDIS_PORT' |
-    'S3_BUCKET_UPLOAD' |
-    'ENCRYPTION_KEY' |
-    'MAL_CLIENT_ID' |
-    'MAL_CLIENT_SECRET'
+    | 'REDIS_HOST'
+    | 'REDIS_PORT'
+    | 'S3_BUCKET_UPLOAD'
+    | 'ENCRYPTION_KEY'
+    | 'MAL_CLIENT_ID'
+    | 'MAL_CLIENT_SECRET'
 
 const secretsCache = new Map<RuntimeSecret, string>()
 

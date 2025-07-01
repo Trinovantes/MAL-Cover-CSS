@@ -1,5 +1,5 @@
-import { AppContext } from '@/web/AppContext'
-import { ErrorResponse } from '@/web/server/interfaces/ApiResponse'
+import type { AppContext } from '../../AppContext.ts'
+import type { ErrorResponse } from '../../server/interfaces/ApiResponse.ts'
 
 type FetchResult<T> = {
     error: ErrorResponse
@@ -18,7 +18,7 @@ type FetchResult<T> = {
  */
 export async function fetchWithSsrProxy<T>(url: string, config: RequestInit = { method: 'GET' }, appContext?: AppContext): Promise<FetchResult<T>> {
     const clientCookie = appContext?.req.headers.cookie
-    const res = await fetch(DEFINE.API_URL + url, {
+    const res = await fetch(__API_URL__ + url, {
         ...config,
         credentials: 'include',
         headers: {

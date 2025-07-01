@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm'
-import { Migration } from '../migrateDb'
+import type { Migration } from '../migrateDb.ts'
 
 const migration: Migration = {
     version: '0002' as const,

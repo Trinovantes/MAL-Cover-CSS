@@ -1,6 +1,6 @@
 import crypto from 'node:crypto'
-import { ENCRYPTION_ALGORITHM, ENCRYPTION_AUTH_TAG_LENGTH, ENCRYPTION_IV_LENGTH } from '@/common/Constants'
-import { getEncryptionKey } from '@/common/node/RuntimeSecret'
+import { ENCRYPTION_IV_LENGTH, ENCRYPTION_ALGORITHM, ENCRYPTION_AUTH_TAG_LENGTH } from '../Constants.ts'
+import { getEncryptionKey } from './RuntimeSecret.ts'
 
 const textEncoding = 'utf8'
 const databaseEncoding = 'base64'

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
-import { useApi } from '../utils/useApi'
-import { useUserStore } from '../store/User/useUserStore'
-import { APP_NAME } from '@/common/Constants'
+import { useApi } from '../utils/useApi.ts'
+import { useUserStore } from '../store/User/useUserStore.ts'
+import { APP_NAME } from '../../../common/Constants.ts'
 
 const isHeaderItemsExpanded = ref(false)
 const closeHeaderItems = () => {

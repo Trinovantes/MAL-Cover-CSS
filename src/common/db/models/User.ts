@@ -1,8 +1,8 @@
-import { InferSelectModel, sql } from 'drizzle-orm'
+import { type InferSelectModel, sql } from 'drizzle-orm'
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
-import { DrizzleClient } from '../createDb'
-import { getSqlTimestamp, isValidSqlTimestamp } from '@/common/utils/getSqlTimestamp'
-import { decrypt, encrypt } from '@/common/node/encryption'
+import { decrypt, encrypt } from '../../node/encryption.ts'
+import type { DrizzleClient } from '../createDb.ts'
+import { getSqlTimestamp, isValidSqlTimestamp } from '../../utils/getSqlTimestamp.ts'
 
 export const userTable = sqliteTable('User', {
     id: integer('id').primaryKey(),

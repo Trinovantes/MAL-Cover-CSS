@@ -1,20 +1,20 @@
 import express from 'express'
-import { ServerAppContext } from '@/web/server/ServerAppContext'
-import { isLoginPayload } from '@/web/server/interfaces/LoginPayload'
-import { MAL_OAUTH_RANDOM_STATE_LENGTH } from '@/common/Constants'
-import { fetchMalUser } from '@/common/services/MyAnimeList/data'
-import { getOauthEndpoint, fetchAccessToken } from '@/common/services/MyAnimeList/oauth'
-import { isOauthAuthSuccess } from '@/common/services/MyAnimeList/schemas/OauthAuthSuccess'
-import { getSqlTimestampFromNow } from '@/common/utils/getSqlTimestamp'
 import createHttpError from 'http-errors'
-import { RedirectResponse, SuccessResponse } from '@/web/server/interfaces/ApiResponse'
-import { isOauthState } from '@/web/server/interfaces/OauthState'
-import { clearSession } from '@/web/server/utils/clearSession'
-import { createAsyncHandler } from '@/web/server/utils/createAsyncHandler'
 import crypto from 'node:crypto'
-import { enforceAuth } from '@/web/server/middlewares/enforceAuth'
-import { isOauthAuthFailure } from '@/common/services/MyAnimeList/schemas/OauthAuthFailure'
-import { stringifyUser, upsertUser } from '@/common/db/models/User'
+import type { ServerAppContext } from '../../ServerAppContext.ts'
+import { isLoginPayload } from '../../interfaces/LoginPayload.ts'
+import { MAL_OAUTH_RANDOM_STATE_LENGTH } from '../../../../common/Constants.ts'
+import { fetchAccessToken, getOauthEndpoint } from '../../../../common/services/MyAnimeList/oauth.ts'
+import type { RedirectResponse, SuccessResponse } from '../../interfaces/ApiResponse.ts'
+import { enforceAuth } from '../../middlewares/enforceAuth.ts'
+import { createAsyncHandler } from '../../utils/createAsyncHandler.ts'
+import { clearSession } from '../../utils/clearSession.ts'
+import { isOauthState } from '../../interfaces/OauthState.ts'
+import { isOauthAuthFailure } from '../../../../common/services/MyAnimeList/schemas/OauthAuthFailure.ts'
+import { isOauthAuthSuccess } from '../../../../common/services/MyAnimeList/schemas/OauthAuthSuccess.ts'
+import { fetchMalUser } from '../../../../common/services/MyAnimeList/data.ts'
+import { getSqlTimestampFromNow } from '../../../../common/utils/getSqlTimestamp.ts'
+import { stringifyUser, upsertUser } from '../../../../common/db/models/User.ts'
 
 export function routeOauth({ db }: ServerAppContext) {
     const router = express.Router()
@@ -34,18 +34,18 @@ export function routeOauth({ db }: ServerAppContext) {
         res.json({ url } satisfies RedirectResponse)
     })
 
-    router.post('/logout', enforceAuth(), createAsyncHandler(async(req, res) => {
+    router.post('/logout', enforceAuth(), createAsyncHandler(async (req, res) => {
         await clearSession(req, res)
         res.json({ message: 'Successfully logged out' } satisfies SuccessResponse)
     }))
 
-    router.get('/', createAsyncHandler(async(req, res) => {
+    router.get('/', createAsyncHandler(async (req, res) => {
         const urlQuery = req.query
 
         // Check if state exists in query
         const encodedState = urlQuery.state
         if (typeof encodedState !== 'string') {
-            res.log.warn('Invalid oauth state', urlQuery)
+            res.log.warn(`Invalid oauth state: ${JSON.stringify(urlQuery)}`)
             await clearSession(req, res)
             res.redirect('/')
             return
@@ -54,7 +54,7 @@ export function routeOauth({ db }: ServerAppContext) {
         // Check if returned state is valid
         const returnedState = JSON.parse(decodeURIComponent(encodedState)) as unknown
         if (!isOauthState(returnedState)) {
-            res.log.warn('Malformed oauth state in urlQuery', urlQuery)
+            res.log.warn(`Malformed oauth state in urlQuery: ${JSON.stringify(urlQuery)}`)
             await clearSession(req, res)
             res.redirect('/')
             return
@@ -71,7 +71,7 @@ export function routeOauth({ db }: ServerAppContext) {
 
         // Oauth failure (e.g. user decline request)
         if (isOauthAuthFailure(urlQuery)) {
-            res.log.warn('Failed to get access token', urlQuery)
+            res.log.warn(`Failed to get access token: ${JSON.stringify(urlQuery)}`)
             await clearSession(req, res)
             res.redirect(returnedState.restorePath)
             return
@@ -79,7 +79,7 @@ export function routeOauth({ db }: ServerAppContext) {
 
         // Check if oauth was successful
         if (!isOauthAuthSuccess(urlQuery)) {
-            res.log.warn('Unexpected urlQuery', urlQuery)
+            res.log.warn(`Unexpected urlQuery: ${JSON.stringify(urlQuery)}`)
             await clearSession(req, res)
             res.redirect(returnedState.restorePath)
             return

@@ -1,5 +1,5 @@
 import express from 'express'
-import { SSRContext } from '@vue/server-renderer'
+import type { SSRContext } from '@vue/server-renderer'
 import { useSSRContext } from 'vue'
 import type { createPinia } from 'pinia'
 
@@ -40,7 +40,7 @@ export function createAppContext(req: express.Request, res: express.Response): A
 }
 
 export function useAppContext(): AppContext | undefined {
-    if (DEFINE.IS_SSR) {
+    if (__IS_SSR__) {
         return useSSRContext()
     } else {
         return undefined

@@ -1,6 +1,6 @@
-import { DrizzleClient } from '@/common/db/createDb'
 import session from 'express-session'
-import { HttpLogger } from 'pino-http'
+import type { HttpLogger } from 'pino-http'
+import type { DrizzleClient } from '../../common/db/createDb.ts'
 
 type Options = {
     trustProxy: boolean

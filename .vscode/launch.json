@@ -5,16 +5,25 @@
             "name": "Launch Web Server",
             "type": "node",
             "request": "launch",
-
             "runtimeArgs": [
-                "-r",
-                "source-map-support/register",
-                "-r",
-                "dotenv/config",
+                "--require=source-map-support/register",
+                "--require=dotenv/config",
             ],
-
-            "envFile": "${workspaceRoot}/.env",
-            "program": "${workspaceRoot}/dist/web/www.js",
+            "program": "${workspaceRoot}/dist/web/server/www.cjs",
+        },
+        {
+            "name": "Generate CSS",
+            "type": "node",
+            "request": "launch",
+            "runtimeArgs": [
+                "--require=source-map-support/register",
+                "--require=dotenv/config",
+                "--import=${workspaceRoot}/build/preload.ts",
+            ],
+            "program": "${workspaceRoot}/src/cron/generateCss.ts",
+            "args": [
+                "${workspaceRoot}/dist/web/client/generated"
+            ],
         },
     ],
 }

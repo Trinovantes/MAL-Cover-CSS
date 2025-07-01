@@ -1,7 +1,7 @@
-diff --git a/node_modules/highlight.js/package.json b/node_modules/highlight.js/package.json
-index 6ee1be7..6a81044 100644
---- a/node_modules/highlight.js/package.json
-+++ b/node_modules/highlight.js/package.json
+diff --git a/package.json b/package.json
+index 6ee1be7551cb4dd0068fae66f2fa382aa5c9a837..6a810447564b931a41fb7352f1a6d32ad3fe3652 100644
+--- a/package.json
++++ b/package.json
 @@ -112,6 +112,10 @@
        "require": "./lib/languages/*.js",
        "import": "./es/languages/*.js"

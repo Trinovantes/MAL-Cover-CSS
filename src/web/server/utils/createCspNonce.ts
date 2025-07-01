@@ -3,8 +3,8 @@ import crypto from 'node:crypto'
 export function createCspNonce() {
     let devHosts = ''
 
-    if (DEFINE.IS_DEV) {
-        const webUrl = new URL(DEFINE.WEB_URL)
+    if (__IS_DEV__) {
+        const webUrl = new URL(__WEB_URL__)
         devHosts = `${webUrl.host} ws://${webUrl.host} *.malcovercss.link:*`
     }
 

@@ -1,7 +1,7 @@
-import { ENCRYPTION_KEY_LENGTH } from '@/common/Constants'
-import { getEncryptionKey } from '@/common/node/RuntimeSecret'
-import { decrypt, encrypt } from '@/common/node/encryption'
 import { vi, describe, test, beforeEach, expect } from 'vitest'
+import { ENCRYPTION_KEY_LENGTH } from '../../../src/common/Constants.ts'
+import { getEncryptionKey } from '../../../src/common/node/RuntimeSecret.ts'
+import { decrypt, encrypt } from '../../../src/common/node/encryption.ts'
 
 const mocks = vi.hoisted(() => {
     return {
@@ -9,7 +9,7 @@ const mocks = vi.hoisted(() => {
     }
 })
 
-vi.mock('@/common/node/RuntimeSecret', () => {
+vi.mock('../../../src/common/node/RuntimeSecret.ts', () => {
     return {
         getEncryptionKey: mocks.getEncryptionKey,
     }

@@ -1,8 +1,8 @@
 import { desc, sql } from 'drizzle-orm'
 import { sqliteTable, text } from 'drizzle-orm/sqlite-core'
-import { DbLogger, DrizzleClient } from './createDb'
-import { MAX_MIGRATION_ATTEMPTS, RETRY_MIGRATION_AFTER_MS } from '../Constants'
-import { sleep } from '../utils/sleep'
+import { MAX_MIGRATION_ATTEMPTS, RETRY_MIGRATION_AFTER_MS } from '../Constants.ts'
+import { sleep } from '../utils/sleep.ts'
+import type { DbLogger, DrizzleClient } from './createDb.ts'
 
 type Digit = '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
 type Version = `${Digit}${Digit}${Digit}${Digit}`

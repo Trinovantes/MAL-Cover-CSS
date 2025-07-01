@@ -1,9 +1,9 @@
 import path from 'node:path'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import { VueLoaderPlugin } from 'vue-loader'
-import webpack, { DefinePlugin } from 'webpack'
+import webpack from 'webpack'
 import merge from 'webpack-merge'
-import { isDev, srcDir, buildConstants, rawDirRegexp, publicPath } from './BuildConstants'
+import { isDev, buildConstants, rawDirRegexp, publicPath, srcWebDir } from './BuildConstants.ts'
 
 // ----------------------------------------------------------------------------
 // Common
@@ -18,13 +18,15 @@ const commonConfig: webpack.Configuration = {
     resolve: {
         extensions: ['.ts', '.js', '.vue', '.json', 'scss', '.css'],
         alias: {
-            // Need to match aliases in tsconfig.json
-            '@': path.resolve(srcDir),
+            '@css': path.resolve(srcWebDir, 'client', 'assets', 'css'),
+            '@img': path.resolve(srcWebDir, 'client', 'assets', 'img'),
+            '@layouts': path.resolve(srcWebDir, 'client', 'layouts'),
+            '@pages': path.resolve(srcWebDir, 'client', 'pages'),
         },
     },
 
     plugins: [
-        new DefinePlugin(buildConstants),
+        new webpack.DefinePlugin(buildConstants),
         new VueLoaderPlugin(),
     ],
 
@@ -54,7 +56,7 @@ const commonConfig: webpack.Configuration = {
     },
 }
 
-export const commonWebConfig = merge(commonConfig, {
+export const commonWebConfig = merge.default(commonConfig, {
     target: 'web',
 
     module: {
@@ -69,8 +71,8 @@ export const commonWebConfig = merge(commonConfig, {
                         options: {
                             additionalData: (content: string, loaderContext: { resourcePath: string }): string => {
                                 return (loaderContext.resourcePath.endsWith('sass'))
-                                    ? '@use "sass:color"\n@use "sass:math"\n@use "@/web/client/assets/css/variables.scss" as *\n' + content
-                                    : '@use "sass:color"; @use "sass:math"; @use "@/web/client/assets/css/variables.scss" as *; ' + content
+                                    ? '@use "sass:color"\n@use "sass:math"\n@use "@css/variables.scss" as *\n' + content
+                                    : '@use "sass:color"; @use "sass:math"; @use "@css/variables.scss" as *; ' + content
                             },
                         },
                     },
@@ -104,11 +106,12 @@ export const commonWebConfig = merge(commonConfig, {
     },
 })
 
-export const commonNodeConfig = merge(commonConfig, {
+export const commonNodeConfig = merge.default(commonConfig, {
     target: 'node',
 
     output: {
         libraryTarget: 'commonjs2',
+        filename: '[name].cjs',
     },
 
     module: {

@@ -1,12 +1,12 @@
 import fs from 'node:fs'
 import path from 'node:path'
-import { Item, selectItems } from '@/common/db/models/Item'
-import { createDb, DrizzleClient } from '@/common/db/createDb'
-import { ALL_ITEM_TYPES, ItemType } from '@/common/db/models/ItemType'
-import { createLogger } from '@/common/node/createLogger'
 import * as Sentry from '@sentry/node'
-import { DB_FILE, SENTRY_DSN } from '@/common/Constants'
-import { getMigrations } from '@/common/db/getMigrations'
+import { SENTRY_DSN, DB_FILE } from '../common/Constants.ts'
+import { type DrizzleClient, createDb } from '../common/db/createDb.ts'
+import { getMigrations } from '../common/db/getMigrations.ts'
+import { selectItems, type Item } from '../common/db/models/Item.ts'
+import { ALL_ITEM_TYPES, type ItemType } from '../common/db/models/ItemType.ts'
+import { createLogger } from '../common/node/createLogger.ts'
 
 // ----------------------------------------------------------------------------
 // Pino
@@ -20,8 +20,8 @@ const logger = createLogger()
 
 Sentry.init({
     dsn: SENTRY_DSN,
-    release: DEFINE.GIT_HASH,
-    enabled: !DEFINE.IS_DEV,
+    release: __GIT_HASH__,
+    enabled: !__IS_DEV__,
 })
 
 // ----------------------------------------------------------------------------
@@ -57,7 +57,7 @@ function generate(db: DrizzleClient, outputDir: string, selector: CssSelector, m
     const outputFile = path.resolve(outputDir, fileName)
     const cssFileStream = fs.createWriteStream(outputFile, { flags: 'w' })
     cssFileStream.on('error', (err) => {
-        logger.warn('Failed to write css file', fileName)
+        logger.warn(`Failed to write css file: ${fileName}`)
         logger.warn(err)
     })
 
@@ -129,11 +129,12 @@ async function main() {
     await Sentry.startSpan({
         op: 'generateCss',
         name: 'Generate CSS Cron Job',
-    }, async() => {
+    }, async () => {
         try {
+            const migrations = await getMigrations()
             const db = await createDb(DB_FILE, {
                 cleanOnExit: true,
-                migrations: await getMigrations(),
+                migrations,
             })
 
             generateCss(db, outputDir)

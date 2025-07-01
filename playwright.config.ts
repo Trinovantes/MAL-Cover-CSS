@@ -1,5 +1,5 @@
-import { PlaywrightTestConfig } from '@playwright/test'
-import { getBuildSecret } from 'build/BuildSecret'
+import type { PlaywrightTestConfig } from '@playwright/test'
+import { getBuildSecret } from './build/BuildSecret.ts'
 
 const webUrl = getBuildSecret('WEB_URL')
 const isContinousIntegration = Boolean(process.env.CI)
@@ -17,7 +17,7 @@ const config: PlaywrightTestConfig = {
     forbidOnly: isContinousIntegration,
 
     webServer: {
-        command: 'yarn devWebClient',
+        command: 'pnpm devWebClient',
         url: webUrl,
         timeout: 60 * 1000, // ms
         reuseExistingServer: !isContinousIntegration,

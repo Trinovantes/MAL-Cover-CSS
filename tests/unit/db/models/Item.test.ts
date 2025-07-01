@@ -1,10 +1,10 @@
-import { DB_MEMORY } from '@/common/Constants'
-import { createDb, DrizzleClient } from '@/common/db/createDb'
-import { getMigrations } from '@/common/db/getMigrations'
-import { selectItems, upsertItem } from '@/common/db/models/Item'
-import { ItemType } from '@/common/db/models/ItemType'
-import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
 import { vi, describe, test, beforeEach, afterEach, expect } from 'vitest'
+import { createDb, type DrizzleClient } from '../../../../src/common/db/createDb.ts'
+import { DB_MEMORY } from '../../../../src/common/Constants.ts'
+import { getMigrations } from '../../../../src/common/db/getMigrations.ts'
+import { selectItems, upsertItem } from '../../../../src/common/db/models/Item.ts'
+import type { ItemType } from '../../../../src/common/db/models/ItemType.ts'
+import { getSqlTimestamp } from '../../../../src/common/utils/getSqlTimestamp.ts'
 
 let db: DrizzleClient
 
@@ -14,13 +14,13 @@ const mocks = vi.hoisted(() => {
     }
 })
 
-vi.mock('@/common/utils/getSqlTimestamp', () => {
+vi.mock('../../../../src/common/utils/getSqlTimestamp.ts', () => {
     return {
         getSqlTimestamp: mocks.getSqlTimestamp,
     }
 })
 
-beforeEach(async() => {
+beforeEach(async () => {
     db = await createDb(DB_MEMORY, {
         migrations: await getMigrations(),
     })

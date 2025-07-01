@@ -1,8 +1,8 @@
 import { expect, test as base } from '@playwright/test'
-import { ApiMocker } from './mockers/ApiMocker'
-import { SettingsPageTester } from './pages/SettingsPageTester'
-import { HomePageTester } from './pages/HomePageTester'
-import { MainLayoutHeaderTester } from './pages/MainLayoutHeaderTester'
+import { ApiMocker } from './mockers/ApiMocker.ts'
+import { SettingsPageTester } from './pages/SettingsPageTester.ts'
+import { HomePageTester } from './pages/HomePageTester.ts'
+import { MainLayoutHeaderTester } from './pages/MainLayoutHeaderTester.ts'
 
 type Fixtures = {
     apiMocker: ApiMocker
@@ -12,27 +12,27 @@ type Fixtures = {
 }
 
 export const malTest = base.extend<Fixtures>({
-    apiMocker: async({}, use) => {
+    apiMocker: async ({}, use) => {
         const apiMocker = new ApiMocker()
         await use(apiMocker)
     },
 
-    header: async({ page }, use) => {
+    header: async ({ page }, use) => {
         const tester = new MainLayoutHeaderTester(page)
         await use(tester)
     },
 
-    homePage: async({ page }, use) => {
+    homePage: async ({ page }, use) => {
         const tester = new HomePageTester(page)
         await use(tester)
     },
 
-    settingsPage: async({ page }, use) => {
+    settingsPage: async ({ page }, use) => {
         const tester = new SettingsPageTester(page)
         await use(tester)
     },
 
-    page: async({ page, apiMocker }, use) => {
+    page: async ({ page, apiMocker }, use) => {
         page.on('pageerror', (error) => {
             if (error.stack?.includes('webpackHotUpdate')) {
                 return

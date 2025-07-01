@@ -1,8 +1,8 @@
 import { test } from 'vitest'
-import { DrizzleClient, createDb } from '@/common/db/createDb'
-import { DB_MEMORY } from '@/common/Constants'
-import { mockApi } from './mockApi'
-import { getMigrations } from '@/common/db/getMigrations'
+import { createDb, type DrizzleClient } from '../../../src/common/db/createDb.ts'
+import { mockApi } from './mockApi.ts'
+import { DB_MEMORY } from '../../../src/common/Constants.ts'
+import { getMigrations } from '../../../src/common/db/getMigrations.ts'
 
 type Fixtures = {
     db: DrizzleClient
@@ -10,7 +10,7 @@ type Fixtures = {
 }
 
 export const apiTest = test.extend<Fixtures>({
-    db: async({}, use) => {
+    db: async ({}, use) => {
         // Create db
         const db = await createDb(DB_MEMORY, {
             cleanOnExit: false,
@@ -24,7 +24,7 @@ export const apiTest = test.extend<Fixtures>({
         db.$client.close()
     },
 
-    api: async({ db }, use) => {
+    api: async ({ db }, use) => {
         await use(mockApi(db))
     },
 })

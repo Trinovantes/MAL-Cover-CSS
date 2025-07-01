@@ -5,18 +5,18 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import { VueSsrAssetsClientPlugin } from 'vue-ssr-assets-plugin'
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer'
 import merge from 'webpack-merge'
-import { Configuration } from 'webpack'
+import type { Configuration } from 'webpack'
 import path from 'node:path'
-import { commonWebConfig } from './webpack.common'
-import { distClientDir, distServerManifest, entryFile, isDev, manifestFileName, publicPath, publicPathOnServer, srcWebDir, srcWebStaticDir, srcWebTemplate } from './BuildConstants'
-import { getBuildSecret, isAnalyze } from './BuildSecret'
+import { commonWebConfig } from './webpack.common.ts'
+import { distClientDir, distServerManifest, entryFile, isDev, manifestFileName, publicPath, publicPathOnServer, srcWebDir, srcWebStaticDir, srcWebTemplate } from './BuildConstants.ts'
+import { getBuildSecret, isAnalyze } from './BuildSecret.ts'
 import 'webpack-dev-server'
 
 // ----------------------------------------------------------------------------
 // Client
 // ----------------------------------------------------------------------------
 
-export default ((): Configuration => merge(commonWebConfig, {
+export default ((): Configuration => merge.default(commonWebConfig, {
     entry: {
         main: path.join(srcWebDir, 'entryClient.ts'),
     },

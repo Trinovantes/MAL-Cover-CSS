@@ -1,17 +1,16 @@
-import { DELAY_BETWEEN_SCRAPPING, DELAY_BETWEEN_REQUESTS, ITEMS_PER_LIST_REQUEST, DB_FILE } from '@/common/Constants'
-import { fetchMalAnimeList, fetchMalMangaList, MalAnimeResponse, MalMangaResponse } from '@/common/services/MyAnimeList/data'
-import { getSqlTimestamp, getSqlTimestampFromNow } from '@/common/utils/getSqlTimestamp'
-import { sleep } from '@/common/utils/sleep'
-import { createDb, DrizzleClient } from '@/common/db/createDb'
-import { User, deleteUser, selectUsersToDelete, selectUsersToScrape, stringifyUser, updateUserLastChecked, updateUserTokens } from '@/common/db/models/User'
-import { ItemType } from '@/common/db/models/ItemType'
-import { upsertItem } from '@/common/db/models/Item'
 import { isAfter } from 'date-fns'
-import { createLogger } from '@/common/node/createLogger'
-import { refreshAccessToken } from '@/common/services/MyAnimeList/oauth'
 import * as Sentry from '@sentry/node'
-import { SENTRY_DSN } from '@/common/Constants'
-import { getMigrations } from '@/common/db/getMigrations'
+import { SENTRY_DSN, DELAY_BETWEEN_SCRAPPING, DELAY_BETWEEN_REQUESTS, ITEMS_PER_LIST_REQUEST, DB_FILE } from '../common/Constants.ts'
+import { type DrizzleClient, createDb } from '../common/db/createDb.ts'
+import { getMigrations } from '../common/db/getMigrations.ts'
+import { upsertItem } from '../common/db/models/Item.ts'
+import type { ItemType } from '../common/db/models/ItemType.ts'
+import { selectUsersToScrape, stringifyUser, updateUserLastChecked, updateUserTokens, deleteUser, selectUsersToDelete, type User } from '../common/db/models/User.ts'
+import { type MalAnimeResponse, type MalMangaResponse, fetchMalAnimeList, fetchMalMangaList } from '../common/services/MyAnimeList/data.ts'
+import { refreshAccessToken } from '../common/services/MyAnimeList/oauth.ts'
+import { getSqlTimestampFromNow, getSqlTimestamp } from '../common/utils/getSqlTimestamp.ts'
+import { sleep } from '../common/utils/sleep.ts'
+import { createLogger } from '../common/node/createLogger.ts'
 
 // ----------------------------------------------------------------------------
 // Pino
@@ -25,8 +24,8 @@ const logger = createLogger()
 
 Sentry.init({
     dsn: SENTRY_DSN,
-    release: DEFINE.GIT_HASH,
-    enabled: !DEFINE.IS_DEV,
+    release: __GIT_HASH__,
+    enabled: !__IS_DEV__,
 })
 
 // ----------------------------------------------------------------------------
@@ -143,11 +142,12 @@ async function main(): Promise<void> {
     await Sentry.startSpan({
         op: 'scrapeUsers',
         name: 'Scrape Users Cron Job',
-    }, async() => {
+    }, async () => {
         try {
+            const migrations = await getMigrations()
             const db = await createDb(DB_FILE, {
                 cleanOnExit: true,
-                migrations: await getMigrations(),
+                migrations,
             })
 
             await scrapeUsers(db)

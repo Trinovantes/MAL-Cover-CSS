@@ -1,4 +1,4 @@
-import { RequestHandler, Request, Response, NextFunction } from 'express'
+import type { RequestHandler, Request, Response, NextFunction } from 'express'
 import createHttpError from 'http-errors'
 
 export function generate404(): RequestHandler {

@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useApi } from '@/web/client/utils/useApi'
-import { useUserStore } from '@/web/client/store/User/useUserStore'
-import { APP_NAME, APP_DESC } from '@/common/Constants'
-import { IntersectionValue } from 'quasar'
-import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
+import type { IntersectionValue } from 'quasar'
+import examplePreviewImg from '@img/example-covers-preview.jpg?rl'
 import settingsImg from './img/modern-image-settings.png?rl'
 import { useSeoMeta } from '@unhead/vue'
+import { APP_NAME, APP_DESC } from '../../../../common/Constants.ts'
+import { useUserStore } from '../../store/User/useUserStore.ts'
+import { useApi } from '../../utils/useApi.ts'
 
 useSeoMeta({
     title: APP_NAME,
@@ -90,7 +90,7 @@ const intersectConfig: IntersectionValue = {
         <div class="container full-height-container">
             <section>
                 <q-img
-                    :src="require('@/web/client/assets/img/example-covers.jpg?size=400').src"
+                    :src="require('@img/example-covers.jpg?size=400').src"
                     height="600"
                     fit="cover"
                 />

@@ -1,8 +1,8 @@
 import express from 'express'
-import { ServerAppContext } from '../ServerAppContext'
-import { setUser } from '../middlewares/setUser'
-import { routeOauth } from './api/routeOauth'
-import { routeSettings } from './api/routeSettings'
+import type { ServerAppContext } from '../ServerAppContext.ts'
+import { setUser } from '../middlewares/setUser.ts'
+import { routeOauth } from './api/routeOauth.ts'
+import { routeSettings } from './api/routeSettings.ts'
 
 export function routeApi(ctx: ServerAppContext) {
     const router = express.Router()

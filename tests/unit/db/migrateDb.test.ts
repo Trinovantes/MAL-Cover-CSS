@@ -1,13 +1,12 @@
 import { sql } from 'drizzle-orm'
 import { test, expect, vi, beforeEach, afterEach } from 'vitest'
-import { DB_MEMORY } from '@/common/Constants'
-import { Migration, getCurrentMigrationVersion, migrationTable } from '@/common/db/migrateDb'
-import { createDb, DrizzleClient } from '@/common/db/createDb'
-import { migrateDb } from '@/common/db/migrateDb'
+import { DB_MEMORY } from '../../../src/common/Constants.ts'
+import { createDb, type DrizzleClient } from '../../../src/common/db/createDb.ts'
+import { getCurrentMigrationVersion, migrateDb, migrationTable, type Migration } from '../../../src/common/db/migrateDb.ts'
 
 let db: DrizzleClient
 
-beforeEach(async() => {
+beforeEach(async () => {
     db = await createDb(DB_MEMORY)
 })
 
@@ -15,7 +14,7 @@ afterEach(() => {
     db.$client.close()
 })
 
-test('no migrations', async() => {
+test('no migrations', async () => {
     const migrations: Array<Migration> = []
 
     await expect(migrateDb(db, migrations)).resolves.toBe(true)
@@ -25,7 +24,7 @@ test('no migrations', async() => {
     expect(results.length).toBe(0)
 })
 
-test('basic migration', async() => {
+test('basic migration', async () => {
     const migrations: Array<Migration> = [
         {
             version: '0000',
@@ -39,7 +38,7 @@ test('basic migration', async() => {
     expect(migrations[0].run).toHaveBeenCalledTimes(1)
 })
 
-test('0/2 completed migrations', async() => {
+test('0/2 completed migrations', async () => {
     const migrations: Array<Migration> = [
         {
             version: '0000',
@@ -63,7 +62,7 @@ test('0/2 completed migrations', async() => {
     expect(getTestTable(1)).toEqual([])
 })
 
-test('1/2 completed migrations', async() => {
+test('1/2 completed migrations', async () => {
     const migrations: Array<Migration> = [
         {
             version: '0000',
@@ -90,7 +89,7 @@ test('1/2 completed migrations', async() => {
     expect(getTestTable(1)).toEqual([])
 })
 
-test('2/2 completed migrations', async() => {
+test('2/2 completed migrations', async () => {
     const migrations: Array<Migration> = [
         {
             version: '0000',
@@ -117,7 +116,7 @@ test('2/2 completed migrations', async() => {
     expect(() => getTestTable(1)).toThrow()
 })
 
-test('concurrent migrations do not throw errors', async() => {
+test('concurrent migrations do not throw errors', async () => {
     const migrations: Array<Migration> = [
         {
             version: '0000',
@@ -133,7 +132,7 @@ test('concurrent migrations do not throw errors', async() => {
         },
     ]
 
-    const concurrentMigration = async() => {
+    const concurrentMigration = async () => {
         await Promise.all([
             migrateDb(db, migrations),
             migrateDb(db, migrations),

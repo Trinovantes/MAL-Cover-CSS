@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import hljs from 'highlight.js/lib/core'
 import { onMounted, ref, watch } from 'vue'
-import { escapeHtml } from '../utils/escapeHtml'
-import { sleep } from '@/common/utils/sleep'
-import { LanguageFn } from 'highlight.js'
+import { escapeHtml } from '../utils/escapeHtml.ts'
+import type { LanguageFn } from 'highlight.js'
 import 'highlight.js/styles/monokai.css'
+import { sleep } from '../../../common/utils/sleep.ts'
 
 const props = defineProps({
     code: {
@@ -32,7 +32,7 @@ const languageMap = new Map<string, string>([
 ])
 
 const highlightedCode = ref<string>(escapeHtml(props.code))
-watch(() => props, async() => {
+watch(() => props, async () => {
     if (props.language === 'txt') {
         highlightedCode.value = escapeHtml(props.code)
     } else {

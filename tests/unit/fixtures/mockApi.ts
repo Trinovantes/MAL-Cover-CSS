@@ -1,9 +1,9 @@
-import { createServerApp } from '@/web/server/createServerApp'
-import { DrizzleClient } from '@/common/db/createDb'
 import { MemoryStore } from 'express-session'
 import request from 'supertest'
 import { pinoHttp } from 'pino-http'
 import pino from 'pino'
+import { createServerApp } from '../../../src/web/server/createServerApp.ts'
+import type { DrizzleClient } from '../../../src/common/db/createDb.ts'
 
 type RequestBody = Parameters<request.Request['send']>[0]
 

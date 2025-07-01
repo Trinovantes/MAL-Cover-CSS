@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
+import examplePreviewImg from '@img/example-covers-preview.jpg?rl'
 import { useSeoMeta } from '@unhead/vue'
 
 const title = 'Example List Design'
@@ -97,7 +97,7 @@ useSeoMeta({
             </p>
 
             <q-img
-                :src="require('@/web/client/assets/img/example-covers.jpg?size=400').src"
+                :src="require('@img/example-covers.jpg?size=400').src"
             >
                 <div class="absolute-bottom caption">
                     Example List Design

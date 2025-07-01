@@ -1,6 +1,6 @@
-import { RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/interfaces/ApiResponse'
-import { Page } from '@playwright/test'
-import { getBuildSecret } from 'build/BuildSecret'
+import type { Page } from '@playwright/test'
+import { getBuildSecret } from '../../../../build/BuildSecret.ts'
+import type { RedirectResponse, SuccessResponse, UserResponse } from '../../../../src/web/server/interfaces/ApiResponse.ts'
 
 const apiUrl = getBuildSecret('API_URL')
 
@@ -14,7 +14,7 @@ export class ApiMocker {
     }
 
     async interceptApiRequests(page: Page) {
-        await page.route(`${apiUrl}/api/settings/user`, async(route, request) => {
+        await page.route(`${apiUrl}/api/settings/user`, async (route, request) => {
             if (!this.#isLoggedIn) {
                 await route.fulfill({ status: 403 })
                 return
@@ -36,7 +36,7 @@ export class ApiMocker {
             })
         })
 
-        await page.route(`${apiUrl}/api/settings/user`, async(route, request) => {
+        await page.route(`${apiUrl}/api/settings/user`, async (route, request) => {
             if (!this.#isLoggedIn) {
                 await route.fulfill({ status: 403 })
                 return
@@ -55,7 +55,7 @@ export class ApiMocker {
             })
         })
 
-        await page.route(`${apiUrl}/api/oauth/login`, async(route) => {
+        await page.route(`${apiUrl}/api/oauth/login`, async (route) => {
             this.#isLoggedIn = true
 
             await route.fulfill({
@@ -68,7 +68,7 @@ export class ApiMocker {
             })
         })
 
-        await page.route(`${apiUrl}/api/oauth/logout`, async(route) => {
+        await page.route(`${apiUrl}/api/oauth/logout`, async (route) => {
             this.#isLoggedIn = false
 
             await route.fulfill({

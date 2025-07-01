@@ -1,5 +1,5 @@
 import devalue from '@nuxt/devalue'
-import { UserState } from './User/useUserStore'
+import type { UserState } from './User/useUserStore.ts'
 
 export type HydrationMap = {
     ['__INITIAL_USER_STATE__']: UserState
@@ -10,7 +10,7 @@ export function saveStateToWindow<K extends keyof HydrationMap>(key: K, state: H
 }
 
 export function loadStateFromWindow<K extends keyof HydrationMap>(key: K): HydrationMap[K] | undefined {
-    if (DEFINE.IS_SSR) {
+    if (__IS_SSR__) {
         return undefined
     }
 
