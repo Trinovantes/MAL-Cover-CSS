@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { getBuildSecret, getGitHash } from './BuildSecret'
+import { getBuildSecret, getGitHash } from './BuildSecret.ts'
 
 // Assume we are running webpack from the project root (../)
 const rootDir = path.resolve()
@@ -31,21 +31,21 @@ export const distServerManifest = path.join(distServerDir, manifestFileName)
 export const distServerTemplate = path.join(distServerDir, 'index.html')
 
 export const buildConstants = {
-    '__VUE_OPTIONS_API__': JSON.stringify(false),
-    '__VUE_PROD_DEVTOOLS__': JSON.stringify(false),
-    '__VUE_PROD_HYDRATION_MISMATCH_DETAILS__': JSON.stringify(false),
+    __VUE_OPTIONS_API__: JSON.stringify(false),
+    __VUE_PROD_DEVTOOLS__: JSON.stringify(false),
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: JSON.stringify(false),
 
-    'DEFINE.IS_DEV': JSON.stringify(isDev),
-    'DEFINE.IS_SSR': "(typeof window === 'undefined')",
-    'DEFINE.GIT_HASH': JSON.stringify(gitHash),
+    __IS_DEV__: JSON.stringify(isDev),
+    __IS_SSR__: "(typeof window === 'undefined')",
+    __GIT_HASH__: JSON.stringify(gitHash),
 
-    'DEFINE.WEB_URL': JSON.stringify(getBuildSecret('WEB_URL')),
-    'DEFINE.WEB_PORT': JSON.stringify(getBuildSecret('WEB_PORT')),
-    'DEFINE.API_URL': JSON.stringify(getBuildSecret('API_URL')),
-    'DEFINE.API_PORT': JSON.stringify(getBuildSecret('API_PORT')),
+    __WEB_URL__: JSON.stringify(getBuildSecret('WEB_URL')),
+    __WEB_PORT__: JSON.stringify(getBuildSecret('WEB_PORT')),
+    __API_URL__: JSON.stringify(getBuildSecret('API_URL')),
+    __API_PORT__: JSON.stringify(getBuildSecret('API_PORT')),
 
-    'DEFINE.SSR_PUBLIC_PATH': JSON.stringify('/'),
-    'DEFINE.SSR_PUBLIC_DIR': JSON.stringify(distClientDir),
-    'DEFINE.SSR_MANIFEST_FILE': JSON.stringify(distServerManifest),
-    'DEFINE.SSR_HTML_TEMPLATE': JSON.stringify(distServerTemplate),
+    __SSR_PUBLIC_PATH__: JSON.stringify('/'),
+    __SSR_PUBLIC_DIR__: JSON.stringify(distClientDir),
+    __SSR_MANIFEST_FILE__: JSON.stringify(distServerManifest),
+    __SSR_HTML_TEMPLATE__: JSON.stringify(distServerTemplate),
 }

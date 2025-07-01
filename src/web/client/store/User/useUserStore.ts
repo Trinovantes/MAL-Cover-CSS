@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
-import { loadStateFromWindow } from '../Hydration'
-import { AppContext } from '@/web/AppContext'
-import { RedirectResponse, SuccessResponse, UserResponse } from '@/web/server/interfaces/ApiResponse'
-import { fetchWithSsrProxy } from '@/web/client/utils/fetchWithSsrProxy'
-import { LoginPayload } from '@/web/server/interfaces/LoginPayload'
+import { loadStateFromWindow } from '../Hydration.ts'
+import type { RedirectResponse, SuccessResponse, UserResponse } from '../../../server/interfaces/ApiResponse.ts'
+import type { AppContext } from '../../../AppContext.ts'
+import { fetchWithSsrProxy } from '../../utils/fetchWithSsrProxy.ts'
+import type { LoginPayload } from '../../../server/interfaces/LoginPayload.ts'
 
 // ----------------------------------------------------------------------------
 // State
@@ -34,7 +34,7 @@ export const useUserStore = defineStore('User', {
                 return
             }
 
-            if (!DEFINE.IS_SSR) {
+            if (!__IS_SSR__) {
                 const savedState = loadStateFromWindow('__INITIAL_USER_STATE__')
                 if (savedState) {
                     this.$patch(savedState)

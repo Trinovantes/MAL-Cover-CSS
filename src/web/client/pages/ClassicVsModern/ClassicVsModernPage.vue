@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import examplePreviewImg from '@/web/client/assets/img/example-covers-preview.jpg?rl'
+import examplePreviewImg from '@img/example-covers-preview.jpg?rl'
 import { useSeoMeta } from '@unhead/vue'
 
 const title = 'Classic vs. Modern Templates'

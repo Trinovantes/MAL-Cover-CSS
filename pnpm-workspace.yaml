@@ -1,0 +1,17 @@
+ignoredBuiltDependencies:
+  - '@parcel/watcher'
+  - '@sentry/cli'
+  - esbuild
+  - sharp
+
+onlyBuiltDependencies:
+  - better-sqlite3
+
+patchedDependencies:
+  '@nuxt/devalue': patches/@nuxt__devalue.patch
+  '@rollup/plugin-replace': patches/@rollup__plugin-replace.patch
+  highlight.js: patches/highlight.js.patch
+  pino: patches/pino.patch
+  pino-http: patches/pino-http.patch
+  quasar: patches/quasar.patch
+  vue-loader: patches/vue-loader.patch

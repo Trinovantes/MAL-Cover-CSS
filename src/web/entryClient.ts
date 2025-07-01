@@ -3,19 +3,19 @@
 
 import './client/assets/css/main.scss'
 import * as Sentry from '@sentry/vue'
-import { SENTRY_DSN } from '@/common/Constants'
-import { createVueApp } from './createVueApp'
 import { createHead } from '@unhead/vue/client'
+import { createVueApp } from './createVueApp.ts'
+import { SENTRY_DSN } from '../common/Constants.ts'
 
 async function main() {
-    console.info('Release', DEFINE.GIT_HASH)
+    console.info('Release', __GIT_HASH__)
     const head = createHead()
     const { app, router } = await createVueApp(head)
 
-    if (!DEFINE.IS_DEV) {
+    if (!__IS_DEV__) {
         Sentry.init({
             app,
-            release: DEFINE.GIT_HASH,
+            release: __GIT_HASH__,
             dsn: SENTRY_DSN,
             integrations: [
                 Sentry.browserTracingIntegration({ router }),

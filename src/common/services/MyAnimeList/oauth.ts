@@ -1,9 +1,9 @@
 import querystring from 'node:querystring'
-import { MAL_AUTHORIZE_URL, MAL_TOKEN_URL } from '@/common/Constants'
-import { getRuntimeSecret } from '@/common/node/RuntimeSecret'
-import { OauthState } from '@/web/server/interfaces/OauthState'
-import { isOauthAuthFailure } from './schemas/OauthAuthFailure'
-import { isOauthTokenSuccess, OauthTokenSuccess } from './schemas/OauthTokenSuccess'
+import type { OauthState } from '../../../web/server/interfaces/OauthState.ts'
+import { MAL_AUTHORIZE_URL, MAL_TOKEN_URL } from '../../Constants.ts'
+import { getRuntimeSecret } from '../../node/RuntimeSecret.ts'
+import { isOauthAuthFailure } from './schemas/OauthAuthFailure.ts'
+import { type OauthTokenSuccess, isOauthTokenSuccess } from './schemas/OauthTokenSuccess.ts'
 
 // ----------------------------------------------------------------------------
 // v1 API Oauth Responses
@@ -14,7 +14,7 @@ import { isOauthTokenSuccess, OauthTokenSuccess } from './schemas/OauthTokenSucc
 
 export function getOauthEndpoint(oauthState: OauthState, codeChallenge: string): string {
     const query = {
-        redirect_uri: `${DEFINE.WEB_URL}/api/oauth`,
+        redirect_uri: `${__WEB_URL__}/api/oauth`,
         client_id: getRuntimeSecret('MAL_CLIENT_ID'),
         response_type: 'code',
         state: encodeURIComponent(JSON.stringify(oauthState)),
@@ -28,7 +28,7 @@ export function getOauthEndpoint(oauthState: OauthState, codeChallenge: string):
 
 export async function fetchAccessToken(authCode: string, codeChallenge: string): Promise<OauthTokenSuccess> {
     const query = {
-        redirect_uri: `${DEFINE.WEB_URL}/api/oauth`,
+        redirect_uri: `${__WEB_URL__}/api/oauth`,
         client_id: getRuntimeSecret('MAL_CLIENT_ID'),
         client_secret: getRuntimeSecret('MAL_CLIENT_SECRET'),
         grant_type: 'authorization_code',

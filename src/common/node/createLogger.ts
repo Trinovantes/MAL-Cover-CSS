@@ -1,5 +1,5 @@
-import pino, { LoggerOptions } from 'pino'
-import pretty, { PrettyOptions } from 'pino-pretty'
+import pino, { type LoggerOptions } from 'pino'
+import pretty, { type PrettyOptions } from 'pino-pretty'
 
 const pinoOpts: LoggerOptions = {
     enabled: !process.env.CI,
@@ -11,7 +11,7 @@ const pinoPrettyOpts: PrettyOptions = {
 }
 
 export function createLogger() {
-    return DEFINE.IS_DEV
+    return __IS_DEV__
         ? pino(pinoOpts, pretty(pinoPrettyOpts))
         : pino(pinoOpts)
 }

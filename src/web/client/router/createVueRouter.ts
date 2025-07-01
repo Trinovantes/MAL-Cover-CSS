@@ -1,8 +1,8 @@
 import { computed, watch } from 'vue'
-import { createMemoryHistory, createRouter, createWebHistory, Router } from 'vue-router'
-import { useUserStore } from '../store/User/useUserStore'
-import { AppContext } from '@/web/AppContext'
-import { ROUTE_NAME, ROUTE_META_KEY, routes } from './routes'
+import { createMemoryHistory, createRouter, createWebHistory, type Router } from 'vue-router'
+import { useUserStore } from '../store/User/useUserStore.ts'
+import { ROUTE_NAME, ROUTE_META_KEY, routes } from './routes.ts'
+import type { AppContext } from '../../AppContext.ts'
 
 // ----------------------------------------------------------------------------
 // Router
@@ -10,7 +10,7 @@ import { ROUTE_NAME, ROUTE_META_KEY, routes } from './routes'
 
 export async function createVueRouter(appContext?: AppContext): Promise<Router> {
     const router = createRouter({
-        history: DEFINE.IS_SSR
+        history: __IS_SSR__
             ? createMemoryHistory()
             : createWebHistory(),
 
@@ -35,7 +35,7 @@ export async function createVueRouter(appContext?: AppContext): Promise<Router> 
 
     const userStore = useUserStore(appContext?.pinia)
     const isLoggedIn = computed(() => userStore.user !== null)
-    watch(isLoggedIn, async() => {
+    watch(isLoggedIn, async () => {
         if (router.currentRoute.value.meta[ROUTE_META_KEY.REQUIRE_AUTH] && !isLoggedIn.value) {
             console.warn(`[403] Cannot stay on ${router.currentRoute.value.fullPath} because isLoggedIn:${isLoggedIn.value}`)
             await router.push({ name: ROUTE_NAME.HOME })

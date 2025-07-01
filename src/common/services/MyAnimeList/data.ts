@@ -1,6 +1,6 @@
-import { MAL_API_URL } from '@/common/Constants'
-import { DrizzleClient } from '@/common/db/createDb'
-import { User } from '@/common/db/models/User'
+import { MAL_API_URL } from '../../Constants.ts'
+import type { DrizzleClient } from '../../db/createDb.ts'
+import type { User } from '../../db/models/User.ts'
 
 // ----------------------------------------------------------------------------
 // v2 API Data

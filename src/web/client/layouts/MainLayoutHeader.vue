@@ -2,7 +2,7 @@
 import { computed, ref } from 'vue'
 import { useApi } from '../utils/useApi'
 import { useUserStore } from '../store/User/useUserStore'
-import { APP_NAME } from '@/common/Constants'
+import { APP_NAME } from '../../../common/Constants.ts'
 
 const isHeaderItemsExpanded = ref(false)
 const closeHeaderItems = () => {

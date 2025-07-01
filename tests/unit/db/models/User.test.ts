@@ -1,10 +1,10 @@
-import { DB_MEMORY, ENCRYPTION_KEY_LENGTH } from '@/common/Constants'
-import { createDb, DrizzleClient } from '@/common/db/createDb'
-import { getMigrations } from '@/common/db/getMigrations'
-import { selectUsersToDelete, selectUsersToScrape, updateUserLastChecked, updateUserTokens, upsertUser } from '@/common/db/models/User'
-import { getEncryptionKey } from '@/common/node/RuntimeSecret'
-import { getSqlTimestamp, getSqlTimestampFromNow } from '@/common/utils/getSqlTimestamp'
 import { vi, describe, test, beforeEach, afterEach, expect } from 'vitest'
+import { DB_MEMORY, ENCRYPTION_KEY_LENGTH } from '../../../../src/common/Constants.ts'
+import { type DrizzleClient, createDb } from '../../../../src/common/db/createDb.ts'
+import { getMigrations } from '../../../../src/common/db/getMigrations.ts'
+import { selectUsersToDelete, selectUsersToScrape, updateUserLastChecked, updateUserTokens, upsertUser } from '../../../../src/common/db/models/User.ts'
+import { getEncryptionKey } from '../../../../src/common/node/RuntimeSecret.ts'
+import { getSqlTimestamp, getSqlTimestampFromNow } from '../../../../src/common/utils/getSqlTimestamp.ts'
 
 let db: DrizzleClient
 
@@ -15,14 +15,14 @@ const mocks = vi.hoisted(() => {
     }
 })
 
-vi.mock('@/common/node/RuntimeSecret', () => {
+vi.mock('../../../../src/common/node/RuntimeSecret.ts', () => {
     return {
         getEncryptionKey: mocks.getEncryptionKey,
     }
 })
 
-vi.mock('@/common/utils/getSqlTimestamp', async() => {
-    const original = await vi.importActual<typeof import('@/common/utils/getSqlTimestamp')>('@/common/utils/getSqlTimestamp')
+vi.mock('../../../../src/common/utils/getSqlTimestamp.ts', async () => {
+    const original = await vi.importActual<typeof import('../../../../src/common/utils/getSqlTimestamp.ts')>('../../../../src/common/utils/getSqlTimestamp.ts')
 
     return {
         ...original,
@@ -30,7 +30,7 @@ vi.mock('@/common/utils/getSqlTimestamp', async() => {
     }
 })
 
-beforeEach(async() => {
+beforeEach(async () => {
     db = await createDb(DB_MEMORY, {
         migrations: await getMigrations(),
     })

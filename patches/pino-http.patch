@@ -1,7 +1,7 @@
-diff --git a/node_modules/pino-http/index.d.ts b/node_modules/pino-http/index.d.ts
-index c7c482d..e291f9f 100644
---- a/node_modules/pino-http/index.d.ts
-+++ b/node_modules/pino-http/index.d.ts
+diff --git a/index.d.ts b/index.d.ts
+index c7c482ddb729f99c513db8793d457006fb2a050a..e291f9f94c54f5d02494614bf1a2b8627cff2cf1 100644
+--- a/index.d.ts
++++ b/index.d.ts
 @@ -12,17 +12,17 @@ import { IncomingMessage, ServerResponse } from 'http';
  import pino from 'pino';
  import { err, req, res, SerializedError, SerializedRequest, SerializedResponse } from 'pino-std-serializers';

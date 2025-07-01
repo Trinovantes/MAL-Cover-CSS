@@ -1,4 +1,4 @@
-import { ROUTE_META_KEY } from '@/web/client/router/routes'
+import type { ROUTE_META_KEY } from '../web/client/router/routes.ts'
 
 declare module 'vue-router' {
     // eslint-disable-next-line @typescript-eslint/consistent-type-definitions

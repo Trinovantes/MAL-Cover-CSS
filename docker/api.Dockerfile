@@ -1,16 +1,36 @@
 # -----------------------------------------------------------------------------
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS base
 # -----------------------------------------------------------------------------
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable pnpm
 
 WORKDIR /app
 
-# Install dependencies
 COPY tsconfig.json              ./
-COPY yarn.lock package.json     ./
+COPY package.json               ./
+COPY pnpm-workspace.yaml        ./
+COPY pnpm-lock.yaml             ./
 COPY patches/                   ./patches/
-RUN yarn install
 
-# Build app
+# -----------------------------------------------------------------------------
+FROM base AS deps
+# -----------------------------------------------------------------------------
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install \
+        --frozen-lockfile \
+        --production
+
+# -----------------------------------------------------------------------------
+FROM base AS builder
+# -----------------------------------------------------------------------------
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install \
+        --frozen-lockfile
+
 COPY build/                     ./build/
 COPY src/                       ./src/
 RUN \
@@ -20,13 +40,10 @@ RUN \
     --mount=type=secret,id=API_URL \
     --mount=type=secret,id=API_PORT \
     NODE_ENV=production \
-    yarn build
-
-# Remove dev dependencies
-RUN yarn install --production
+    pnpm build
 
 # -----------------------------------------------------------------------------
-FROM node:22-alpine
+FROM node:24-alpine
 LABEL org.opencontainers.image.source=https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 
@@ -35,11 +52,12 @@ WORKDIR /app
 ENV NODE_ENV='production'
 
 # Copy app
-COPY --from=builder /app/package.json   ./
-COPY --from=builder /app/node_modules/  ./node_modules/
 COPY --from=builder /app/dist/          ./dist/
+COPY --from=deps /app/package.json      ./
+COPY --from=deps /app/node_modules/     ./node_modules/
 
 # Mount points
-RUN mkdir -p ./db/live
+RUN mkdir -p                            ./db/live
+RUN mkdir -p                            ./dist/web/client/generated
 
-CMD ["yarn", "startWeb"]
+CMD ["npm", "run", "startWeb"]

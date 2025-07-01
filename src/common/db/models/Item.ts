@@ -1,8 +1,8 @@
-import { InferSelectModel, sql } from 'drizzle-orm'
+import { type InferSelectModel, sql } from 'drizzle-orm'
 import { sqliteTable, text, integer } from 'drizzle-orm/sqlite-core'
-import { ItemType } from './ItemType'
-import { DrizzleClient } from '../createDb'
-import { getSqlTimestamp } from '@/common/utils/getSqlTimestamp'
+import { getSqlTimestamp } from '../../utils/getSqlTimestamp.ts'
+import type { DrizzleClient } from '../createDb.ts'
+import type { ItemType } from './ItemType.ts'
 
 export const itemTable = sqliteTable('Item', {
     id: integer('id').primaryKey(),

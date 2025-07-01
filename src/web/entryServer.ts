@@ -2,26 +2,27 @@
 // It is kept as entryServer for historical value to match Vue's SSR guides
 
 import http from 'node:http'
-import { createServerApp } from './server/createServerApp'
-import { createSessionStore } from './server/utils/createSessionStore'
 import { pinoHttp } from 'pino-http'
-import { createLogger } from '@/common/node/createLogger'
-import { createDb } from '@/common/db/createDb'
-import { DB_FILE } from '@/common/Constants'
-import { getMigrations } from '@/common/db/getMigrations'
+import { createLogger } from '../common/node/createLogger.ts'
+import { DB_FILE } from '../common/Constants.ts'
+import { createDb } from '../common/db/createDb.ts'
+import { getMigrations } from '../common/db/getMigrations.ts'
+import { createServerApp } from './server/createServerApp.ts'
+import { createSessionStore } from './server/utils/createSessionStore.ts'
 
 const logger = createLogger()
 
 async function main() {
+    const migrations = await getMigrations()
     const db = await createDb(DB_FILE, {
         cleanOnExit: true,
-        migrations: await getMigrations(),
+        migrations,
     })
 
     const app = createServerApp({
-        trustProxy: !DEFINE.IS_DEV,
-        enableCors: DEFINE.IS_DEV,
-        enableStaticFiles: DEFINE.IS_DEV,
+        trustProxy: !__IS_DEV__,
+        enableCors: __IS_DEV__,
+        enableStaticFiles: __IS_DEV__,
         enableVue: true,
 
         db,
@@ -29,7 +30,7 @@ async function main() {
         httpLogger: pinoHttp({ logger }),
     })
 
-    const port = parseInt(DEFINE.API_PORT)
+    const port = parseInt(__API_PORT__)
     const server = http.createServer(app)
 
     server.listen(port, '0.0.0.0', (): void => {

@@ -1,24 +1,24 @@
 import { readFileSync } from 'node:fs'
 import { renderToString } from '@vue/server-renderer'
 import express from 'express'
-import { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin/dist/utils/VueSsrAssetsRenderer'
-import { createAsyncHandler } from '@/web/server/utils/createAsyncHandler'
-import { renderRawHtml } from '@/web/server/utils/renderRawHtml'
-import { createAppContext } from '@/web/AppContext'
-import { ROUTE_NAME } from '@/web/client/router/routes'
-import { createVueApp } from '@/web/createVueApp'
 import { renderSSRHead } from '@unhead/ssr'
 import { createHead } from '@unhead/vue/server'
-import { createCspNonce } from '../utils/createCspNonce'
-import { saveStateToWindow } from '@/web/client/store/Hydration'
-import { useUserStore } from '@/web/client/store/User/useUserStore'
+import { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin/dist/utils/VueSsrAssetsRenderer.js'
+import { createAsyncHandler } from '../utils/createAsyncHandler.ts'
+import { createAppContext } from '../../AppContext.ts'
+import { createVueApp } from '../../createVueApp.ts'
+import { ROUTE_NAME } from '../../client/router/routes.ts'
+import { saveStateToWindow } from '../../client/store/Hydration.ts'
+import { useUserStore } from '../../client/store/User/useUserStore.ts'
+import { createCspNonce } from '../utils/createCspNonce.ts'
+import { renderRawHtml } from '../utils/renderRawHtml.ts'
 
 export function routeVue() {
     const router = express.Router()
-    const assetRenderer = new VueSsrAssetRenderer(DEFINE.SSR_MANIFEST_FILE)
-    const htmlTemplate = readFileSync(DEFINE.SSR_HTML_TEMPLATE).toString('utf-8')
+    const assetRenderer = new VueSsrAssetRenderer(__SSR_MANIFEST_FILE__)
+    const htmlTemplate = readFileSync(__SSR_HTML_TEMPLATE__).toString('utf-8')
 
-    router.use(createAsyncHandler(async(req, res) => {
+    router.use(createAsyncHandler(async (req, res) => {
         const appContext = createAppContext(req, res)
         const head = createHead({ disableDefaults: true })
         const { app, router } = await createVueApp(head, appContext)

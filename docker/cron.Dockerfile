@@ -1,32 +1,30 @@
 # -----------------------------------------------------------------------------
-FROM node:22-alpine AS builder
+FROM node:24-alpine AS base
 # -----------------------------------------------------------------------------
+
+ENV PNPM_HOME="/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+RUN corepack enable pnpm
 
 WORKDIR /app
 
-# Install dependencies
 COPY tsconfig.json              ./
-COPY yarn.lock package.json     ./
+COPY package.json               ./
+COPY pnpm-workspace.yaml        ./
+COPY pnpm-lock.yaml             ./
 COPY patches/                   ./patches/
-RUN yarn install
-
-# Build app
-COPY build/                     ./build/
-COPY src/                       ./src/
-RUN \
-    --mount=type=secret,id=GIT_HASH \
-    --mount=type=secret,id=WEB_URL \
-    --mount=type=secret,id=WEB_PORT \
-    --mount=type=secret,id=API_URL \
-    --mount=type=secret,id=API_PORT \
-    NODE_ENV=production \
-    yarn build
-
-# Remove dev dependencies
-RUN yarn install --production
 
 # -----------------------------------------------------------------------------
-FROM oven/bun:alpine
+FROM base AS deps
+# -----------------------------------------------------------------------------
+
+RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
+    pnpm install \
+        --frozen-lockfile \
+        --production
+
+# -----------------------------------------------------------------------------
+FROM node:24-alpine
 LABEL org.opencontainers.image.source=https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 
@@ -34,16 +32,16 @@ WORKDIR /app
 
 ENV NODE_ENV='production'
 
-# Install dependencies
-RUN apk update && apk add --no-cache curl git
+# Install cron dependencies
+RUN apk update && \
+    apk add --no-cache git
 
 # Copy app
-COPY --from=builder /app/tsconfig.json  ./
-COPY --from=builder /app/package.json   ./
-COPY --from=builder /app/node_modules/  ./node_modules/
-COPY --from=builder /app/build/         ./build/
-COPY --from=builder /app/src/           ./src/
+COPY --from=deps /app/package.json      ./
+COPY --from=deps /app/node_modules/     ./node_modules/
 COPY docker/                            ./docker/
+COPY build/                             ./build/
+COPY src/                               ./src/
 COPY .git/                              ./.git/
 
 # Mount points

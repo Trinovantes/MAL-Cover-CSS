@@ -1,11 +1,11 @@
-import { selectUser } from '@/common/db/models/User'
-import { ServerAppContext } from '../ServerAppContext'
-import { clearSession } from '../utils/clearSession'
-import { createAsyncHandler } from '../utils/createAsyncHandler'
-import { RequestHandler } from 'express'
+import { selectUser } from '../../../common/db/models/User.ts'
+import type { ServerAppContext } from '../ServerAppContext.ts'
+import { clearSession } from '../utils/clearSession.ts'
+import { createAsyncHandler } from '../utils/createAsyncHandler.ts'
+import type { RequestHandler } from 'express'
 
 export function setUser({ db }: ServerAppContext): RequestHandler {
-    return createAsyncHandler(async(req, res, next) => {
+    return createAsyncHandler(async (req, res, next) => {
         const malUserId = req.session?.malUserId
         if (malUserId === undefined) {
             next()

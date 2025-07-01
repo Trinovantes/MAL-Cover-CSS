@@ -1,9 +1,9 @@
 <script lang="ts" setup>
 import { computed } from 'vue'
-import { useApi } from '@/web/client/utils/useApi'
-import { useUserStore } from '@/web/client/store/User/useUserStore'
-import { getRelativeTime } from '@/common/utils/getRelativeTime'
 import { useSeoMeta } from '@unhead/vue'
+import { useUserStore } from '../../store/User/useUserStore.ts'
+import { getRelativeTime } from '../../../../common/utils/getRelativeTime.ts'
+import { useApi } from '../../utils/useApi.ts'
 
 const title = 'Settings'
 useSeoMeta({ title })

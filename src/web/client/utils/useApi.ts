@@ -1,6 +1,6 @@
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { useUserStore } from '../store/User/useUserStore'
+import { useUserStore } from '../store/User/useUserStore.ts'
 
 export function useApi() {
     const $q = useQuasar()
@@ -10,7 +10,7 @@ export function useApi() {
     const notifyError = (message: string) => {
         $q.notify({
             message,
-            timeout: DEFINE.IS_DEV ? 0 : undefined,
+            timeout: __IS_DEV__ ? 0 : undefined,
             type: 'negative',
             position: 'top',
             actions: [{
@@ -32,7 +32,7 @@ export function useApi() {
         })
     }
 
-    const login = async() => {
+    const login = async () => {
         const { data, error } = await userStore.login(router.currentRoute.value.path)
         if (error) {
             notifyError(error.errorMessage)
@@ -42,7 +42,7 @@ export function useApi() {
         window.location.href = data.url
     }
 
-    const logout = async() => {
+    const logout = async () => {
         const { data, error } = await userStore.logout()
         if (error) {
             notifyError(error.errorMessage)
@@ -52,7 +52,7 @@ export function useApi() {
         notifySuccess(data.message)
     }
 
-    const deleteUser = async() => {
+    const deleteUser = async () => {
         const { data, error } = await userStore.deleteUser()
         if (error) {
             notifyError(error.errorMessage)

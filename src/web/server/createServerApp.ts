@@ -1,13 +1,13 @@
 import cors from 'cors'
 import express from 'express'
 import session from 'express-session'
-import { COOKIE_DURATION } from '@/common/Constants'
-import { getRuntimeSecret } from '@/common/node/RuntimeSecret'
-import { routeApi } from './routers/routeApi'
-import { routeVue } from './routers/routeVue'
-import { createErrorHandler } from './utils/createErrorHandler'
-import { generate404 } from './middlewares/generate404'
-import { ServerAppContext } from '@/web/server/ServerAppContext'
+import type { ServerAppContext } from './ServerAppContext.ts'
+import { getRuntimeSecret } from '../../common/node/RuntimeSecret.ts'
+import { COOKIE_DURATION } from '../../common/Constants.ts'
+import { generate404 } from './middlewares/generate404.ts'
+import { routeApi } from './routers/routeApi.ts'
+import { routeVue } from './routers/routeVue.ts'
+import { createErrorHandler } from './utils/createErrorHandler.ts'
 
 export function createServerApp(ctx: ServerAppContext) {
     const app = express()
@@ -31,7 +31,7 @@ export function createServerApp(ctx: ServerAppContext) {
         cookie: {
             maxAge: COOKIE_DURATION,
             httpOnly: true, // Cookies will not be available to Document.cookie api
-            secure: DEFINE.WEB_URL.startsWith('https'), // Cookies only sent over https
+            secure: __WEB_URL__.startsWith('https'), // Cookies only sent over https
         },
         store: ctx.sessionStore,
     }))
@@ -41,16 +41,16 @@ export function createServerApp(ctx: ServerAppContext) {
     // -----------------------------------------------------------------------------
 
     if (ctx.enableCors) {
-        ctx.httpLogger.logger.info(`Setting CORS origin to ${DEFINE.WEB_URL}`)
+        ctx.httpLogger.logger.info(`Setting CORS origin to ${__WEB_URL__}`)
         app.use(cors({
             credentials: true,
-            origin: DEFINE.WEB_URL,
+            origin: __WEB_URL__,
         }))
     }
 
     if (ctx.enableStaticFiles) {
-        ctx.httpLogger.logger.info(`Serving static files from "${DEFINE.SSR_PUBLIC_DIR}" to "${DEFINE.SSR_PUBLIC_PATH}"`)
-        app.use(DEFINE.SSR_PUBLIC_PATH, express.static(DEFINE.SSR_PUBLIC_DIR))
+        ctx.httpLogger.logger.info(`Serving static files from "${__SSR_PUBLIC_DIR__}" to "${__SSR_PUBLIC_PATH__}"`)
+        app.use(__SSR_PUBLIC_PATH__, express.static(__SSR_PUBLIC_DIR__))
     }
 
     // -----------------------------------------------------------------------------

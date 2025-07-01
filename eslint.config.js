@@ -10,11 +10,12 @@ import vueParser from 'vue-eslint-parser'
 import { readFileSync } from 'node:fs'
 import { includeIgnoreFile } from '@eslint/compat'
 import path from 'node:path'
+import { defineConfig } from 'eslint/config'
 
 const inlineElementsJson = readFileSync('node_modules/eslint-plugin-vue/lib/utils/inline-non-void-elements.json').toString('utf-8')
 const inlineElements = JSON.parse(inlineElementsJson)
 
-export default tseslint.config(
+export default defineConfig(
     includeIgnoreFile(path.resolve('.gitignore')),
 
     {
@@ -47,7 +48,12 @@ export default tseslint.config(
             }],
             '@stylistic/generator-star-spacing': ['error', 'before'],
             '@stylistic/arrow-parens': ['error', 'always'],
-            '@stylistic/space-before-function-paren': ['error', 'never'],
+            '@stylistic/space-before-function-paren': ['error', {
+                anonymous: 'never',
+                named: 'never',
+                asyncArrow: 'always',
+                catch: 'always',
+            }],
             '@stylistic/indent': ['error', 4, {
                 SwitchCase: 1,
             }],
@@ -74,8 +80,11 @@ export default tseslint.config(
                 overrides: {
                     '?': 'before',
                     ':': 'before',
+                    '&': 'before',
+                    '|': 'before',
                 },
             }],
+            '@stylistic/object-curly-spacing': ['error', 'always'],
         },
     },
 
@@ -197,6 +206,7 @@ export default tseslint.config(
             '@typescript-eslint/require-array-sort-compare': ['error', {
                 ignoreStringArrays: true,
             }],
+            '@typescript-eslint/no-import-type-side-effects': 'error',
         },
     },
 

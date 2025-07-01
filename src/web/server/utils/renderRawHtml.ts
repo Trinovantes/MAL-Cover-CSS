@@ -1,6 +1,6 @@
-import { AppContext } from '@/web/AppContext'
 import { renderSSRHead } from '@unhead/ssr'
-import { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin'
+import type { AppContext } from '../../AppContext.ts'
+import type { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin'
 
 export type RenderedPage = {
     appHtml: string
