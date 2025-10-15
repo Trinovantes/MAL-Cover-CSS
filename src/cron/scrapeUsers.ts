@@ -6,7 +6,7 @@ import { getMigrations } from '../common/db/getMigrations.ts'
 import { upsertItem } from '../common/db/models/Item.ts'
 import type { ItemType } from '../common/db/models/ItemType.ts'
 import { selectUsersToScrape, stringifyUser, updateUserLastChecked, updateUserTokens, deleteUser, selectUsersToDelete, type User } from '../common/db/models/User.ts'
-import { type MalAnimeResponse, type MalMangaResponse, fetchMalAnimeList, fetchMalMangaList } from '../common/services/MyAnimeList/data.ts'
+import { type MalAnimeResponse, MalFailedFetchError, type MalMangaResponse, fetchMalAnimeList, fetchMalMangaList } from '../common/services/MyAnimeList/data.ts'
 import { refreshAccessToken } from '../common/services/MyAnimeList/oauth.ts'
 import { getSqlTimestampFromNow, getSqlTimestamp } from '../common/utils/getSqlTimestamp.ts'
 import { sleep } from '../common/utils/sleep.ts'
@@ -105,10 +105,7 @@ async function fetchUserList(db: DrizzleClient, user: User, mediaType: ItemType,
             ? await fetchMalAnimeList(db, user, ITEMS_PER_LIST_REQUEST, offset)
             : await fetchMalMangaList(db, user, ITEMS_PER_LIST_REQUEST, offset)
     } catch (err) {
-        if (!(err instanceof Error)) {
-            throw err
-        }
-        if (!err.message.startsWith('[401]')) {
+        if (!(err instanceof MalFailedFetchError && err.statusCode === 401)) {
             throw err
         }
 

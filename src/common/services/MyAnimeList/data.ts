@@ -73,6 +73,17 @@ export type MalMangaResponse = MalList<MalMangaListItem>
 // v2 API Data Fetch Functions
 // ----------------------------------------------------------------------------
 
+export class MalFailedFetchError extends Error {
+    statusCode: number
+    errorMsg: string
+
+    constructor(statusCode: number, errorMsg: string) {
+        super(`[Status:${statusCode}] Failed to fetch from MAL: ${errorMsg}`)
+        this.statusCode = statusCode
+        this.errorMsg = errorMsg
+    }
+}
+
 async function fetchFromMal<T>(accessToken: string, endpoint: string): Promise<T> {
     const res = await fetch(MAL_API_URL + endpoint, {
         headers: {
@@ -81,7 +92,7 @@ async function fetchFromMal<T>(accessToken: string, endpoint: string): Promise<T
     })
 
     if (res.status !== 200) {
-        throw new Error(`${res.status}: Failed to fetch: ${await res.text()}`)
+        throw new MalFailedFetchError(res.status, await res.text())
     }
 
     return await res.json() as T
