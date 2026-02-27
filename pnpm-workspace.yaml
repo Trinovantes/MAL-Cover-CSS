@@ -15,3 +15,8 @@ patchedDependencies:
   pino-http: patches/pino-http.patch
   quasar: patches/quasar.patch
   vue-loader: patches/vue-loader.patch
+
+overrides:
+  "@types/express": "^4"
+  "@types/node": "^24"
+  "express": "^4"
