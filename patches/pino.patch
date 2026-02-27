@@ -1,9 +1,9 @@
 diff --git a/pino.d.ts b/pino.d.ts
-index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c1a17ec23 100644
+index 0e2cd8da35d094503aafea6577580e3b1bb43251..69723d0ed090a50d117ef9765282fd35eebca00a 100644
 --- a/pino.d.ts
 +++ b/pino.d.ts
-@@ -27,7 +27,7 @@ declare namespace pino {
-     type ThreadStream = any
+@@ -24,7 +24,7 @@ declare namespace pino {
+     //// Non-exported types and interfaces
  
      type TimeFn = () => string;
 -    type MixinFn<CustomLevels extends string = never> = (mergeObject: object, level: number, logger:Logger<CustomLevels>) => object;
@@ -11,7 +11,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
      type MixinMergeStrategyFn = (mergeObject: object, mixinObject: object) => object;
  
      type CustomLevelLogger<CustomLevels extends string, UseOnlyCustomLevels extends boolean = boolean> = { 
-@@ -50,7 +50,7 @@ declare namespace pino {
+@@ -47,7 +47,7 @@ declare namespace pino {
      * A synchronous callback that will run on each creation of a new child.
      * @param child: The newly created child logger instance.
      */
@@ -20,7 +20,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
  
      export interface redactOptions {
          paths: string[];
-@@ -58,7 +58,7 @@ declare namespace pino {
+@@ -55,7 +55,7 @@ declare namespace pino {
          remove?: boolean;
      }
  
@@ -29,7 +29,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
          /**
           * Exposes the Pino package version. Also available on the exported pino function.
           */
-@@ -85,7 +85,7 @@ declare namespace pino {
+@@ -82,7 +82,7 @@ declare namespace pino {
           * @param options: an options object that will override child logger inherited options.
           * @returns a child logger instance.
           */
@@ -38,7 +38,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
  
          /**
           * This can be used to modify the callback function on creation of a new child.
-@@ -234,7 +234,7 @@ declare namespace pino {
+@@ -231,7 +231,7 @@ declare namespace pino {
      export type SerializerFn = (value: any) => any;
      export type WriteFn = (o: object) => void;
  
@@ -47,7 +47,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
          lvl: LevelWithSilentOrString,
          val: number,
          prevLvl: LevelWithSilentOrString,
-@@ -244,7 +244,7 @@ declare namespace pino {
+@@ -241,7 +241,7 @@ declare namespace pino {
  
      export type LogDescriptor = Record<string, any>;
  
@@ -56,8 +56,8 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
  
      export type SerializedError = pinoStdSerializers.SerializedError;
      export type SerializedResponse = pinoStdSerializers.SerializedResponse;
-@@ -345,7 +345,7 @@ declare namespace pino {
-         <T, TMsg extends string = string>(obj: T, msg?: T extends string ? never : TMsg, ...args: ParseLogFnArgs<TMsg> extends [unknown, ...unknown[]] ? ParseLogFnArgs<TMsg> : unknown[]): void;
+@@ -348,7 +348,7 @@ declare namespace pino {
+         <T, TMsg extends string = string>(obj: [T] extends [object] ? T & LogFnFields : T, msg?: T extends string ? never : TMsg, ...args: ParseLogFnArgs<TMsg> extends [unknown, ...unknown[]] ? ParseLogFnArgs<TMsg> : unknown[]): void;
      }
  
 -    export interface LoggerOptions<CustomLevels extends string = never, UseOnlyCustomLevels extends boolean = boolean> {
@@ -65,7 +65,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
          transport?: TransportSingleOptions | TransportMultiOptions | TransportPipelineOptions
          /**
           * Avoid error causes by circular references in the object tree. Default: `true`.
-@@ -698,7 +698,7 @@ declare namespace pino {
+@@ -708,7 +708,7 @@ declare namespace pino {
          crlf?: boolean;
      }
  
@@ -74,7 +74,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
          level?: LevelOrString;
          serializers?: { [key: string]: SerializerFn };
          customLevels?: { [level in CustomLevels]: number };
-@@ -850,7 +850,7 @@ declare namespace pino {
+@@ -863,7 +863,7 @@ declare namespace pino {
       * relative protocol is enabled. Default: process.stdout
       * @returns a new logger instance.
       */
@@ -83,16 +83,16 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
  
      /**
       * @param [options]: an options object
-@@ -858,7 +858,7 @@ declare namespace pino {
+@@ -871,7 +871,7 @@ declare namespace pino {
       * relative protocol is enabled. Default: process.stdout
       * @returns a new logger instance.
       */
 -    function pino<CustomLevels extends string = never, UseOnlyCustomLevels extends boolean = boolean>(options: LoggerOptions<CustomLevels, UseOnlyCustomLevels>, stream?: DestinationStream | undefined): Logger<CustomLevels, UseOnlyCustomLevels>;
 +    function pino<CustomLevels extends string = string, UseOnlyCustomLevels extends boolean = boolean>(options: LoggerOptions<CustomLevels, UseOnlyCustomLevels>, stream?: DestinationStream | undefined): Logger<CustomLevels, UseOnlyCustomLevels>;
- }
  
- //// Callable default export
-@@ -868,7 +868,7 @@ declare namespace pino {
+     /**
+      * Attach selected static members to the nested callable export, so that
+@@ -895,7 +895,7 @@ declare namespace pino {
   * relative protocol is enabled. Default: process.stdout
   * @returns a new logger instance.
   */
@@ -101,7 +101,7 @@ index 2759a1de9a27843ce85407538662ab7b231762e6..4711d3bd9c9dd27c4aa614f3c25a702c
  
  /**
   * @param [options]: an options object
-@@ -876,6 +876,6 @@ declare function pino<CustomLevels extends string = never, UseOnlyCustomLevels e
+@@ -903,6 +903,6 @@ declare function pino<CustomLevels extends string = never, UseOnlyCustomLevels e
   * relative protocol is enabled. Default: process.stdout
   * @returns a new logger instance.
   */

@@ -1,10 +1,10 @@
 diff --git a/package.json b/package.json
-index d860a5be969381df7da61bb391fb491bfb0c790f..a845ddecbaa23da0d6897aed4567ff3decfdc360 100644
+index 27e5357480073a4d123b05ef12435449bcaa011f..c3bc197dbc4416e7933e6308429798bf279ff6cb 100644
 --- a/package.json
 +++ b/package.json
 @@ -1,4 +1,5 @@
  {
 +  "type": "module",
    "name": "@rollup/plugin-replace",
-   "version": "6.0.2",
+   "version": "6.0.3",
    "publishConfig": {
