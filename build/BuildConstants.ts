@@ -9,11 +9,7 @@ export const gitHash = getGitHash(rootDir)
 export const manifestFileName = 'ssr-manifest.json'
 export const entryFile = 'app.html'
 export const rawDirRegexp = /\/raw\//
-
-export const publicPathOnServer = '/public/'
-export const publicPath = isDev
-    ? getBuildSecret('WEB_URL') + publicPathOnServer
-    : publicPathOnServer
+export const publicPath = '/assets/'
 
 export const srcDir = path.join(rootDir, 'src')
 export const srcCronDir = path.join(srcDir, 'cron')

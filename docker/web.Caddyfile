@@ -1,17 +1,26 @@
 :80 {
-	encode gzip
+    encode gzip
 
-	@notStatic {
-		not {
-			file {
-				try_files {path}
-			}
-		}
-	}
+    @favicon path /favicon.*
+    @generated path /generated/*
+    @static path /assets/*
+    @notStatic {
+        not {
+            file {
+                try_files {path}
+            }
+        }
+    }
 
-	root * /app/dist/web/client
-	reverse_proxy @notStatic http://malcovercss-api:API_PORT {
-		trusted_proxies 172.16.0.0/12
-	}
-	file_server
+    reverse_proxy @notStatic http://malcovercss-api:API_PORT {
+        trusted_proxies 172.16.0.0/12
+    }
+
+    root * /app/dist/web/client
+    file_server
+
+    header @static Cache-Control "public, max-age=31536000, immutable"
+    header @notStatic Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+    header @favicon Cache-Control "public, max-age=86400, must-revalidate"
+    header @generated Cache-Control "public, max-age=86400, must-revalidate"
 }

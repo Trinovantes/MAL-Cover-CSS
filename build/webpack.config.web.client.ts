@@ -8,7 +8,7 @@ import merge from 'webpack-merge'
 import type { Configuration } from 'webpack'
 import path from 'node:path'
 import { commonWebConfig } from './webpack.common.ts'
-import { distClientDir, distServerManifest, entryFile, isDev, manifestFileName, publicPath, publicPathOnServer, srcWebDir, srcWebStaticDir, srcWebTemplate } from './BuildConstants.ts'
+import { distClientDir, distServerManifest, entryFile, isDev, manifestFileName, publicPath, srcWebDir, srcWebStaticDir, srcWebTemplate } from './BuildConstants.ts'
 import { getBuildSecret, isAnalyze } from './BuildSecret.ts'
 import 'webpack-dev-server'
 
@@ -22,13 +22,11 @@ export default ((): Configuration => merge.default(commonWebConfig, {
     },
 
     output: {
-        path: path.join(distClientDir, publicPathOnServer),
-
+        path: path.join(distClientDir, publicPath),
+        publicPath: publicPath,
         filename: isDev
             ? '[name].js'
             : '[name].[contenthash].js',
-
-        publicPath,
     },
 
     devServer: {
@@ -37,8 +35,8 @@ export default ((): Configuration => merge.default(commonWebConfig, {
         devMiddleware: {
             index: entryFile,
             writeToDisk: (filePath) => {
-                // Since output.publicPath is '/public', app.html can only be accessed at /public/index.html
-                // Instead, we need to write it to disk and have webpack-dev-server serve it from '/' (contentBasePublicPath)
+                // Since output.publicPath is '/assets', app.html can only be accessed at /assets/index.html
+                // Instead, we need to write it to disk and have webpack-dev-server serve it from '/'
                 if (filePath.endsWith('.html')) {
                     return true
                 }
