@@ -56,3 +56,6 @@ COPY ./docker/web.Caddyfile             /etc/caddy/Caddyfile
 RUN \
     --mount=type=secret,id=API_PORT \
     sed -i "s/API_PORT/$(cat /run/secrets/API_PORT)/" /etc/caddy/Caddyfile
+
+RUN caddy validate --config /etc/caddy/Caddyfile \
+    && caddy fmt --overwrite /etc/caddy/Caddyfile
