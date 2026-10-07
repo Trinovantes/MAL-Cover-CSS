@@ -1,7 +1,7 @@
 import { createPinia } from 'pinia'
 import { Quasar, Notify } from 'quasar'
 import type { QuasarPluginOptions } from 'quasar'
-import { createSSRApp } from 'vue'
+import { createSSRApp, type Component } from 'vue'
 import AppLoader from './client/AppLoader.vue'
 import ClientOnly from './client/components/ClientOnly.vue'
 import CodeBlock from './client/components/CodeBlock.vue'
@@ -10,17 +10,18 @@ import { createVueRouter } from './client/router/createVueRouter.ts'
 import { useUserStore } from './client/store/User/useUserStore.ts'
 import type { AppContext } from './AppContext.ts'
 import type { SSRContext } from '@vue/server-renderer'
-import type { createHead } from '@unhead/vue/client'
+import type { VueHeadClient } from '@unhead/vue/client'
 import type { createRouter } from 'vue-router'
+import type { UseHeadInput } from '@unhead/vue'
 
 type VueApp = {
     app: ReturnType<typeof createSSRApp>
     router: ReturnType<typeof createRouter>
 }
 
-export async function createVueApp(head: ReturnType<typeof createHead>, appContext?: AppContext): Promise<VueApp> {
+export async function createVueApp(head: VueHeadClient<UseHeadInput, unknown>, appContext?: AppContext): Promise<VueApp> {
     // Vue
-    const app = createSSRApp(AppLoader)
+    const app = createSSRApp(AppLoader as Component)
     app.component('ClientOnly', ClientOnly)
     app.component('ExternalLink', ExternalLink)
     app.component('CodeBlock', CodeBlock)

@@ -25,7 +25,7 @@ const intersectConfig: IntersectionValue = {
     },
     handler: (entry) => {
         if (!entry?.isIntersecting) {
-            return true
+            return
         }
 
         entry.target?.classList.add('visible')

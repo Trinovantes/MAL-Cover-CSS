@@ -1,20 +1,20 @@
 patchedDependencies:
   '@nuxt/devalue': patches/@nuxt__devalue.patch
   '@rollup/plugin-replace': patches/@rollup__plugin-replace.patch
-  highlight.js: patches/highlight.js.patch
-  pino: patches/pino.patch
-  pino-http: patches/pino-http.patch
-  quasar: patches/quasar.patch
-  vue-loader: patches/vue-loader.patch
+  'pino': patches/pino.patch
+  'pino-http': patches/pino-http.patch
+  'quasar': patches/quasar.patch
+  'vue-loader': patches/vue-loader.patch
 
 overrides:
-  '@types/node': '^24'
+  '@types/node': '^26'
   '@types/express': '^4'
   'express': '^4'
+  'typescript': '^6'
 
 allowBuilds:
-  better-sqlite3: true
+  'better-sqlite3': true
   '@parcel/watcher': false
   '@sentry/cli': false
-  esbuild: false
-  sharp: false
+  'esbuild': false
+  'sharp': false

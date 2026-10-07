@@ -1,11 +1,9 @@
 # -----------------------------------------------------------------------------
-FROM node:24-alpine AS base
+FROM node:26-alpine AS base
 # -----------------------------------------------------------------------------
 
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack use pnpm@latest-11 && \
-    corepack enable pnpm
+RUN npm install -g pnpm@12 && \
+    apk add python3
 
 WORKDIR /app
 
@@ -25,7 +23,7 @@ RUN --mount=type=cache,id=pnpm,target=/pnpm/store \
         --production
 
 # -----------------------------------------------------------------------------
-FROM node:24-alpine
+FROM node:26-alpine
 LABEL org.opencontainers.image.source=https://github.com/Trinovantes/MAL-Cover-CSS
 # -----------------------------------------------------------------------------
 

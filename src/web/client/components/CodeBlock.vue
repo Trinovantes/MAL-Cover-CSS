@@ -1,9 +1,6 @@
 <script lang="ts" setup>
-import hljs from 'highlight.js/lib/core'
 import { onMounted, ref, watch } from 'vue'
 import { escapeHtml } from '../utils/escapeHtml.ts'
-import type { LanguageFn } from 'highlight.js'
-import 'highlight.js/styles/monokai.css'
 import { sleep } from '../../../common/utils/sleep.ts'
 
 const props = defineProps({
@@ -15,38 +12,15 @@ const props = defineProps({
         type: String,
         default: 'css',
     },
-    ignoreIllegals: {
-        type: Boolean,
-        default: true,
-    },
-    preWhiteSpace: {
-        type: String,
-        default: 'pre',
-    },
 })
-
-const languageMap = new Map<string, string>([
-    ['js', 'javascript'],
-    ['ts', 'typescript'],
-    ['html', 'xml'],
-])
 
 const highlightedCode = ref<string>(escapeHtml(props.code))
 watch(() => props, async () => {
-    if (props.language === 'txt') {
-        highlightedCode.value = escapeHtml(props.code)
-    } else {
-        if (!hljs.getLanguage(props.language)) {
-            const fileName = languageMap.get(props.language) ?? props.language
-            const { default: languageFn } = await import(`highlight.js/lib/languages/${fileName}`) as { default: LanguageFn }
-            hljs.registerLanguage(props.language, languageFn)
-        }
-
-        highlightedCode.value = hljs.highlight(props.code, {
-            language: props.language,
-            ignoreIllegals: props.ignoreIllegals,
-        }).value
-    }
+    const { codeToHtml } = await import('shiki')
+    highlightedCode.value = await codeToHtml(props.code, {
+        lang: props.language,
+        theme: 'monokai',
+    })
 }, {
     immediate: true,
 })
@@ -79,8 +53,7 @@ async function copyToClipboard() {
             @click="copyToClipboard"
         />
 
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <pre :class="`hljs ${language}`" :style="`white-space: ${props.preWhiteSpace};`"><code v-html="highlightedCode" /></pre>
+        <div v-html="highlightedCode" />
     </div>
 </template>
 

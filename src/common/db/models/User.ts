@@ -176,7 +176,7 @@ export function deleteUser(db: DrizzleClient, id: number): User | null {
         .delete(userTable)
         .where(sql`${userTable.id} = ${id}`)
         .returning()
-        .get() as User | undefined
+        .get()
 
     if (!user) {
         return null

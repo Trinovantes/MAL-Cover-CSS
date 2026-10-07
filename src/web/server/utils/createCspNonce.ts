@@ -13,7 +13,7 @@ export function createCspNonce() {
         "object-src     'none'",
         "base-uri       'self'",
         `connect-src    'self' cloudflareinsights.com *.ingest.sentry.io ${devHosts}`,
-        `script-src     'strict-dynamic' 'nonce-${nonce}'`,
+        `script-src     'strict-dynamic' 'wasm-unsafe-eval' 'nonce-${nonce}'`,
         `style-src      'self' 'unsafe-inline' fonts.googleapis.com ${devHosts}`,
         `font-src       'self' fonts.gstatic.com ${devHosts}`,
     ].join(';')

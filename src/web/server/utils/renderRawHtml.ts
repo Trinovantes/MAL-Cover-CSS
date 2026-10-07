@@ -1,10 +1,10 @@
-import { renderSSRHead } from '@unhead/ssr'
+import type { SSRHeadPayload } from '@unhead/vue/server'
 import type { AppContext } from '../../AppContext.ts'
 import type { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin'
 
 export type RenderedPage = {
     appHtml: string
-    unhead: Awaited<ReturnType<typeof renderSSRHead>>
+    unhead: SSRHeadPayload
     teleports: AppContext['teleports']
     quasar: AppContext['_meta']
     vueSsrAssets: {
@@ -15,7 +15,7 @@ export type RenderedPage = {
 
 /**
  * Glues together headers/footers of current page from all the various plugins used
- *  - `@unhead/ssr`
+ *  - `unhead`
  *  - `quasar`
  *  - `vue-ssr-assets-plugin`
  *  - `pinia`

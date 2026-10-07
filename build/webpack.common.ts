@@ -149,7 +149,7 @@ export const commonNodeConfig = merge.default(commonConfig, {
             '@sentry/node': 'commonjs @sentry/node',
             'better-sqlite3': 'commonjs better-sqlite3',
             'express': 'commonjs express',
+            'redis': 'commonjs redis',
         },
-        /^bun(:\w+)?/i,
     ],
 })

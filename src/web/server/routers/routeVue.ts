@@ -1,7 +1,6 @@
 import { readFileSync } from 'node:fs'
 import { renderToString } from '@vue/server-renderer'
 import express from 'express'
-import { renderSSRHead } from '@unhead/ssr'
 import { createHead } from '@unhead/vue/server'
 import { VueSsrAssetRenderer } from 'vue-ssr-assets-plugin/dist/utils/VueSsrAssetsRenderer.js'
 import { createAsyncHandler } from '../utils/createAsyncHandler.ts'
@@ -32,7 +31,7 @@ export function routeVue() {
 
         // Render the app on the server
         const appHtml = await renderToString(app, appContext)
-        const unhead = await renderSSRHead(head)
+        const unhead = head.render()
         const renderedPage = {
             appHtml,
             unhead,
