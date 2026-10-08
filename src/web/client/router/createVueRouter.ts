@@ -42,14 +42,13 @@ export async function createVueRouter(appContext?: AppContext): Promise<Router> 
         }
     })
 
-    router.beforeEach((to, from, next) => {
+    router.beforeEach((to) => {
         if (to.meta[ROUTE_META_KEY.REQUIRE_AUTH] && !isLoggedIn.value) {
             console.warn(`[403] Cannot navigate to ${to.fullPath} because isLoggedIn:${isLoggedIn.value}`)
-            next({ name: ROUTE_NAME.HOME })
-            return
+            return { name: ROUTE_NAME.HOME }
         }
 
-        next()
+        return true
     })
 
     if (appContext?.url) {
